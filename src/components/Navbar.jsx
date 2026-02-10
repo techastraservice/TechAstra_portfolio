@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Rocket } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import logo from '../assets/techastra-logo.png';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -17,9 +18,7 @@ const Navbar = () => {
         <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'glass-nav py-4' : 'py-6 bg-transparent'}`}>
             <div className="container flex justify-between items-center">
                 <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-cyan-400 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                        <Rocket className="text-white w-5 h-5" />
-                    </div>
+                    <img src={logo} alt="TechAstra Logo" className="w-14 h-14 object-contain" />
                     <span className="text-2xl font-bold tracking-tighter text-white">
                         Tech<span className="text-cyan-400">Astra</span>
                     </span>
