@@ -60,6 +60,8 @@ const projects = [
     }
 ];
 
+import Reveal from './Reveal';
+
 const Projects = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 6;
@@ -79,67 +81,71 @@ const Projects = () => {
     return (
         <section id="projects" className="py-20 relative">
             <div className="container">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
-                    <div>
-                        <span className="text-cyan-400 font-medium tracking-wider uppercase text-sm">Portfolio</span>
-                        <h2 className="text-4xl md:text-5xl font-bold text-white mt-2">Featured Projects</h2>
-                        <p className="text-gray-400 mt-2">Explore our diverse portfolio of {projects.length}+ innovative solutions.</p>
-                    </div>
+                <Reveal>
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
+                        <div>
+                            <span className="text-cyan-400 font-medium tracking-wider uppercase text-sm">Portfolio</span>
+                            <h2 className="text-4xl md:text-5xl font-bold text-white mt-2">Featured Projects</h2>
+                            <p className="text-gray-400 mt-2">Explore our diverse portfolio of {projects.length}+ innovative solutions.</p>
+                        </div>
 
-                    <div className="flex gap-2">
-                        <button
-                            onClick={prevPage}
-                            disabled={currentPage === 1}
-                            className={`p-2 rounded-lg border border-white/10 ${currentPage === 1 ? 'text-gray-600 cursor-not-allowed' : 'text-white hover:bg-white/10'}`}
-                        >
-                            <ChevronLeft />
-                        </button>
-                        <button
-                            onClick={nextPage}
-                            disabled={currentPage === totalPages}
-                            className={`p-2 rounded-lg border border-white/10 ${currentPage === totalPages ? 'text-gray-600 cursor-not-allowed' : 'text-white hover:bg-white/10'}`}
-                        >
-                            <ChevronRight />
-                        </button>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={prevPage}
+                                disabled={currentPage === 1}
+                                className={`p-2 rounded-lg border border-white/10 ${currentPage === 1 ? 'text-gray-600 cursor-not-allowed' : 'text-white hover:bg-white/10'}`}
+                            >
+                                <ChevronLeft />
+                            </button>
+                            <button
+                                onClick={nextPage}
+                                disabled={currentPage === totalPages}
+                                className={`p-2 rounded-lg border border-white/10 ${currentPage === totalPages ? 'text-gray-600 cursor-not-allowed' : 'text-white hover:bg-white/10'}`}
+                            >
+                                <ChevronRight />
+                            </button>
+                        </div>
                     </div>
-                </div>
+                </Reveal>
 
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 animate-in fade-in duration-500">
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {currentProjects.map((project, index) => (
-                        <div key={index} className="group relative rounded-2xl overflow-hidden glass border-0 h-[400px]">
-                            {/* Image Overlay */}
-                            <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all z-10"></div>
+                        <Reveal key={index} delay={index * 100}>
+                            <div className="group relative rounded-2xl overflow-hidden glass border-0 h-[400px]">
+                                {/* Image Overlay */}
+                                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all z-10"></div>
 
-                            <img
-                                src={project.image}
-                                alt={project.title}
-                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-                            />
+                                <img
+                                    src={project.image}
+                                    alt={project.title}
+                                    className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                                />
 
-                            <div className="absolute bottom-0 left-0 w-full p-6 z-20 bg-gradient-to-t from-black/95 via-black/80 to-transparent">
-                                <div className="flex justify-between items-end">
-                                    <div className="w-full">
-                                        <span className="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2 block">{project.category}</span>
-                                        <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
-                                        <p className="text-gray-300 text-sm mb-4 line-clamp-2">{project.desc}</p>
-                                        <div className="flex flex-wrap gap-2 mb-4">
-                                            {project.tech.map((t, i) => (
-                                                <span key={i} className="text-[10px] text-gray-400 bg-white/10 px-2 py-1 rounded border border-white/5">{t}</span>
-                                            ))}
+                                <div className="absolute bottom-0 left-0 w-full p-6 z-20 bg-gradient-to-t from-black/95 via-black/80 to-transparent">
+                                    <div className="flex justify-between items-end">
+                                        <div className="w-full">
+                                            <span className="text-cyan-400 text-xs font-bold uppercase tracking-wider mb-2 block">{project.category}</span>
+                                            <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
+                                            <p className="text-gray-300 text-sm mb-4 line-clamp-2">{project.desc}</p>
+                                            <div className="flex flex-wrap gap-2 mb-4">
+                                                {project.tech.map((t, i) => (
+                                                    <span key={i} className="text-[10px] text-gray-400 bg-white/10 px-2 py-1 rounded border border-white/5">{t}</span>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                {/* Actions */}
-                                <div className="flex gap-3 justify-end mt-2">
-                                    <a href="#" className="p-2 rounded-full bg-white/10 text-white hover:bg-cyan-500 hover:text-white transition-colors backdrop-blur-sm" title="View Code">
-                                        <Github size={18} />
-                                    </a>
-                                    <a href="#" className="p-2 rounded-full bg-white/10 text-white hover:bg-cyan-500 hover:text-white transition-colors backdrop-blur-sm" title="Live Demo">
-                                        <ExternalLink size={18} />
-                                    </a>
+                                    {/* Actions */}
+                                    <div className="flex gap-3 justify-end mt-2">
+                                        <a href="#" className="p-2 rounded-full bg-white/10 text-white hover:bg-cyan-500 hover:text-white transition-colors backdrop-blur-sm" title="View Code">
+                                            <Github size={18} />
+                                        </a>
+                                        <a href="#" className="p-2 rounded-full bg-white/10 text-white hover:bg-cyan-500 hover:text-white transition-colors backdrop-blur-sm" title="Live Demo">
+                                            <ExternalLink size={18} />
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        </Reveal>
                     ))}
                 </div>
             </div>

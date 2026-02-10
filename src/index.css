@@ -30,6 +30,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   min-height: 100vh;
   background: #050507;
@@ -162,6 +166,7 @@ ul {
   border-radius: 5px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #555;
+/* Animation Utilities */
+.animate-float {
+  animation: float 6s ease-in-out infinite alternate;
 }

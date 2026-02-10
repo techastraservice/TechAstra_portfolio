@@ -25,29 +25,35 @@ const services = [
 
 ];
 
+import Reveal from './Reveal';
+
 const Services = () => {
     return (
         <section id="services" className="py-20 relative bg-black/20">
             <div className="container">
-                <div className="text-center mb-16">
-                    <span className="text-cyan-400 font-medium tracking-wider uppercase text-sm">Services</span>
-                    <h2 className="text-4xl md:text-5xl font-bold text-white mt-2">Transform Your Vision</h2>
-                    <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
-                        Comprehensive solutions that bring your ideas to life with cutting-edge technology and expert craftsmanship.
-                    </p>
-                </div>
+                <Reveal>
+                    <div className="text-center mb-16">
+                        <span className="text-cyan-400 font-medium tracking-wider uppercase text-sm">Services</span>
+                        <h2 className="text-4xl md:text-5xl font-bold text-white mt-2">Transform Your Vision</h2>
+                        <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
+                            Comprehensive solutions that bring your ideas to life with cutting-edge technology and expert craftsmanship.
+                        </p>
+                    </div>
+                </Reveal>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {services.map((service, index) => (
-                        <div key={index} className="glass-card group p-8">
-                            <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                                {service.icon}
+                        <Reveal key={index} delay={index * 100} className="h-full">
+                            <div className="glass-card group p-8 h-full">
+                                <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                                    {service.icon}
+                                </div>
+                                <h3 className="text-xl font-bold text-white mb-3">{service.title}</h3>
+                                <p className="text-gray-400 leading-relaxed">
+                                    {service.desc}
+                                </p>
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-3">{service.title}</h3>
-                            <p className="text-gray-400 leading-relaxed">
-                                {service.desc}
-                            </p>
-                        </div>
+                        </Reveal>
                     ))}
                 </div>
             </div>
