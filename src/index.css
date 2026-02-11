@@ -2,14 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply transition-colors duration-300;
+  }
+}
+
 :root {
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark;
+  color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #0d0d12;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -17,11 +23,25 @@
   -moz-osx-font-smoothing: grayscale;
 
   --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+  /* Light Mode Defaults */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --glass-highlight: rgba(255, 255, 255, 0.8);
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --neon-blue: #00f2ff;
+  --neon-purple: #bc13fe;
+}
+
+.dark {
+  /* Dark Mode Overrides */
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-highlight: rgba(255, 255, 255, 0.15);
-  --neon-blue: #00f2ff;
-  --neon-purple: #bc13fe;
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  background-color: #0d0d12;
 }
 
 * {
@@ -36,7 +56,8 @@ html {
 
 body {
   min-height: 100vh;
-  background: #050507;
+  /* background managed by App.jsx or .dark class */
+  @apply text-gray-900 dark:text-gray-100;
   overflow-x: hidden;
   position: relative;
 }

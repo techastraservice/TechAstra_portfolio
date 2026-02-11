@@ -17,7 +17,7 @@ function App() {
   }, []);
 
   return (
-    <div className="antialiased text-gray-100 selection:bg-cyan-500 selection:text-white">
+    <div className="antialiased text-gray-900 dark:text-gray-100 bg-gray-50 dark:bg-black min-h-screen transition-colors duration-300 selection:bg-cyan-500 selection:text-white">
       <Background3D />
       <Navbar />
       <Hero />

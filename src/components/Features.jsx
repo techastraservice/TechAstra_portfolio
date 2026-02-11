@@ -31,33 +31,45 @@ const features = [
 const Features = () => {
     const [selectedFeature, setSelectedFeature] = useState(null);
 
+    // Prevent body scroll when modal is open
+    React.useEffect(() => {
+        if (selectedFeature) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [selectedFeature]);
+
     return (
-        <section className="py-20 relative">
+        <section className="py-20 relative bg-gray-50 dark:bg-transparent transition-colors duration-300">
             <div className="container">
                 <div className="mb-16 text-center md:text-left">
-                    <span className="text-cyan-400 font-medium tracking-wider uppercase text-sm">Why Choose Us</span>
-                    <h2 className="text-3xl md:text-5xl font-bold text-white mt-2 leading-tight">
+                    <span className="text-cyan-600 dark:text-cyan-400 font-medium tracking-wider uppercase text-sm transition-colors">Why Choose Us</span>
+                    <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-white mt-2 leading-tight transition-colors">
                         Accelerate Your <br />
                         <span className="text-gradient">Digital Transformation</span>
                     </h2>
-                    <p className="text-gray-400 mt-4 max-w-2xl leading-relaxed">
+                    <p className="text-gray-600 dark:text-gray-400 mt-4 max-w-2xl leading-relaxed transition-colors">
                         Our comprehensive suite of services delivers innovative solutions that drive growth, efficiency, and competitive advantage.
                     </p>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {features.map((feature, index) => (
-                        <div key={index} className="glass p-6 rounded-2xl hover:bg-white/5 transition-colors border border-white/5 flex flex-col items-start h-full">
-                            <div className="w-12 h-12 rounded-lg bg-white/5 flex items-center justify-center mb-4">
+                        <div key={index} className="glass p-6 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors border border-gray-200 dark:border-white/5 flex flex-col items-start h-full bg-white/50 dark:bg-white/5 backdrop-blur-sm shadow-sm dark:shadow-none">
+                            <div className="w-12 h-12 rounded-lg bg-cyan-50 dark:bg-white/5 flex items-center justify-center mb-4 transition-colors">
                                 {feature.icon}
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
-                            <p className="text-gray-400 text-sm leading-relaxed mb-4 flex-grow">
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">{feature.title}</h3>
+                            <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4 flex-grow transition-colors">
                                 {feature.desc}
                             </p>
                             <button
                                 onClick={() => setSelectedFeature(feature)}
-                                className="inline-block mt-auto text-sm text-cyan-400 hover:text-cyan-300 font-medium cursor-pointer hover:translate-x-1 transition-transform"
+                                className="inline-block mt-auto text-sm text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 font-medium cursor-pointer hover:translate-x-1 transition-transform"
                             >
                                 Learn more →
                             </button>
@@ -70,33 +82,33 @@ const Features = () => {
             {selectedFeature && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
                     <div
-                        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
                         onClick={() => setSelectedFeature(null)}
                     ></div>
-                    <div className="relative glass-card w-full max-w-lg md:p-8 p-6 animate-in slide-in-from-bottom-4 fade-in duration-300">
+                    <div className="relative w-full max-w-lg md:p-8 p-6 animate-in slide-in-from-bottom-4 fade-in duration-300 bg-white dark:bg-[#0d0d12] backdrop-blur-xl rounded-3xl shadow-2xl border border-gray-200 dark:border-white/10">
                         <button
                             onClick={() => setSelectedFeature(null)}
-                            className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
                         >
                             <X size={24} />
                         </button>
 
                         <div className="flex items-center gap-4 mb-6">
-                            <div className="w-16 h-16 rounded-xl bg-white/5 flex items-center justify-center">
+                            <div className="w-16 h-16 rounded-xl bg-cyan-50 dark:bg-white/5 flex items-center justify-center transition-colors">
                                 {/* Clone element to increase size if needed, or just render */}
-                                {React.cloneElement(selectedFeature.icon, { className: "w-8 h-8 text-cyan-400" })}
+                                {React.cloneElement(selectedFeature.icon, { className: "w-8 h-8 text-cyan-500 dark:text-cyan-400" })}
                             </div>
-                            <h3 className="text-2xl font-bold text-white">{selectedFeature.title}</h3>
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">{selectedFeature.title}</h3>
                         </div>
 
                         <div className="space-y-4">
-                            <h4 className="text-lg font-semibold text-cyan-400">Overview</h4>
-                            <p className="text-gray-300 leading-relaxed">
+                            <h4 className="text-lg font-semibold text-cyan-600 dark:text-cyan-400 transition-colors">Overview</h4>
+                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed transition-colors">
                                 {selectedFeature.desc}
                             </p>
 
-                            <h4 className="text-lg font-semibold text-cyan-400 pt-2">Key Benefits</h4>
-                            <p className="text-gray-300 leading-relaxed">
+                            <h4 className="text-lg font-semibold text-cyan-600 dark:text-cyan-400 pt-2 transition-colors">Key Benefits</h4>
+                            <p className="text-gray-600 dark:text-gray-300 leading-relaxed transition-colors">
                                 {selectedFeature.details}
                             </p>
 
