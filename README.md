@@ -1,16 +1,42 @@
-# TechAstra_portfolio
+# TechAstra Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Official portfolio website for **TechAstra**, providing expert consultancy and project development services.
 
-Currently, two official plugins are available:
+## Tech Stack
+-   **React** + **Vite** (Framework)
+-   **Tailwind CSS** (Styling)
+-   **Lucide React** (Icons)
+-   **Firebase** (Hosting & Analytics)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Getting Started
 
-## React Compiler
+### Prerequisites
+-   Node.js (v16+)
+-   npm
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Installation
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/techastraservice/TechAstra_portfolio.git
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
 
-## Expanding the ESLint configuration
+### Running Locally
+Start the development server:
+```bash
+npm run dev
+```
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Building for Production
+Build the project for deployment:
+```bash
+npm run build
+```
+
+## Deployment
+This project is deployed on **Firebase Hosting**.
+-   Live Site: [https://techastra-14e42.web.app](https://techastra-14e42.web.app)
