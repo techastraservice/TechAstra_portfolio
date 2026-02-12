@@ -1,48 +1,109 @@
 import React from 'react';
-import { ArrowRight, Play, Zap, Shield, TrendingUp, Cpu } from 'lucide-react';
+import { ArrowRight, Play, Zap, Shield, TrendingUp, Cpu, Users } from 'lucide-react';
 import logo from '../assets/techastra-logo.png';
 
 import Reveal from './Reveal';
+import { useProjects } from '../context/ProjectContext';
 
 const Hero = () => {
+    const { projects } = useProjects();
+    const visitCount = 12000; // Placeholder for total visits
+
+    // TODO: future integration with Firebase for real-time visit count
+    // useEffect(() => {
+    //     // const database = getDatabase(app);
+    //     // const visitsRef = ref(database, 'visits');
+    //     // get(visitsRef).then((snapshot) => {
+    //     //   if (snapshot.exists()) {
+    //     //     setVisitCount(snapshot.val());
+    //     //   }
+    //     // });
+    // }, []);
+
     return (
-        <section id="home" className="min-h-screen flex items-center pt-20 relative overflow-hidden bg-gray-50 dark:bg-black transition-colors duration-300">
-            <div className="container grid md:grid-cols-2 gap-12 items-center relative z-10">
+        <section id="home" className="min-h-screen flex items-center relative overflow-hidden bg-gray-50 dark:bg-[#0d0d12] text-gray-900 dark:text-white pt-20 transition-colors duration-300">
+            {/* Background Elements */}
+            <div className="absolute top-[-20%] left-[-10%] w-[50vw] h-[50vw] bg-purple-500/10 dark:bg-purple-600/20 rounded-full blur-[120px] animate-pulse pointer-events-none"></div>
+            <div className="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] bg-cyan-500/10 dark:bg-cyan-600/20 rounded-full blur-[120px] animate-pulse delay-700 pointer-events-none"></div>
+
+            {/* Grid Pattern Overlay */}
+            {/* Grid Pattern Overlay */}
+            <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 dark:opacity-20 brightness-100 contrast-150 mix-blend-overlay pointer-events-none"></div>
+
+            <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center relative z-10">
                 <Reveal>
-                    <div className="space-y-6">
-                        <div className="inline-block px-4 py-2 rounded-full glass border border-cyan-500/30 text-cyan-600 dark:text-cyan-400 text-sm font-medium mb-4 bg-white/50 dark:bg-white/5 backdrop-blur-sm">
-                            🚀 Accelerate Your Business Growth
+                    <div className="space-y-8">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-md text-cyan-600 dark:text-cyan-400 text-sm font-medium animate-fade-in-up shadow-sm dark:shadow-none">
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                            </span>
+                            Accelerate Your Business Growth
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-bold leading-tight text-gray-900 dark:text-white transition-colors">
+
+                        <h1 className="text-5xl md:text-7xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
                             Launch Your Project <br />
-                            <span className="text-gradient">With Confidence</span>
+                            <span className="bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent">With Confidence</span>
                         </h1>
-                        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-lg leading-relaxed transition-colors">
+
+                        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-xl leading-relaxed">
                             Expert consultancy services that accelerate your business growth with cutting-edge technology solutions and proven methodologies.
                         </p>
-                        <div className="flex flex-wrap gap-4 pt-4">
-                            <a href="#contact" className="btn-primary flex items-center gap-2">
-                                Start Now <ArrowRight size={18} />
+
+                        <div className="flex flex-wrap gap-4 pt-4 relative z-20">
+                            <a
+                                href="#contact"
+                                className="group relative px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-xl font-bold tracking-wide text-white shadow-[0_4px_20px_rgba(6,182,212,0.3)] hover:shadow-[0_6px_30px_rgba(6,182,212,0.5)] transition-all transform hover:-translate-y-1 overflow-hidden"
+                            >
+                                <span className="relative z-10 flex items-center gap-2">Start Now <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" /></span>
+                                <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                            </a>
+                            <a
+                                href="#projects"
+                                className="px-8 py-4 rounded-xl font-bold tracking-wide text-gray-800 dark:text-white border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 transition-all flex items-center gap-2 backdrop-blur-sm shadow-sm dark:shadow-none"
+                            >
+                                View Work
                             </a>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-6 pt-8">
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-cyan-500/10 dark:bg-cyan-500/20 rounded-lg text-cyan-600 dark:text-cyan-400">
-                                    <Zap size={20} />
+                        <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-200 dark:border-white/5">
+                            <div className="flex items-center gap-4 group">
+                                <div className="p-3 bg-cyan-500/10 rounded-xl text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform duration-300 border border-cyan-500/20">
+                                    <Zap size={24} />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-gray-900 dark:text-white transition-colors">Rapid Deployment</h4>
-                                    <p className="text-xs text-gray-500 dark:text-gray-500">Solutions in record time</p>
+                                    <h4 className="font-bold text-gray-900 dark:text-gray-200">Rapid Deployment</h4>
+                                    <p className="text-xs text-gray-500">Solutions in record time</p>
                                 </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                                <div className="p-2 bg-purple-500/10 dark:bg-purple-500/20 rounded-lg text-purple-600 dark:text-purple-400">
-                                    <Shield size={20} />
+                            <div className="flex items-center gap-4 group">
+                                <div className="p-3 bg-purple-500/10 rounded-xl text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform duration-300 border border-purple-500/20">
+                                    <Shield size={24} />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-gray-900 dark:text-white transition-colors">Expert Team</h4>
-                                    <p className="text-xs text-gray-500 dark:text-gray-500">Seasoned professionals</p>
+                                    <h4 className="font-bold text-gray-900 dark:text-gray-200">Expert Team</h4>
+                                    <p className="text-xs text-gray-500">Seasoned professionals</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-6 pt-6 border-t border-gray-200 dark:border-white/5">
+                            <div className="flex items-center gap-4 group">
+                                <div className="p-3 bg-blue-500/10 rounded-xl text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300 border border-blue-500/20">
+                                    <Cpu size={24} />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-gray-900 dark:text-gray-200">{projects.length}+ Delivered</h4>
+                                    <p className="text-xs text-gray-500">Innovative Solutions</p>
+                                </div>
+                            </div>
+                            <div className="flex items-center gap-4 group">
+                                <div className="p-3 bg-green-500/10 rounded-xl text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-300 border border-green-500/20">
+                                    <Users size={24} />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-gray-900 dark:text-gray-200">{visitCount.toLocaleString()}+</h4>
+                                    <p className="text-xs text-gray-500">Total Visits</p>
                                 </div>
                             </div>
                         </div>
@@ -50,20 +111,21 @@ const Hero = () => {
                 </Reveal>
 
                 <Reveal delay={200}>
-                    <div className="relative hidden md:block">
-                        {/* Abstract Glass shapes */}
-                        <div className="relative w-full aspect-square">
-                            <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500 to-purple-600 rounded-full opacity-10 dark:opacity-20 blur-3xl animate-pulse transition-opacity"></div>
-                            <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2 bg-white/40 dark:bg-white/5 backdrop-blur-xl rounded-3xl rotate-12 z-10 border border-white/20 dark:border-white/10 flex items-center justify-center shadow-xl dark:shadow-none transition-all">
-                                <div className="text-center p-6">
-                                    <span className="text-4xl font-bold text-gray-900 dark:text-white block mb-2 transition-colors">3+</span>
-                                    <span className="text-sm text-gray-600 dark:text-gray-400 uppercase tracking-widest transition-colors">Years Experience</span>
-                                </div>
+                    <div className="relative hidden md:block aspect-square max-w-lg mx-auto">
+                        {/* Main Glass Card */}
+                        <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 to-purple-600/20 rounded-full blur-[80px] animate-pulse"></div>
+
+                        <div className="relative z-10 w-full h-full bg-white/60 dark:bg-white/5 backdrop-blur-2xl border border-white/40 dark:border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col items-center justify-center transform hover:scale-[1.02] transition-transform duration-500 group">
+                            {/* Inner Shimmer */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 dark:via-white/5 to-transparent skew-x-12 translate-x-[-150%] group-hover:animate-shimmer rounded-3xl overflow-hidden"></div>
+
+                            <div className="relative w-48 h-48 mb-6">
+                                <div className="absolute inset-0 bg-blue-500/20 dark:bg-blue-500/30 blur-2xl rounded-full"></div>
+                                <img src={logo} alt="TechAstra Logo" className="w-full h-full object-contain relative z-10 drop-shadow-2xl" />
                             </div>
-                            <div className="absolute top-1/3 right-1/4 w-1/3 h-1/3 bg-white/40 dark:bg-white/5 backdrop-blur-xl rounded-full z-20 border border-white/30 dark:border-white/20 flex items-center justify-center shadow-lg dark:shadow-none transition-all">
-                                <img src={logo} alt="TechAstra Logo" className="w-40 h-40 object-contain drop-shadow-lg animate-float" />
-                            </div>
-                            <div className="absolute bottom-1/4 left-1/3 w-2/5 h-2/5 bg-white/20 dark:bg-white/5 backdrop-blur-lg rounded-2xl rotate-45 z-0 border border-white/10 dark:border-white/5 transition-all"></div>
+
+                            <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent mb-2">Tech Astra</h2>
+                            <p className="text-sm text-cyan-600 dark:text-cyan-400 tracking-widest uppercase font-semibold">Innovate . Build . Scale</p>
                         </div>
                     </div>
                 </Reveal>
