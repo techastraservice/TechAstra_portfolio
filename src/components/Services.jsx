@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Globe, Smartphone, Brain, BarChart, ArrowRight } from 'lucide-react';
+import { Globe, Smartphone, Brain, BarChart, ArrowRight, Rocket, Zap } from 'lucide-react';
 import Reveal from './Reveal';
 import ServiceModal from './ServiceModal';
 
@@ -133,6 +133,72 @@ const services = [
             ],
             timeline: "Ongoing",
             pricing: "10,000+"
+        }
+    },
+    {
+        icon: <Rocket className="w-8 h-8 text-gray-700 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" />,
+        title: "Main Project Development",
+        desc: "End-to-end operational solutions for final year students. Scalable, secure, and production-ready architectures for top grades.",
+        details: {
+            description: "Our Main Project Development service is exclusively designed for Final Year Students looking to build robust, scalable, and high-performance Capstone projects. We provide complete guidance from system architecture to deployment, ensuring you understand every line of code.",
+            technologies: {
+                Frontend: "React, Next.js, Vue.js, TypeScript, Tailwind CSS",
+                Backend: "Node.js (NestJS/Express), Python (Django/FastAPI), Go",
+                Database: "PostgreSQL, MongoDB, Redis, ElasticSearch",
+                Cloud: "AWS, Azure, Google Cloud, Kubernetes, Docker",
+                Security: "OAuth2, JWT, SSL/TLS, OWASP Standards"
+            },
+            servicesList: [
+                "Final Year Capstone Projects",
+                "Complex Web Applications",
+                "IEEE Base Paper Implementations",
+                "AI/ML Integrated Projects",
+                "Blockchain & IoT Solutions",
+                "Complete Project Documentation"
+            ],
+            keyFeatures: [
+                "Complete Source Code Explanation",
+                "Project Report & PPT Support",
+                "Viva-Voce Preparation",
+                "Deployment on Live Server",
+                "Comprehensive Documentation",
+                "100% Plagiarism Free Code"
+            ],
+            timeline: "3-6+ Months",
+            pricing: "Custom Quote"
+        }
+    },
+    {
+        icon: <Zap className="w-8 h-8 text-gray-700 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" />,
+        title: "Mini Project / MVP",
+        desc: "Rapid prototypes, semester projects, and mini projects. Cost-effective solutions delivered quickly.",
+        details: {
+            description: "Perfect for college students needing Semester Projects or Mini Projects. We deliver functional applications that meet academic requirements without unnecessary complexity.",
+            technologies: {
+                Frontend: "React, HTML5/CSS3, JavaScript",
+                Backend: "Node.js, Firebase, Python (Flask)",
+                Database: "MongoDB, MySQL, SQLite",
+                Hosting: "Vercel, Netlify, Heroku",
+                Tools: "Git, Postman"
+            },
+            servicesList: [
+                "Semester Projects",
+                "Mini Projects for College Students",
+                "Simple Web Applications",
+                "Academic Assignments",
+                "Frontend/Backend Modules",
+                "Portfolio Websites"
+            ],
+            keyFeatures: [
+                "Rapid Delivery (1-2 Weeks)",
+                "Clean & Easy to Understand Code",
+                "Cost-Effective for Students",
+                "Setup & Installation Guide",
+                "Basic Documentation",
+                "Video Walkthrough"
+            ],
+            timeline: "2-4 Weeks",
+            pricing: "Affordable"
         }
     }
 ];
