@@ -3,7 +3,7 @@ import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import logo from '../assets/techastra-logo.png';
 
-const Navbar = () => {
+const Navbar = ({ isAuthenticated, onLogout }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const { theme, toggleTheme } = useTheme();
@@ -43,7 +43,16 @@ const Navbar = () => {
                         {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
                     </button>
 
-                    <a href="#contact" className="btn-primary">Get Started</a>
+                    {isAuthenticated ? (
+                        <button
+                            onClick={onLogout}
+                            className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition-colors shadow-lg shadow-red-500/20"
+                        >
+                            Sign Out
+                        </button>
+                    ) : (
+                        <a href="#contact" className="btn-primary">Get Started</a>
+                    )}
                 </div>
 
                 {/* Mobile Toggle */}
@@ -68,7 +77,19 @@ const Navbar = () => {
                     <a href="#services" onClick={() => setIsOpen(false)} className="text-gray-700 dark:text-gray-300 hover:text-cyan-600 dark:hover:text-white text-lg font-medium">Services</a>
                     <a href="#projects" onClick={() => setIsOpen(false)} className="text-gray-700 dark:text-gray-300 hover:text-cyan-600 dark:hover:text-white text-lg font-medium">Projects</a>
                     <a href="#about" onClick={() => setIsOpen(false)} className="text-gray-700 dark:text-gray-300 hover:text-cyan-600 dark:hover:text-white text-lg font-medium">About</a>
-                    <a href="#contact" onClick={() => setIsOpen(false)} className="btn-primary text-center mt-2">Get Started</a>
+                    {isAuthenticated ? (
+                        <button
+                            onClick={() => {
+                                onLogout();
+                                setIsOpen(false);
+                            }}
+                            className="bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-medium text-center mt-2 shadow-lg shadow-red-500/20"
+                        >
+                            Sign Out
+                        </button>
+                    ) : (
+                        <a href="#contact" onClick={() => setIsOpen(false)} className="btn-primary text-center mt-2">Get Started</a>
+                    )}
                 </div>
             )}
         </nav>
