@@ -9,7 +9,7 @@ import { signInWithPopup, signInWithRedirect, signOut, onAuthStateChanged, getRe
 import { ExternalLink, Github, Trash2, Search } from 'lucide-react';
 
 const Admin = () => {
-    const { addProject, projects, deleteProject } = useProjects(); // Get projects and delete function
+    const { addProject, projects, deleteProject, totalVisits } = useProjects(); // Get projects and delete function
     const navigate = useNavigate();
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -262,7 +262,7 @@ const Admin = () => {
                             </div>
                             <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">TOTAL VIEWS</div>
                             <div className="text-3xl font-bold text-white flex items-baseline gap-2">
-                                1,245
+                                {totalVisits ? totalVisits.toLocaleString() : '0'}
                                 <span className="text-xs text-green-500 font-mono">+12%</span>
                             </div>
                         </div>

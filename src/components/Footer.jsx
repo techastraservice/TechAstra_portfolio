@@ -1,7 +1,9 @@
 import React from 'react';
 import { Rocket, Twitter, Linkedin, Github, ExternalLink } from 'lucide-react';
+import { useProjects } from '../context/ProjectContext';
 
 const Footer = () => {
+    const { totalVisits } = useProjects();
     return (
         <footer className="relative border-t border-gray-200 dark:border-white/10 bg-white/90 dark:bg-black/40 backdrop-blur-md pt-20 pb-10 overflow-hidden transition-colors duration-300">
             {/* Background Decorations */}
@@ -66,7 +68,18 @@ const Footer = () => {
                 </div>
 
                 <div className="border-t border-gray-200 dark:border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500 transition-colors">
-                    <p>&copy; 2024 Tech Astra. All rights reserved.</p>
+                    <div className="flex flex-col md:flex-row items-center gap-4">
+                        <p>&copy; 2024 Tech Astra. All rights reserved.</p>
+                        {(totalVisits >= 0) && (
+                            <>
+                                <div className="hidden md:block w-1 h-1 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+                                <p className="font-mono flex items-center gap-2">
+                                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                                    Visitors: <span className="text-gray-900 dark:text-white font-bold">{totalVisits.toLocaleString()}</span>
+                                </p>
+                            </>
+                        )}
+                    </div>
                     <div className="flex gap-6">
                         <a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Privacy Policy</a>
                         <a href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Terms of Service</a>
