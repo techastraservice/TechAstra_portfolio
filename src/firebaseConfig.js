@@ -18,8 +18,11 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const database = getDatabase(app, "https://techastra-14e42-default-rtdb.firebaseio.com/"); // Initialize Realtime Database with explicit URL
+let analytics;
+if (typeof window !== 'undefined') {
+    analytics = getAnalytics(app);
+}
+const database = getDatabase(app, "https://techastra-14e42-default-rtdb.firebaseio.com/"); // Initialize Realtime Database
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
