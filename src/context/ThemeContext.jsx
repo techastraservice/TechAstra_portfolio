@@ -1,8 +1,9 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
 const ThemeContext = createContext();
 
-export function ThemeProvider({ children }) {
+function ThemeProvider({ children }) {
     const [theme, setTheme] = useState(() => {
         // Check localStorage first
         if (typeof window !== 'undefined') {
@@ -42,6 +43,8 @@ export function ThemeProvider({ children }) {
     );
 }
 
-export function useTheme() {
+const useTheme = () => {
     return useContext(ThemeContext);
-}
+};
+
+export { ThemeProvider, useTheme };

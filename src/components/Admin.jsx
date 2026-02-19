@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useProjects } from '../context/ProjectContext';
-import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import Logo from '../assets/techastra-logo.png'; // Import the logo
 import { auth, googleProvider } from '../firebaseConfig';
-import { signInWithPopup, signInWithRedirect, signOut, onAuthStateChanged, getRedirectResult } from 'firebase/auth';
-import { ExternalLink, Github, Trash2, Search } from 'lucide-react';
+import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
+import AgreementGenerator from './admin/AgreementGenerator';
+import ClientManager from './admin/ClientManager';
+import { ExternalLink, Github, Trash2, Search, FileText, Users } from 'lucide-react';
 
 const Admin = () => {
     const { addProject, projects, deleteProject, totalVisits } = useProjects(); // Get projects and delete function
-    const navigate = useNavigate();
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [activeTab, setActiveTab] = useState('dashboard');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -192,10 +193,18 @@ const Admin = () => {
 
                 <nav className="flex-1 p-4 space-y-2">
                     <div className="text-xs font-mono text-gray-500 mb-4 px-2 tracking-widest">MAIN MENU</div>
-                    <a href="#" className="flex items-center gap-3 px-4 py-3 bg-cyan-500/10 text-cyan-400 rounded-lg border border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
+                    <button onClick={() => setActiveTab('dashboard')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'dashboard' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                         <span className="font-medium">Dashboard</span>
-                    </a>
+                    </button>
+                    <button onClick={() => setActiveTab('agreements')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'agreements' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                        <FileText className="w-5 h-5" />
+                        <span className="font-medium">Agreements</span>
+                    </button>
+                    <button onClick={() => setActiveTab('clients')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'clients' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                        <Users className="w-5 h-5" />
+                        <span className="font-medium">Clients</span>
+                    </button>
                     <a href="#" className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                         <span className="font-medium">Analytics</span>
@@ -225,7 +234,11 @@ const Admin = () => {
                     <div className="flex items-center gap-4 text-sm text-gray-400">
                         <span className="text-white font-medium">Dashboard</span>
                         <span>/</span>
-                        <span className="text-cyan-400">Add Project</span>
+                        <span className="text-cyan-400">
+                            {activeTab === 'dashboard' ? 'Add Project' :
+                                activeTab === 'agreements' ? 'Agreement Generator' :
+                                    'Client Management'}
+                        </span>
                     </div>
 
                     <div className="flex items-center gap-6">
@@ -243,216 +256,224 @@ const Admin = () => {
 
                 {/* Dashboard Content */}
                 <div className="flex-1 overflow-y-auto p-8 relative">
+                    {activeTab === 'agreements' ? (
+                        <AgreementGenerator />
+                    ) : activeTab === 'clients' ? (
+                        <ClientManager />
+                    ) : (
+                        <>
 
-                    {/* Stats Row */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <svg className="w-16 h-16 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                            </div>
-                            <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">TOTAL PROJECTS</div>
-                            <div className="text-3xl font-bold text-white flex items-baseline gap-2">
-                                {projects.length}
-                                <span className="text-xs text-green-500 font-mono">+1 NEW</span>
-                            </div>
-                        </div>
-                        <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <svg className="w-16 h-16 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                            </div>
-                            <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">TOTAL VIEWS</div>
-                            <div className="text-3xl font-bold text-white flex items-baseline gap-2">
-                                {totalVisits ? totalVisits.toLocaleString() : '0'}
-                                <span className="text-xs text-green-500 font-mono">+12%</span>
-                            </div>
-                        </div>
-                        <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
-                            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <svg className="w-16 h-16 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            </div>
-                            <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">SYSTEM STATUS</div>
-                            <div className="text-3xl font-bold text-green-500 flex items-baseline gap-2">
-                                ONLINE
-                                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse ml-2"></span>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Form Section */}
-                        <div className="lg:col-span-1">
-                            <div className="bg-[#0f0f16]/90 border border-white/10 rounded-2xl p-6 relative backdrop-blur-xl shadow-2xl sticky top-6">
-                                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
-
-                                <h2 className="text-2xl font-bold mb-8 text-white flex items-center gap-3">
-                                    <span className="w-1 h-8 bg-cyan-500 rounded-full"></span>
-                                    New Project Protocol
-                                </h2>
-
-                                <form onSubmit={handleSubmit} className="space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className="group">
-                                            <label className="block text-xs font-mono text-cyan-500/80 mb-2 tracking-wider">PROJECT IDENTIFIER</label>
-                                            <input
-                                                type="text"
-                                                name="title"
-                                                value={formData.title}
-                                                onChange={handleChange}
-                                                className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white placeholder-gray-600 outline-none transition-all focus:bg-black/60 focus:shadow-[0_0_20px_rgba(6,182,212,0.1)]"
-                                                required
-                                                placeholder="Enter project name..."
-                                            />
-                                        </div>
-                                        <div className="group">
-                                            <label className="block text-xs font-mono text-purple-500/80 mb-2 tracking-wider">CATEGORY CLASSIFICATION</label>
-                                            <input
-                                                type="text"
-                                                name="category"
-                                                value={formData.category}
-                                                onChange={handleChange}
-                                                className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-purple-500/50 text-white placeholder-gray-600 outline-none transition-all focus:bg-black/60 focus:shadow-[0_0_20px_rgba(168,85,247,0.1)]"
-                                                required
-                                                placeholder="e.g. Web Development"
-                                            />
-                                        </div>
+                            {/* Stats Row */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                                <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                        <svg className="w-16 h-16 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
                                     </div>
-
-                                    <div className="group">
-                                        <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">VISUAL ASSET URL</label>
-                                        <div className="relative">
-                                            <input
-                                                type="url"
-                                                name="image"
-                                                value={formData.image}
-                                                onChange={handleChange}
-                                                className="w-full p-4 pl-12 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white placeholder-gray-600 outline-none transition-all"
-                                                required
-                                                placeholder="https://"
-                                            />
-                                            <svg className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                        </div>
+                                    <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">TOTAL PROJECTS</div>
+                                    <div className="text-3xl font-bold text-white flex items-baseline gap-2">
+                                        {projects.length}
+                                        <span className="text-xs text-green-500 font-mono">+1 NEW</span>
                                     </div>
-
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div className="group">
-                                            <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">DEPLOYMENT UPLINK (OPTIONAL)</label>
-                                            <input
-                                                type="url"
-                                                name="liveLink"
-                                                value={formData.liveLink}
-                                                onChange={handleChange}
-                                                className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-green-500/50 text-white placeholder-gray-600 outline-none transition-all"
-                                                placeholder="https://"
-                                            />
-                                        </div>
-                                        <div className="group">
-                                            <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">TECH STACK (CSV)</label>
-                                            <input
-                                                type="text"
-                                                name="tech"
-                                                value={formData.tech}
-                                                onChange={handleChange}
-                                                className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-yellow-500/50 text-white placeholder-gray-600 outline-none transition-all"
-                                                required
-                                                placeholder="React, Node.js, AI..."
-                                            />
-                                        </div>
+                                </div>
+                                <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                        <svg className="w-16 h-16 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                     </div>
-
-                                    <div className="group">
-                                        <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">PROJECT DATA LOG</label>
-                                        <textarea
-                                            name="desc"
-                                            value={formData.desc}
-                                            onChange={handleChange}
-                                            className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white placeholder-gray-600 outline-none transition-all h-32 resize-none"
-                                            required
-                                            placeholder="Detailed system description..."
-                                        ></textarea>
+                                    <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">TOTAL VIEWS</div>
+                                    <div className="text-3xl font-bold text-white flex items-baseline gap-2">
+                                        {totalVisits ? totalVisits.toLocaleString() : '0'}
+                                        <span className="text-xs text-green-500 font-mono">+12%</span>
                                     </div>
-
-                                    <div className="pt-4 flex justify-end">
-                                        <button
-                                            type="submit"
-                                            className="py-4 px-8 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-cyan-500/25 transform hover:scale-[1.02] active:scale-95 flex items-center gap-3 uppercase tracking-wider text-sm"
-                                        >
-                                            <span>INITIALIZE PROJECT</span>
-                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                        </button>
+                                </div>
+                                <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
+                                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                                        <svg className="w-16 h-16 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     </div>
-                                </form>
+                                    <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">SYSTEM STATUS</div>
+                                    <div className="text-3xl font-bold text-green-500 flex items-baseline gap-2">
+                                        ONLINE
+                                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse ml-2"></span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
 
-                        {/* Right/Bottom: Project List */}
-                        <div className="lg:col-span-2">
-                            <div className="bg-[#0f0f16]/90 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl">
-                                <div className="flex justify-between items-center mb-6">
-                                    <h2 className="text-xl font-bold text-white flex items-center gap-3">
-                                        <span className="w-1 h-6 bg-purple-500 rounded-full"></span>
-                                        Active Projects Directory
-                                    </h2>
-                                    <div className="relative">
-                                        <input
-                                            type="text"
-                                            placeholder="Search database..."
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                            className="bg-black/40 border border-white/10 rounded-lg py-2 px-4 pl-10 text-sm text-white focus:border-cyan-500/50 outline-none w-48 md:w-64 transition-all"
-                                        />
-                                        <Search className="w-4 h-4 text-gray-500 absolute left-3 top-2.5" />
+
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                {/* Form Section */}
+                                <div className="lg:col-span-1">
+                                    <div className="bg-[#0f0f16]/90 border border-white/10 rounded-2xl p-6 relative backdrop-blur-xl shadow-2xl sticky top-6">
+                                        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
+
+                                        <h2 className="text-2xl font-bold mb-8 text-white flex items-center gap-3">
+                                            <span className="w-1 h-8 bg-cyan-500 rounded-full"></span>
+                                            New Project Protocol
+                                        </h2>
+
+                                        <form onSubmit={handleSubmit} className="space-y-6">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div className="group">
+                                                    <label className="block text-xs font-mono text-cyan-500/80 mb-2 tracking-wider">PROJECT IDENTIFIER</label>
+                                                    <input
+                                                        type="text"
+                                                        name="title"
+                                                        value={formData.title}
+                                                        onChange={handleChange}
+                                                        className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white placeholder-gray-600 outline-none transition-all focus:bg-black/60 focus:shadow-[0_0_20px_rgba(6,182,212,0.1)]"
+                                                        required
+                                                        placeholder="Enter project name..."
+                                                    />
+                                                </div>
+                                                <div className="group">
+                                                    <label className="block text-xs font-mono text-purple-500/80 mb-2 tracking-wider">CATEGORY CLASSIFICATION</label>
+                                                    <input
+                                                        type="text"
+                                                        name="category"
+                                                        value={formData.category}
+                                                        onChange={handleChange}
+                                                        className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-purple-500/50 text-white placeholder-gray-600 outline-none transition-all focus:bg-black/60 focus:shadow-[0_0_20px_rgba(168,85,247,0.1)]"
+                                                        required
+                                                        placeholder="e.g. Web Development"
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="group">
+                                                <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">VISUAL ASSET URL</label>
+                                                <div className="relative">
+                                                    <input
+                                                        type="url"
+                                                        name="image"
+                                                        value={formData.image}
+                                                        onChange={handleChange}
+                                                        className="w-full p-4 pl-12 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white placeholder-gray-600 outline-none transition-all"
+                                                        required
+                                                        placeholder="https://"
+                                                    />
+                                                    <svg className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                </div>
+                                            </div>
+
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                                <div className="group">
+                                                    <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">DEPLOYMENT UPLINK (OPTIONAL)</label>
+                                                    <input
+                                                        type="url"
+                                                        name="liveLink"
+                                                        value={formData.liveLink}
+                                                        onChange={handleChange}
+                                                        className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-green-500/50 text-white placeholder-gray-600 outline-none transition-all"
+                                                        placeholder="https://"
+                                                    />
+                                                </div>
+                                                <div className="group">
+                                                    <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">TECH STACK (CSV)</label>
+                                                    <input
+                                                        type="text"
+                                                        name="tech"
+                                                        value={formData.tech}
+                                                        onChange={handleChange}
+                                                        className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-yellow-500/50 text-white placeholder-gray-600 outline-none transition-all"
+                                                        required
+                                                        placeholder="React, Node.js, AI..."
+                                                    />
+                                                </div>
+                                            </div>
+
+                                            <div className="group">
+                                                <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">PROJECT DATA LOG</label>
+                                                <textarea
+                                                    name="desc"
+                                                    value={formData.desc}
+                                                    onChange={handleChange}
+                                                    className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white placeholder-gray-600 outline-none transition-all h-32 resize-none"
+                                                    required
+                                                    placeholder="Detailed system description..."
+                                                ></textarea>
+                                            </div>
+
+                                            <div className="pt-4 flex justify-end">
+                                                <button
+                                                    type="submit"
+                                                    className="py-4 px-8 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-cyan-500/25 transform hover:scale-[1.02] active:scale-95 flex items-center gap-3 uppercase tracking-wider text-sm"
+                                                >
+                                                    <span>INITIALIZE PROJECT</span>
+                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                                </button>
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
 
-                                <div className="space-y-4">
-                                    {filteredProjects.map((project) => (
-                                        <div key={project.id} className="group bg-black/20 hover:bg-white/5 border border-white/5 hover:border-cyan-500/30 rounded-xl p-4 flex flex-col md:flex-row gap-4 transition-all duration-300">
-                                            <div className="w-full md:w-32 h-32 rounded-lg overflow-hidden relative">
-                                                <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                                                <div className="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                {/* Right/Bottom: Project List */}
+                                <div className="lg:col-span-2">
+                                    <div className="bg-[#0f0f16]/90 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl">
+                                        <div className="flex justify-between items-center mb-6">
+                                            <h2 className="text-xl font-bold text-white flex items-center gap-3">
+                                                <span className="w-1 h-6 bg-purple-500 rounded-full"></span>
+                                                Active Projects Directory
+                                            </h2>
+                                            <div className="relative">
+                                                <input
+                                                    type="text"
+                                                    placeholder="Search database..."
+                                                    value={searchTerm}
+                                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                                    className="bg-black/40 border border-white/10 rounded-lg py-2 px-4 pl-10 text-sm text-white focus:border-cyan-500/50 outline-none w-48 md:w-64 transition-all"
+                                                />
+                                                <Search className="w-4 h-4 text-gray-500 absolute left-3 top-2.5" />
                                             </div>
-                                            <div className="flex-1 flex flex-col justify-between">
-                                                <div>
-                                                    <div className="flex justify-between items-start">
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            {filteredProjects.map((project) => (
+                                                <div key={project.id} className="group bg-black/20 hover:bg-white/5 border border-white/5 hover:border-cyan-500/30 rounded-xl p-4 flex flex-col md:flex-row gap-4 transition-all duration-300">
+                                                    <div className="w-full md:w-32 h-32 rounded-lg overflow-hidden relative">
+                                                        <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                                                        <div className="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                                    </div>
+                                                    <div className="flex-1 flex flex-col justify-between">
                                                         <div>
-                                                            <div className="flex items-center gap-2 mb-1">
-                                                                <h3 className="text-lg font-bold text-white">{project.title}</h3>
-                                                                <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">{project.category}</span>
+                                                            <div className="flex justify-between items-start">
+                                                                <div>
+                                                                    <div className="flex items-center gap-2 mb-1">
+                                                                        <h3 className="text-lg font-bold text-white">{project.title}</h3>
+                                                                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">{project.category}</span>
+                                                                    </div>
+                                                                    <p className="text-gray-500 text-xs line-clamp-2 md:line-clamp-1">{project.desc}</p>
+                                                                </div>
+                                                                <button
+                                                                    onClick={() => handleDelete(project)}
+                                                                    className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                                                                    title="Delete Project"
+                                                                >
+                                                                    <Trash2 size={18} />
+                                                                </button>
                                                             </div>
-                                                            <p className="text-gray-500 text-xs line-clamp-2 md:line-clamp-1">{project.desc}</p>
+                                                            <div className="flex flex-wrap gap-2 mt-3">
+                                                                {project.tech.map((t, i) => (
+                                                                    <span key={i} className="text-[10px] text-gray-400 font-mono bg-white/5 px-2 py-1 rounded">{t}</span>
+                                                                ))}
+                                                            </div>
                                                         </div>
-                                                        <button
-                                                            onClick={() => handleDelete(project)}
-                                                            className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-                                                            title="Delete Project"
-                                                        >
-                                                            <Trash2 size={18} />
-                                                        </button>
-                                                    </div>
-                                                    <div className="flex flex-wrap gap-2 mt-3">
-                                                        {project.tech.map((t, i) => (
-                                                            <span key={i} className="text-[10px] text-gray-400 font-mono bg-white/5 px-2 py-1 rounded">{t}</span>
-                                                        ))}
+                                                        <div className="flex items-center gap-4 mt-4 pt-4 border-t border-white/5 text-xs font-mono text-gray-600">
+                                                            <span>ID: <span className="text-gray-400">P-{project.id || 'LEGACY'}</span></span>
+                                                            <span>STATUS: <span className="text-green-500">ACTIVE</span></span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-white/5 text-xs font-mono text-gray-600">
-                                                    <span>ID: <span className="text-gray-400">P-{project.id || 'LEGACY'}</span></span>
-                                                    <span>STATUS: <span className="text-green-500">ACTIVE</span></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
+                                            ))}
 
-                                    {filteredProjects.length === 0 && (
-                                        <div className="text-center py-12 text-gray-500">
-                                            <p>No projects found matching your query.</p>
+                                            {filteredProjects.length === 0 && (
+                                                <div className="text-center py-12 text-gray-500">
+                                                    <p>No projects found matching your query.</p>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </>
+                    )}
                 </div>
             </main>
         </div>
