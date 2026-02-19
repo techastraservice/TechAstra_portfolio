@@ -6,8 +6,7 @@ import Reveal from './Reveal';
 import { useProjects } from '../context/ProjectContext';
 
 const Hero = () => {
-    const { projects } = useProjects();
-    const visitCount = 12000; // Placeholder for total visits
+    const { projects, totalVisits } = useProjects();
 
     // TODO: future integration with Firebase for real-time visit count
     // useEffect(() => {
@@ -102,7 +101,7 @@ const Hero = () => {
                                     <Users size={24} />
                                 </div>
                                 <div>
-                                    <h4 className="font-bold text-gray-900 dark:text-gray-200">{visitCount.toLocaleString()}+</h4>
+                                    <h4 className="font-bold text-gray-900 dark:text-gray-200">{totalVisits ? totalVisits.toLocaleString() : '0'}+</h4>
                                     <p className="text-xs text-gray-500">Total Visits</p>
                                 </div>
                             </div>

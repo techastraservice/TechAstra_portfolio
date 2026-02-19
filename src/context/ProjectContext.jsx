@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { database } from '../firebaseConfig';
 import { ref, onValue, push, remove, set } from "firebase/database";
@@ -10,7 +11,8 @@ export const useProjects = () => {
 
 // COMPACTED: Default projects removed to save disk space. 
 // They are likely already seeded or can be added via Admin.
-const defaultProjects = [];
+// Default projects removed to save disk space. 
+// They are likely already seeded or can be added via Admin.
 
 export const ProjectProvider = ({ children }) => {
     const [projects, setProjects] = useState([]);
