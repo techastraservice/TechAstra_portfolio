@@ -30,12 +30,6 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
                 {/* Header */}
                 <div className="p-6 border-b border-gray-100 dark:border-white/10 flex items-start justify-between bg-white/50 dark:bg-white/5 backdrop-blur-md sticky top-0 z-10">
                     <div className="flex items-center gap-4">
-                        <div className="p-3 bg-cyan-500/10 rounded-xl border border-cyan-500/20">
-                            {/* Ensure icons are visible in light mode */}
-                            <div className="text-gray-900 dark:text-white">
-                                {service.icon}
-                            </div>
-                        </div>
                         <div>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">{service.title} services</h3>
                             <p className="text-cyan-600 dark:text-cyan-400 text-sm font-medium tracking-wide uppercase mt-1 transition-colors">Professional Solutions</p>
@@ -62,7 +56,6 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
                     {service.details?.technologies && (
                         <div>
                             <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 transition-colors">
-                                <span className="w-1.5 h-6 bg-cyan-500 rounded-full"></span>
                                 Technologies We Use
                             </h4>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -81,15 +74,11 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
                         {service.details?.servicesList && (
                             <div>
                                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 transition-colors">
-                                    <span className="w-1.5 h-6 bg-purple-500 rounded-full"></span>
                                     Our Services
                                 </h4>
                                 <ul className="space-y-3">
                                     {service.details.servicesList.map((item, idx) => (
                                         <li key={idx} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors group">
-                                            <div className="mt-1 min-w-4 min-h-4 rounded-full border border-purple-500/30 flex items-center justify-center group-hover:border-purple-500 transition-colors">
-                                                <div className="w-1.5 h-1.5 rounded-full bg-purple-500/50 group-hover:bg-purple-500 transition-colors"></div>
-                                            </div>
                                             <span className="text-gray-600 dark:text-gray-300 text-sm transition-colors">{item}</span>
                                         </li>
                                     ))}
@@ -101,13 +90,11 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
                         {service.details?.keyFeatures && (
                             <div>
                                 <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 transition-colors">
-                                    <span className="w-1.5 h-6 bg-pink-500 rounded-full"></span>
                                     Key Features
                                 </h4>
                                 <ul className="space-y-3">
                                     {service.details.keyFeatures.map((feature, idx) => (
                                         <li key={idx} className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
-                                            <Check className="w-5 h-5 text-green-500 dark:text-green-400 shrink-0 mt-0.5" />
                                             <span className="text-gray-600 dark:text-gray-300 text-sm transition-colors">{feature}</span>
                                         </li>
                                     ))}
@@ -122,19 +109,24 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
                     <div className="flex items-center gap-6 text-sm text-gray-500 dark:text-gray-400">
                         {service.details?.timeline && (
                             <div className="flex items-center gap-2">
-                                <Clock className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                                 <span>Timeline: <span className="text-gray-900 dark:text-white font-medium transition-colors">{service.details.timeline}</span></span>
                             </div>
                         )}
                         {service.details?.pricing && (
                             <div className="flex items-center gap-2">
-                                <DollarSign className="w-4 h-4 text-green-600 dark:text-green-400" />
                                 <span>Starting at: <span className="text-gray-900 dark:text-white font-medium transition-colors">{service.details.pricing}</span></span>
                             </div>
                         )}
                     </div>
-
-                    <button className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-medium rounded-xl transition-all shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 group">
+                    <button
+                        onClick={() => {
+                            onClose();
+                            setTimeout(() => {
+                                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+                            }, 100);
+                        }}
+                        className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-medium rounded-xl transition-all shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 group"
+                    >
                         Get Started
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>

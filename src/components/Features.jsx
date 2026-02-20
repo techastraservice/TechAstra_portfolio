@@ -1,27 +1,23 @@
 import React, { useState } from 'react';
-import { Rocket, Users, TrendingUp, BrainCircuit, X } from 'lucide-react';
+import { X } from 'lucide-react';
 
 const features = [
     {
-        icon: <Rocket className="w-8 h-8 text-cyan-400" />,
         title: "Rapid Deployment",
         desc: "Accelerate your projects with our rapid deployment capabilities. Get your solutions up and running in record time without compromising quality.",
         details: "Our proprietary agile framework and CI/CD pipelines allow us to ship production-ready code faster than the industry average. We utilize automated testing, containerization, and microservices architectures to ensure that every release is stable, scalable, and deployed with zero downtime. From concept to launch, we minimize friction and maximize velocity."
     },
     {
-        icon: <Users className="w-8 h-8 text-purple-400" />,
         title: "Expert Team",
         desc: "Work with seasoned professionals who bring years of experience and proven methodologies to every project engagement.",
         details: "Our team consists of senior engineers, industry-vetted architects, and design thinkers who have worked with Fortune 500 companies. We don't just write code; we partner with you to solve complex business challenges. With continuous learning embedded in our culture, we bring the latest and most effective tech stacks to your project."
     },
     {
-        icon: <TrendingUp className="w-8 h-8 text-pink-400" />,
         title: "Cost Efficiency",
         desc: "Maximize your ROI with our streamlined processes and efficient resource allocation. Quality solutions that fit your budget.",
         details: "We optimize cloud infrastructure and development resources to ensure you get the most out of your budget. By identifying bottlenecks and eliminating wasteful processes, we reduce operational costs while increasing performance. Our focus is on long-term value, ensuring that your software asset remains profitable and maintainable."
     },
     {
-        icon: <BrainCircuit className="w-8 h-8 text-blue-400" />,
         title: "AI Integration",
         desc: "Leverage cutting-edge artificial intelligence to transform your business processes and gain a competitive advantage.",
         details: "From predictive analytics to Large Language Model (LLM) fine-tuning, we integrate smart AI solutions tailored to your specific needs. We help you automate repetitive tasks, uncover data-driven insights, and build personalized user experiences that drive engagement and retention in an AI-first world."
@@ -60,9 +56,6 @@ const Features = () => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {features.map((feature, index) => (
                         <div key={index} className="glass p-6 rounded-2xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors border border-gray-200 dark:border-white/5 flex flex-col items-start h-full bg-white/50 dark:bg-white/5 backdrop-blur-sm shadow-sm dark:shadow-none">
-                            <div className="w-12 h-12 rounded-lg bg-cyan-50 dark:bg-white/5 flex items-center justify-center mb-4 transition-colors">
-                                {feature.icon}
-                            </div>
                             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">{feature.title}</h3>
                             <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4 flex-grow transition-colors">
                                 {feature.desc}
@@ -94,10 +87,6 @@ const Features = () => {
                         </button>
 
                         <div className="flex items-center gap-4 mb-6">
-                            <div className="w-16 h-16 rounded-xl bg-cyan-50 dark:bg-white/5 flex items-center justify-center transition-colors">
-                                {/* Clone element to increase size if needed, or just render */}
-                                {React.cloneElement(selectedFeature.icon, { className: "w-8 h-8 text-cyan-500 dark:text-cyan-400" })}
-                            </div>
                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">{selectedFeature.title}</h3>
                         </div>
 

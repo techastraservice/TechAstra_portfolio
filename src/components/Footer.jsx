@@ -1,11 +1,11 @@
 import React from 'react';
-import { Rocket, Twitter, Linkedin, Github, ExternalLink } from 'lucide-react';
+import { Twitter, Linkedin, Github, ExternalLink } from 'lucide-react';
 const Footer = () => {
     return (
         <footer className="relative border-t border-gray-200 dark:border-white/10 bg-white/90 dark:bg-black/40 backdrop-blur-md pt-20 pb-10 overflow-hidden transition-colors duration-300">
             {/* Background Decorations */}
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden z-0">
-                <h1 className="text-[15vw] font-bold text-transparent bg-clip-text bg-gradient-to-b from-purple-500/30 dark:from-purple-500/40 via-cyan-500/10 dark:via-cyan-500/20 to-transparent tracking-tighter leading-none opacity-100 dark:opacity-80 blur-sm transition-colors">
+                <h1 className="text-[15vw] font-bold text-transparent bg-clip-text bg-gradient-to-b from-purple-500/60 dark:from-purple-500/60 via-cyan-500/40 dark:via-cyan-500/40 to-transparent tracking-tighter leading-none opacity-100 transition-colors">
                     Tech Astra
                 </h1>
             </div>
@@ -16,9 +16,6 @@ const Footer = () => {
                 <div className="grid md:grid-cols-4 gap-12 mb-12">
                     <div className="space-y-4">
                         <div className="flex items-center gap-2">
-                            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-purple-600 flex items-center justify-center">
-                                <Rocket className="text-white w-4 h-4" />
-                            </div>
                             <span className="text-xl font-bold text-gray-900 dark:text-white transition-colors">
                                 Tech<span className="text-cyan-600 dark:text-cyan-400 transition-colors">Astra</span>
                             </span>
@@ -53,9 +50,6 @@ const Footer = () => {
                         <div className="flex gap-4">
                             <a href="https://github.com/shivarajm8234" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-all">
                                 <Github size={18} />
-                            </a>
-                            <a href="https://x.com/RJGamer325071" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-700 dark:text-white hover:bg-cyan-100 dark:hover:bg-cyan-500 hover:text-cyan-600 dark:hover:text-white transition-all">
-                                <Twitter size={18} />
                             </a>
                             <a href="https://www.linkedin.com/in/mshivaraj/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-700 dark:text-white hover:bg-blue-100 dark:hover:bg-blue-600 hover:text-blue-600 dark:hover:text-white transition-all">
                                 <Linkedin size={18} />

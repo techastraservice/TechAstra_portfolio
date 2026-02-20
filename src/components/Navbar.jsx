@@ -46,12 +46,12 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
                     {isAuthenticated ? (
                         <button
                             onClick={onLogout}
-                            className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-full font-medium transition-colors shadow-lg shadow-red-500/20"
+                            className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 font-medium transition-colors shadow-lg shadow-red-500/20"
                         >
                             Sign Out
                         </button>
                     ) : (
-                        <a href="#contact" className="btn-primary">Get Started</a>
+                        <a href="#contact" className="btn-primary !rounded-none">Get Started</a>
                     )}
                 </div>
 
@@ -88,7 +88,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
                             Sign Out
                         </button>
                     ) : (
-                        <a href="#contact" onClick={() => setIsOpen(false)} className="btn-primary text-center mt-2">Get Started</a>
+                        <a href="#contact" onClick={() => setIsOpen(false)} className="btn-primary text-center mt-2 !rounded-none">Get Started</a>
                     )}
                 </div>
             )}

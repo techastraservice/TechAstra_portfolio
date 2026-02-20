@@ -90,8 +90,19 @@ export const ProjectProvider = ({ children }) => {
         return () => unsubscribe();
     }, []);
 
+    const updateProject = (id, updatedData) => {
+        if (!id) return;
+        const projectRef = ref(database, `projects/${id}`);
+        import("firebase/database").then(({ update }) => {
+            update(projectRef, {
+                ...updatedData,
+                updatedAt: Date.now()
+            }).catch((error) => console.error("Error updating project: ", error));
+        });
+    };
+
     return (
-        <ProjectContext.Provider value={{ projects, addProject, deleteProject, totalVisits, incrementVisits }}>
+        <ProjectContext.Provider value={{ projects, addProject, deleteProject, updateProject, totalVisits, incrementVisits }}>
             {children}
         </ProjectContext.Provider>
     );

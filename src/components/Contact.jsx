@@ -38,14 +38,6 @@ const Contact = () => {
                                 </div>
                                 <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Call</span>
                             </a>
-
-                            <div className="group relative cursor-default">
-                                <div className="absolute inset-0 bg-pink-500/20 rounded-2xl blur-xl group-hover:bg-pink-500/40 transition-colors opacity-0 group-hover:opacity-100 duration-500" />
-                                <div className="relative w-20 h-20 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-pink-600 dark:text-pink-400 group-hover:scale-110 group-hover:border-pink-500/50 group-hover:text-pink-500 transition-all duration-300 shadow-lg shadow-pink-500/5">
-                                    <MapPin className="w-8 h-8" />
-                                </div>
-                                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Visit</span>
-                            </div>
                         </div>
                     </div>
 

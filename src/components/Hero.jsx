@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Play, Zap, Shield, TrendingUp, Cpu, Users } from 'lucide-react';
+import { ArrowRight, Play, TrendingUp } from 'lucide-react';
 import logo from '../assets/techastra-logo.png';
 
 import Reveal from './Reveal';
@@ -32,13 +32,7 @@ const Hero = () => {
             <div className="container mx-auto px-4 grid md:grid-cols-2 gap-12 items-center relative z-10">
                 <Reveal>
                     <div className="space-y-8">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/50 dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-md text-cyan-600 dark:text-cyan-400 text-sm font-medium animate-fade-in-up shadow-sm dark:shadow-none">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-                            </span>
-                            Accelerate Your Business Growth
-                        </div>
+
 
                         <h1 className="text-5xl md:text-7xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white">
                             Launch Your Project <br />
@@ -67,18 +61,12 @@ const Hero = () => {
 
                         <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-200 dark:border-white/5">
                             <div className="flex items-center gap-4 group">
-                                <div className="p-3 bg-cyan-500/10 rounded-xl text-cyan-600 dark:text-cyan-400 group-hover:scale-110 transition-transform duration-300 border border-cyan-500/20">
-                                    <Zap size={24} />
-                                </div>
                                 <div>
                                     <h4 className="font-bold text-gray-900 dark:text-gray-200">Rapid Deployment</h4>
                                     <p className="text-xs text-gray-500">Solutions in record time</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4 group">
-                                <div className="p-3 bg-purple-500/10 rounded-xl text-purple-600 dark:text-purple-400 group-hover:scale-110 transition-transform duration-300 border border-purple-500/20">
-                                    <Shield size={24} />
-                                </div>
                                 <div>
                                     <h4 className="font-bold text-gray-900 dark:text-gray-200">Expert Team</h4>
                                     <p className="text-xs text-gray-500">Seasoned professionals</p>
@@ -88,18 +76,12 @@ const Hero = () => {
 
                         <div className="grid grid-cols-2 gap-6 pt-6 border-t border-gray-200 dark:border-white/5">
                             <div className="flex items-center gap-4 group">
-                                <div className="p-3 bg-blue-500/10 rounded-xl text-blue-600 dark:text-blue-400 group-hover:scale-110 transition-transform duration-300 border border-blue-500/20">
-                                    <Cpu size={24} />
-                                </div>
                                 <div>
                                     <h4 className="font-bold text-gray-900 dark:text-gray-200">{projects.length}+ Delivered</h4>
                                     <p className="text-xs text-gray-500">Innovative Solutions</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-4 group">
-                                <div className="p-3 bg-green-500/10 rounded-xl text-green-600 dark:text-green-400 group-hover:scale-110 transition-transform duration-300 border border-green-500/20">
-                                    <Users size={24} />
-                                </div>
                                 <div>
                                     <h4 className="font-bold text-gray-900 dark:text-gray-200">{totalVisits ? totalVisits.toLocaleString() : '0'}+</h4>
                                     <p className="text-xs text-gray-500">Total Visits</p>
