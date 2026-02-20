@@ -7,15 +7,16 @@ import { auth, googleProvider } from '../firebaseConfig';
 import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import AgreementGenerator from './admin/AgreementGenerator';
 import ClientManager from './admin/ClientManager';
-import { ExternalLink, Github, Trash2, Search, FileText, Users } from 'lucide-react';
+import { ExternalLink, Github, Trash2, Search, FileText, Users, Edit2 } from 'lucide-react';
 
 const Admin = () => {
-    const { addProject, projects, deleteProject, totalVisits } = useProjects(); // Get projects and delete function
+    const { addProject, projects, deleteProject, updateProject, totalVisits } = useProjects(); // Get projects and CRUD functions
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [activeTab, setActiveTab] = useState('dashboard');
+    const [editingId, setEditingId] = useState(null);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -61,6 +62,21 @@ const Admin = () => {
         }
     };
 
+    const handleEdit = (project) => {
+        setFormData({
+            title: project.title || '',
+            category: project.category || '',
+            image: project.image || '',
+            desc: project.desc || '',
+            tech: Array.isArray(project.tech) ? project.tech.join(', ') : (project.tech || ''),
+            liveLink: project.liveLink || ''
+        });
+        setEditingId(project.id);
+
+        // Scroll to top where the form is
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -68,9 +84,17 @@ const Admin = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const techArray = formData.tech.split(',').map(item => item.trim());
-        const newProject = { ...formData, tech: techArray };
-        addProject(newProject);
-        alert('Project added successfully!');
+        const projectData = { ...formData, tech: techArray };
+
+        if (editingId) {
+            updateProject(editingId, projectData);
+            alert('Project updated successfully!');
+            setEditingId(null);
+        } else {
+            addProject(projectData);
+            alert('Project added successfully!');
+        }
+
         setFormData({
             title: '',
             category: '',
@@ -205,18 +229,6 @@ const Admin = () => {
                         <Users className="w-5 h-5" />
                         <span className="font-medium">Clients</span>
                     </button>
-                    <a href="#" className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                        <span className="font-medium">Analytics</span>
-                    </a>
-                    <a href="#" className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                        <span className="font-medium">Users</span>
-                    </a>
-                    <a href="#" className="flex items-center gap-3 px-4 py-3 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                        <span className="font-medium">Settings</span>
-                    </a>
                 </nav>
 
                 <div className="p-4 border-t border-white/5">
@@ -285,7 +297,7 @@ const Admin = () => {
                                         <span className="text-xs text-green-500 font-mono">+12%</span>
                                     </div>
                                 </div>
-                                <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
+                                {/* <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                         <svg className="w-16 h-16 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     </div>
@@ -294,7 +306,7 @@ const Admin = () => {
                                         ONLINE
                                         <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse ml-2"></span>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
 
 
@@ -306,7 +318,7 @@ const Admin = () => {
 
                                         <h2 className="text-2xl font-bold mb-8 text-white flex items-center gap-3">
                                             <span className="w-1 h-8 bg-cyan-500 rounded-full"></span>
-                                            New Project Protocol
+                                            {editingId ? 'Edit Project Protocol' : 'New Project Protocol'}
                                         </h2>
 
                                         <form onSubmit={handleSubmit} className="space-y-6">
@@ -396,9 +408,21 @@ const Admin = () => {
                                                     type="submit"
                                                     className="py-4 px-8 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-cyan-500/25 transform hover:scale-[1.02] active:scale-95 flex items-center gap-3 uppercase tracking-wider text-sm"
                                                 >
-                                                    <span>INITIALIZE PROJECT</span>
+                                                    <span>{editingId ? 'UPDATE PROJECT' : 'INITIALIZE PROJECT'}</span>
                                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                                                 </button>
+                                                {editingId && (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setEditingId(null);
+                                                            setFormData({ title: '', category: '', image: '', desc: '', tech: '', liveLink: '' });
+                                                        }}
+                                                        className="py-4 px-6 bg-gray-500/10 hover:bg-gray-500/20 text-gray-400 font-bold rounded-lg transition-all border border-gray-500/30 ml-4 hover:border-gray-500/50 uppercase tracking-wider text-sm"
+                                                    >
+                                                        CANCEL
+                                                    </button>
+                                                )}
                                             </div>
                                         </form>
                                     </div>
@@ -441,13 +465,22 @@ const Admin = () => {
                                                                     </div>
                                                                     <p className="text-gray-500 text-xs line-clamp-2 md:line-clamp-1">{project.desc}</p>
                                                                 </div>
-                                                                <button
-                                                                    onClick={() => handleDelete(project)}
-                                                                    className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-                                                                    title="Delete Project"
-                                                                >
-                                                                    <Trash2 size={18} />
-                                                                </button>
+                                                                <div className="flex gap-1">
+                                                                    <button
+                                                                        onClick={() => handleEdit(project)}
+                                                                        className="p-2 text-gray-500 hover:text-cyan-500 hover:bg-cyan-500/10 rounded-lg transition-colors"
+                                                                        title="Edit Project"
+                                                                    >
+                                                                        <Edit2 size={18} />
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => handleDelete(project)}
+                                                                        className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                                                                        title="Delete Project"
+                                                                    >
+                                                                        <Trash2 size={18} />
+                                                                    </button>
+                                                                </div>
                                                             </div>
                                                             <div className="flex flex-wrap gap-2 mt-3">
                                                                 {project.tech.map((t, i) => (

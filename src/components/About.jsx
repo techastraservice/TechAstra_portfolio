@@ -1,5 +1,5 @@
 import React from 'react';
-import { GraduationCap, Code2, Rocket, HeartHandshake } from 'lucide-react';
+
 
 const About = () => {
     return (
@@ -12,10 +12,6 @@ const About = () => {
                 <div className="flex flex-col lg:flex-row items-center gap-16">
                     {/* Left Content */}
                     <div className="w-full lg:w-1/2">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 dark:bg-white/5 border border-cyan-100 dark:border-white/10 text-cyan-600 dark:text-cyan-400 text-xs font-bold uppercase tracking-wider mb-6 transition-colors">
-                            <GraduationCap size={14} />
-                            <span>Student-Driven Excellence</span>
-                        </div>
 
                         <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight transition-colors">
                             Bridging the Gap Between <br />
@@ -34,27 +30,18 @@ const About = () => {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             <div className="flex items-start gap-4">
-                                <div className="p-3 rounded-lg bg-cyan-500/10 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
-                                    <Code2 size={24} />
-                                </div>
                                 <div>
                                     <h4 className="text-gray-900 dark:text-white font-bold mb-1 transition-colors">Modern Tech Stack</h4>
                                     <p className="text-sm text-gray-500 dark:text-gray-400 transition-colors">We build with the tools of tomorrow, not yesterday.</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-4">
-                                <div className="p-3 rounded-lg bg-purple-500/10 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400">
-                                    <Rocket size={24} />
-                                </div>
                                 <div>
                                     <h4 className="text-gray-900 dark:text-white font-bold mb-1 transition-colors">Agile & Hungry</h4>
                                     <p className="text-sm text-gray-500 dark:text-gray-400 transition-colors">Driven to prove our skills through exceptional results.</p>
                                 </div>
                             </div>
                             <div className="flex items-start gap-4">
-                                <div className="p-3 rounded-lg bg-pink-500/10 dark:bg-pink-500/10 text-pink-600 dark:text-pink-400">
-                                    <HeartHandshake size={24} />
-                                </div>
                                 <div>
                                     <h4 className="text-gray-900 dark:text-white font-bold mb-1 transition-colors">Cost-Effective</h4>
                                     <p className="text-sm text-gray-500 dark:text-gray-400 transition-colors">Premium quality solutions without the corporate bloat.</p>

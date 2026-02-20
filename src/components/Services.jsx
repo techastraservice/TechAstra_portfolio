@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import { Globe, Smartphone, Brain, BarChart, ArrowRight, Rocket, Zap } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Reveal from './Reveal';
 import ServiceModal from './ServiceModal';
 
 const services = [
     {
-        icon: <Globe className="w-8 h-8 text-gray-700 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" />,
         title: "Web Development",
         desc: "Modern, responsive websites built with cutting-edge technologies and stunning user experiences.",
         details: {
@@ -34,11 +33,10 @@ const services = [
                 "Cross-Browser Compatibility"
             ],
             timeline: "6-16 weeks",
-            pricing: "25,000+"
+            pricing: "Rs.25,000+"
         }
     },
     {
-        icon: <Smartphone className="w-8 h-8 text-gray-700 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" />,
         title: "App Development",
         desc: "Native and cross-platform mobile applications with seamless performance and intuitive design.",
         details: {
@@ -66,11 +64,10 @@ const services = [
                 "Real-time Data Synchronization"
             ],
             timeline: "8-20 weeks",
-            pricing: "30,000+"
+            pricing: "Rs.30,000+"
         }
     },
     {
-        icon: <Brain className="w-8 h-8 text-gray-700 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" />,
         title: "AI/ML Projects",
         desc: "Intelligent solutions powered by machine learning and artificial intelligence for complex problems.",
         details: {
@@ -99,11 +96,10 @@ const services = [
                 "Continuous Model Training & Improvement"
             ],
             timeline: "10-24 weeks",
-            pricing: "35,000+"
+            pricing: "Rs.35,000+"
         }
     },
     {
-        icon: <BarChart className="w-8 h-8 text-gray-700 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" />,
         title: "Digital Marketing",
         desc: "Data-driven marketing strategies for exponential growth and engagement.",
         details: {
@@ -132,11 +128,10 @@ const services = [
                 "Brand Consistency & Voice"
             ],
             timeline: "Ongoing",
-            pricing: "10,000+"
+            pricing: "Rs.10,000+"
         }
     },
     {
-        icon: <Rocket className="w-8 h-8 text-gray-700 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" />,
         title: "Main Project Development",
         desc: "End-to-end operational solutions for final year students. Scalable, secure, and production-ready architectures for top grades.",
         details: {
@@ -169,7 +164,6 @@ const services = [
         }
     },
     {
-        icon: <Zap className="w-8 h-8 text-gray-700 dark:text-white group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors" />,
         title: "Mini Project / MVP",
         desc: "Rapid prototypes, semester projects, and mini projects. Cost-effective solutions delivered quickly.",
         details: {
@@ -217,10 +211,6 @@ const Services = () => {
             <div className="container relative z-10 mx-auto px-6">
                 <Reveal>
                     <div className="text-center mb-20 max-w-3xl mx-auto">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-md mb-8 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors cursor-default shadow-sm dark:shadow-none">
-                            <span className="w-2 h-2 rounded-full bg-cyan-500 dark:bg-cyan-400 animate-pulse" />
-                            <span className="text-sm font-medium text-gray-600 dark:text-gray-300 tracking-wide uppercase">Our Services</span>
-                        </div>
 
                         <h2 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 tracking-tight transition-colors">
                             Transform Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-purple-600">Vision</span>
@@ -237,12 +227,7 @@ const Services = () => {
                         <Reveal key={index} delay={index * 100}>
                             <div className="group h-full p-8 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-cyan-500/30 dark:hover:border-white/20 hover:bg-gray-50 dark:hover:bg-white/10 transition-all duration-500 backdrop-blur-sm flex flex-col justify-between hover:shadow-2xl hover:shadow-cyan-500/10">
                                 <div>
-                                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-gray-100 to-white dark:from-white/10 dark:to-white/5 flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-500 border border-gray-200 dark:border-white/10 group-hover:border-cyan-500/30">
-                                        {/* Clone icon to pass className if needed, or just use as is */}
-                                        <div className="text-gray-700 dark:text-gray-200 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors">
-                                            {service.icon}
-                                        </div>
-                                    </div>
+                                    {/* Removed Icon Wrapper */}
                                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
                                         {service.title}
                                     </h3>

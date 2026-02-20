@@ -42,7 +42,7 @@ const Projects = () => {
                 <Reveal>
                     <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
                         <div>
-                            <span className="text-cyan-600 dark:text-cyan-400 font-medium tracking-wider uppercase text-sm transition-colors">Portfolio</span>
+                            
                             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mt-2 transition-colors">Featured Projects</h2>
                             <p className="text-gray-600 dark:text-gray-400 mt-2 transition-colors">Explore our diverse portfolio of {projects.length}+ innovative solutions.</p>
                         </div>
