@@ -1,18 +1,21 @@
 import React, { useState, useRef } from 'react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import { useReactToPrint } from 'react-to-print';
 import { Download, FileText, Loader2 } from 'lucide-react';
 import logo from '../../assets/techastra-logo.png';
 import { database } from '../../firebaseConfig';
-import { ref, push, set } from 'firebase/database';
+import { ref, push } from 'firebase/database';
 
 const AgreementGenerator = () => {
     const [clientData, setClientData] = useState({
         clientName: '',
+        clientAddress: '',
+        clientEmail: '',
+        clientPhone: '',
         projectTitle: '',
-        projectDescription: '',
-        price: '',
-        duration: '',
+        duration: '1 Month',
+        priceWithoutResource: '',
+        priceWithResource: '',
+        deliverables: '',
         startDate: new Date().toISOString().split('T')[0]
     });
     const [generating, setGenerating] = useState(false);
@@ -22,45 +25,34 @@ const AgreementGenerator = () => {
         setClientData({ ...clientData, [e.target.name]: e.target.value });
     };
 
+    const handlePrint = useReactToPrint({
+        contentRef: agreementRef,
+        documentTitle: `${clientData.clientName ? clientData.clientName.replace(/\s+/g, '_') : 'Client'}_Agreement`,
+        onAfterPrint: () => setGenerating(false)
+    });
+
     const generatePDF = async () => {
         setGenerating(true);
+        // Trigger print dialog immediately
+        handlePrint();
+
         try {
-            const element = agreementRef.current;
-            const canvas = await html2canvas(element, {
-                scale: 2, // Higher scale for better quality
-                useCORS: true,
-                logging: false,
-                backgroundColor: '#ffffff'
-            });
-
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-            // Save to Database
+            // Save to Database in the background
             const clientsRef = ref(database, 'clients');
             await push(clientsRef, {
                 ...clientData,
                 status: 'Pending',
                 generatedAt: Date.now()
             });
-
-            pdf.save(`${clientData.clientName.replace(/\s+/g, '_')}_Agreement.pdf`);
-            alert("Agreement downloaded and Client saved to database!");
         } catch (error) {
-            console.error("Error generating PDF:", error);
-            alert("Failed to generate PDF. Please try again.");
-        } finally {
-            setGenerating(false);
+            console.error("Error saving client:", error);
         }
     };
 
     return (
         <div className="flex flex-col lg:flex-row gap-8 h-full">
             {/* Form Section */}
-            <div className="w-full lg:w-1/3 bg-[#0f0f16]/90 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl overflow-y-auto">
+            <div className="w-full lg:w-1/3 bg-[#0f0f16]/90 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl overflow-y-auto max-h-[calc(100vh-200px)] custom-scrollbar">
                 <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
                     <FileText className="text-cyan-500" />
                     Agreement Details
@@ -74,42 +66,90 @@ const AgreementGenerator = () => {
                             value={clientData.clientName}
                             onChange={handleChange}
                             className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none"
-                            placeholder="John Doe"
+                            placeholder="Enter the client name "
                         />
                     </div>
                     <div>
-                        <label className="block text-xs font-mono text-gray-500 mb-1">PROJECT TITLE</label>
+                        <label className="block text-xs font-mono text-gray-500 mb-1">CLIENT ADDRESS</label>
+                        <input
+                            type="text"
+                            name="clientAddress"
+                            value={clientData.clientAddress}
+                            onChange={handleChange}
+                            className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none"
+                            placeholder="Client address"
+                        />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-xs font-mono text-gray-500 mb-1">CLIENT EMAIL</label>
+                            <input
+                                type="email"
+                                name="clientEmail"
+                                value={clientData.clientEmail}
+                                onChange={handleChange}
+                                className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none"
+                                placeholder="client@gmail.com"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-mono text-gray-500 mb-1">CLIENT PHONE</label>
+                            <input
+                                type="text"
+                                name="clientPhone"
+                                value={clientData.clientPhone}
+                                onChange={handleChange}
+                                className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none"
+                                placeholder="Mobile Number"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-xs font-mono text-gray-500 mb-1">PROJECT TITLE / PHASE</label>
                         <input
                             type="text"
                             name="projectTitle"
                             value={clientData.projectTitle}
                             onChange={handleChange}
                             className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none"
-                            placeholder="E-commerce Website"
+                            placeholder="Project Title"
                         />
                     </div>
                     <div>
-                        <label className="block text-xs font-mono text-gray-500 mb-1">PROJECT DESCRIPTION</label>
+                        <label className="block text-xs font-mono text-gray-500 mb-1">DELIVERABLES</label>
                         <textarea
-                            name="projectDescription"
-                            value={clientData.projectDescription}
+                            name="deliverables"
+                            value={clientData.deliverables}
                             onChange={handleChange}
-                            className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none h-24 resize-none"
-                            placeholder="Scope of work..."
+                            className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none h-32 resize-none custom-scrollbar"
+                            placeholder="List deliverables here..."
                         />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs font-mono text-gray-500 mb-1">PRICE (₹)</label>
+                            <label className="block text-xs font-mono text-gray-500 mb-1">PRICE (Without Res.) ₹</label>
                             <input
                                 type="text"
-                                name="price"
-                                value={clientData.price}
+                                name="priceWithoutResource"
+                                value={clientData.priceWithoutResource}
                                 onChange={handleChange}
                                 className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none"
-                                placeholder="50000"
+                                placeholder="Price"
                             />
                         </div>
+                        <div>
+                            <label className="block text-xs font-mono text-gray-500 mb-1">PRICE (With Res.) ₹</label>
+                            <input
+                                type="text"
+                                name="priceWithResource"
+                                value={clientData.priceWithResource}
+                                onChange={handleChange}
+                                className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none"
+                                placeholder="25000"
+                            />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-xs font-mono text-gray-500 mb-1">DURATION</label>
                             <input
@@ -118,19 +158,19 @@ const AgreementGenerator = () => {
                                 value={clientData.duration}
                                 onChange={handleChange}
                                 className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none"
-                                placeholder="2 Weeks"
+                                placeholder="1 Month"
                             />
                         </div>
-                    </div>
-                    <div>
-                        <label className="block text-xs font-mono text-gray-500 mb-1">START DATE</label>
-                        <input
-                            type="date"
-                            name="startDate"
-                            value={clientData.startDate}
-                            onChange={handleChange}
-                            className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none"
-                        />
+                        <div>
+                            <label className="block text-xs font-mono text-gray-500 mb-1">START DATE</label>
+                            <input
+                                type="date"
+                                name="startDate"
+                                value={clientData.startDate}
+                                onChange={handleChange}
+                                className="w-full p-3 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white outline-none"
+                            />
+                        </div>
                     </div>
 
                     <button
@@ -145,22 +185,52 @@ const AgreementGenerator = () => {
             </div>
 
             {/* Preview Section */}
-            <div className="w-full lg:w-2/3 bg-gray-200/50 rounded-2xl p-4 overflow-y-auto flex justify-center">
+            <div className="w-full lg:w-2/3 bg-gray-200/50 rounded-2xl p-4 overflow-y-auto max-h-[calc(100vh-200px)] flex justify-center custom-scrollbar">
+                <style>
+                    {`
+                        @media print {
+                            @page {
+                                size: A4 portrait;
+                                margin: 15mm;
+                            }
+                            body { 
+                                -webkit-print-color-adjust: exact; 
+                                print-color-adjust: exact; 
+                                margin: 0;
+                            }
+                            #agreement-content {
+                                width: 100% !important;
+                                height: auto !important;
+                                min-height: 0 !important;
+                                padding: 0 !important;
+                                margin: 0 !important;
+                                box-shadow: none !important;
+                            }
+                            /* Allow normal layout inside the container for print */
+                            #agreement-content > * {
+                                page-break-inside: auto;
+                            }
+                            .page-break { page-break-before: always; }
+                            .avoid-break { break-inside: avoid; page-break-inside: avoid; }
+                        }
+                    `}
+                </style>
                 <div
                     ref={agreementRef}
-                    className="bg-white text-black w-[210mm] min-h-[297mm] p-[20mm] shadow-lg relative flex flex-col"
-                    style={{ fontFamily: "'Times New Roman', Times, serif" }}
+                    id="agreement-content"
+                    className="bg-white text-black w-[210mm] min-h-[297mm] p-[20mm] shadow-lg relative flex flex-col text-[10pt] leading-normal"
+                    style={{ fontFamily: "'Arial', sans-serif" }}
                 >
                     {/* Letterhead Header */}
-                    <div className="flex justify-between items-center border-b-2 border-cyan-700 pb-4 mb-8">
+                    <div className="flex justify-between items-center border-b-2 border-cyan-700 pb-4 mb-6">
                         <div className="flex items-center gap-3">
                             <img src={logo} alt="TechAstra" className="w-16 h-16 object-contain" />
                             <div>
-                                <h1 className="text-3xl font-bold text-cyan-800 tracking-wide">TechAstra</h1>
-                                <p className="text-xs text-gray-600 tracking-widest uppercase">Innovating the Future</p>
+                                <h1 className="text-2xl font-bold text-cyan-800 tracking-wide">TechAstra</h1>
+                                <p className="text-[10px] text-gray-600 tracking-widest uppercase">Innovating the Future</p>
                             </div>
                         </div>
-                        <div className="text-right text-sm text-gray-600">
+                        <div className="text-right text-xs text-gray-600">
                             <p>Bengaluru, Karnataka, India</p>
                             <p>contactus.techastra@gmail.com</p>
                             <p>+91 74833 34990</p>
@@ -168,58 +238,175 @@ const AgreementGenerator = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="flex-1">
-                        <h2 className="text-center text-2xl font-bold underline mb-8 uppercase">Project Agreement</h2>
+                    <div className="flex-1 space-y-4">
+                        <h2 className="text-center text-xl font-bold underline uppercase mb-4">Software Development Agreement</h2>
 
-                        <p className="mb-6">
-                            <strong>Date:</strong> {new Date(clientData.startDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
-                        </p>
+                        <div className="flex justify-between mb-2">
+                            <div>
+                                <p><strong>Client Name:</strong> {clientData.clientName || "[Client Name]"}</p>
+                                <p><strong>Address:</strong> {clientData.clientAddress || "[Address]"}</p>
+                            </div>
+                            <div className="text-right">
+                                <p><strong>Date:</strong> {new Date(clientData.startDate).toLocaleDateString('en-GB')}</p>
+                                <p><strong>Email:</strong> {clientData.clientEmail || "[Email]"}</p>
+                                <p><strong>Phone:</strong> {clientData.clientPhone || "[Phone]"}</p>
+                            </div>
+                        </div>
 
-                        <p className="mb-6 leading-relaxed">
-                            This agreement is made between <strong>TechAstra</strong> (hereinafter referred to as "Service Provider") and <strong>{clientData.clientName || "[Client Name]"}</strong> (hereinafter referred to as "Client").
-                        </p>
+                        <hr className="border-gray-300 my-2" />
 
-                        <div className="mb-6">
-                            <h3 className="font-bold text-lg mb-2">1. Project Details</h3>
-                            <ul className="list-disc pl-5 space-y-2">
-                                <li><strong>Project Title:</strong> {clientData.projectTitle || "[Project Title]"}</li>
-                                <li><strong>Description:</strong> {clientData.projectDescription || "[Description of the project scope and deliverables]"}</li>
-                                <li><strong>Duration:</strong> {clientData.duration || "[Duration]"}</li>
+                        <div>
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">1. PROJECT SCOPE & DELIVERABLES</h3>
+                            <p><strong>Phase/Project Name:</strong> {clientData.projectTitle || "[Project Title]"}</p>
+                            <p><strong>Project Duration:</strong> {clientData.duration || "[Duration]"}</p>
+                            <p className="mt-1"><strong>Project Cost:</strong></p>
+                            <ul className="list-disc pl-5 mb-2">
+                                <li>₹{clientData.priceWithoutResource || "[0]"} (without resources)</li>
+                                <li>₹{clientData.priceWithResource || "[0]"} (with resources)</li>
+                            </ul>
+
+                            <p className="font-semibold underline mt-2 mb-1">A. Deliverables:</p>
+                            <div className="pl-2 whitespace-pre-wrap text-sm">
+                                {clientData.deliverables || "[Deliverables]"}
+                            </div>
+
+                            <p className="font-semibold underline mt-2 mb-1">B. What's Included:</p>
+                            <ul className="list-disc pl-5 mb-2">
+                                <li>Source code delivery</li>
+                                <li>Basic testing and debugging</li>
+                                <li>1 month post-delivery support for bug fixes</li>
+                                <li>Setup assistance (remote)</li>
                             </ul>
                         </div>
 
-                        <div className="mb-6">
-                            <h3 className="font-bold text-lg mb-2">2. Financial Terms</h3>
-                            <p>
-                                The total cost for the project is agreed to be <strong>₹{clientData.price || "0"}</strong>.
-                                Payment shall be made as per the milestones agreed upon separately.
-                            </p>
+                        <div>
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">2. CLIENT RESPONSIBILITIES</h3>
+                            <ul className="list-disc pl-5">
+                                <li>Provide subject-wise syllabus, question samples, or formats if required</li>
+                                <li>Timely feedback during development phases</li>
+                                <li>Provide branding materials (logo, color palette)</li>
+                                <li>Timely approval and testing within stipulated period</li>
+                                <li>Grant access to domain panel (if purchasing independently)</li>
+                            </ul>
                         </div>
 
-                        <div className="mb-6">
-                            <h3 className="font-bold text-lg mb-2">3. Confidentiality</h3>
-                            <p>
-                                Both parties agree to keep all confidential information shared during the course of this project private and not to disclose it to any third party without prior written consent.
-                            </p>
+                        <div className="avoid-break mb-4 pt-2">
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">3. PAYMENT TERMS</h3>
+                            <p className="font-semibold mt-1">Advance Payment (Before Start):</p>
+                            <ul className="list-disc pl-5">
+                                <li>₹{clientData.priceWithoutResource ? (Number(clientData.priceWithoutResource) / 2).toFixed(0) : "[50%]"} (Without Resource)</li>
+                                <li>₹{clientData.priceWithResource ? (Number(clientData.priceWithResource) / 2).toFixed(0) : "[50%]"} (With Resource)</li>
+                            </ul>
+                            <p className="font-semibold mt-1">Final Payment (Upon Completion & Acceptance):</p>
+                            <ul className="list-disc pl-5">
+                                <li>₹{clientData.priceWithoutResource ? (Number(clientData.priceWithoutResource) / 2).toFixed(0) : "[50%]"} (Without Resource)</li>
+                                <li>₹{clientData.priceWithResource ? (Number(clientData.priceWithResource) / 2).toFixed(0) : "[50%]"} (With Resource)</li>
+                            </ul>
+                            <p className="mt-1"><strong>Accepted Methods:</strong> UPI / Bank Transfer / Cash. Final Invoice with Payment Breakdown will be provided.</p>
                         </div>
+
+                        <div className="avoid-break mb-4 pt-2">
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">4. DEVELOPMENT TIMELINE</h3>
+                            <ul className="list-disc pl-5">
+                                <li>Develop the solution according to the agreed functionality</li>
+                                <li>Provide source code upon full payment</li>
+                                <li>Deploy the application (on resource-provided server)</li>
+                                <li>1-month post-delivery support for bug fixes</li>
+                                <li>Respond to minor content or UI corrections</li>
+                            </ul>
+                        </div>
+
+                        <div className="avoid-break mb-4 pt-2">
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">5. INTELLECTUAL PROPERTY RIGHTS</h3>
+                            <ul className="list-disc pl-5">
+                                <li><strong>Source Code:</strong> Full ownership transfers to Client upon final payment</li>
+                                <li><strong>Custom Development:</strong> All custom code developed becomes Client's property</li>
+                                <li><strong>Third-party Libraries:</strong> Open-source libraries remain under their respective licenses</li>
+                                <li><strong>Developer Tools:</strong> Developer retains rights to general methodologies and techniques</li>
+                            </ul>
+                        </div>
+
+                        <div className="avoid-break mb-4 pt-2">
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">6. LIMITATIONS & EXCLUSIONS</h3>
+                            <p className="font-semibold">Not Included in Base Price:</p>
+                            <ul className="list-disc pl-5 mb-1">
+                                <li>Complex AI/ML modeling unless specifically mentioned</li>
+                                <li>Mobile app version</li>
+                                <li>Third-party service costs (SMS, email services)</li>
+                                <li>High-availability cloud optimization</li>
+                                <li>Post-1-month support unless extended by contract</li>
+                            </ul>
+                            <p className="font-semibold">Technical Limitations:</p>
+                            <ul className="list-disc pl-5">
+                                <li>WhatsApp API rate limits apply</li>
+                                <li>Basic error handling and logging</li>
+                                <li>Standard security measures only</li>
+                                <li>Limited customization of UI themes</li>
+                            </ul>
+                        </div>
+
+                        <div className="avoid-break page-break mb-4 pt-4">
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">7. SUPPORT & MAINTENANCE</h3>
+                            <p><strong>Included Support (1 Month):</strong> Bug fixes for delivered functionality, Minor adjustments and tweaks, Setup and deployment assistance, Email/phone support during business hours.</p>
+                            <p><strong>Post-Support Period:</strong> Additional support based on the complexity of issues. Major feature additions will require separate agreement.</p>
+                        </div>
+
+                        <div className="avoid-break mb-4 pt-2">
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">8. TESTING & ACCEPTANCE</h3>
+                            <p><strong>Testing Process:</strong> Developer testing during development, Client User Acceptance Testing (UAT) period: 1 week, Bug fixes during UAT included in base price, Client must provide feedback within testing period.</p>
+                            <p><strong>Acceptance Criteria:</strong> All deliverables meet specified requirements, System functions as demonstrated, No critical bugs affecting core functionality, Documentation provided and reviewed.</p>
+                        </div>
+
+                        <div className="avoid-break mb-4 pt-2">
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">9. CONFIDENTIALITY</h3>
+                            <p>Both parties agree to: Keep all project information confidential, Not disclose business processes or technical details, Protect customer data and business information, Return or destroy confidential information upon request.</p>
+                        </div>
+
+                        <div className="avoid-break mb-4 pt-2">
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">10. LIABILITY & WARRANTIES</h3>
+                            <p><strong>Developer Warranties:</strong> Code will be free from major bugs at delivery, Will use industry-standard development practices, Will deliver within agreed timeline (subject to client cooperation).</p>
+                            <p><strong>Liability Limitations:</strong> Total liability limited to project cost, No liability for business losses or consequential damages, No warranty on third-party service availability, Client responsible for data backup and security.</p>
+                        </div>
+
+                        <div className="avoid-break mb-4 pt-2">
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">11. TERMINATION CLAUSES</h3>
+                            <p><strong>Termination by Client:</strong> 7 days written notice required, Payment for work completed till termination date, Source code delivered for paid portions.</p>
+                            <p><strong>Termination by Developer:</strong> In case of non-payment beyond 7 days, If client fails to provide necessary cooperation, 7 days written notice required.</p>
+                        </div>
+
+                        <div className="avoid-break mb-4 pt-2">
+                            <h3 className="font-bold text-sm bg-gray-100 p-1 mb-1">12. ADDITIONAL TERMS</h3>
+                            <ol className="list-decimal pl-5">
+                                <li><strong>Force Majeure:</strong> Neither party liable for delays due to circumstances beyond control</li>
+                                <li><strong>Modifications:</strong> Any changes to scope require written agreement and may involve additional costs</li>
+                                <li><strong>Governing Law:</strong> This agreement governed by Indian laws</li>
+                                <li><strong>Severability:</strong> If any clause is invalid, remainder of contract remains valid</li>
+                                <li><strong>Communication:</strong> All official communication via email with acknowledgment</li>
+                            </ol>
+                        </div>
+
+                        <p className="italic text-center mt-4 text-xs font-semibold">
+                            This agreement is executed in duplicate, with each party retaining one original copy.<br />
+                            Note: Please review all terms carefully and consult legal counsel if needed before signing.
+                        </p>
                     </div>
 
                     {/* Footer / Signatures */}
-                    <div className="mt-12 pt-8 border-t border-gray-300 grid grid-cols-2 gap-8">
+                    <div className="mt-12 pt-6 pb-6 border-t border-gray-300 grid grid-cols-2 gap-8 avoid-break">
                         <div>
-                            <p className="font-bold mb-12">For TechAstra:</p>
+                            <p className="font-bold mb-8">For TechAstra:</p>
                             <div className="border-t border-black w-3/4"></div>
-                            <p className="mt-2 text-sm italic">Authorized Signatory</p>
+                            <p className="mt-1 text-xs italic">Authorized Signatory</p>
                         </div>
                         <div>
-                            <p className="font-bold mb-12">For Client:</p>
+                            <p className="font-bold mb-8">For Client:</p>
                             <div className="border-t border-black w-3/4"></div>
-                            <p className="mt-2 text-sm italic">{clientData.clientName || "Client Name"}</p>
+                            <p className="mt-1 text-xs italic">{clientData.clientName || "Client Name"}</p>
                         </div>
                     </div>
 
                     {/* Letterhead Footer */}
-                    <div className="mt-auto pt-6 text-center text-xs text-gray-400 border-t border-cyan-700/30">
+                    <div className="mt-auto pt-4 text-center text-[10px] text-gray-400 border-t border-cyan-700/30">
                         <p>TechAstra Solutions • Building Digital Excellence</p>
                     </div>
                 </div>
