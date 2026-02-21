@@ -5,15 +5,19 @@ import Home from './components/Home';
 // Import Admin component (creating it next, but reference for plan)
 import Admin from './components/Admin';
 
+import { TeamProvider } from './context/TeamContext';
+
 const App = () => {
   return (
     <ProjectProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/admin" element={<Admin />} />
-        </Routes>
-      </Router>
+      <TeamProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/admin" element={<Admin />} />
+          </Routes>
+        </Router>
+      </TeamProvider>
     </ProjectProvider>
   );
 };
