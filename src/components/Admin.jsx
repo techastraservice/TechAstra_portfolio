@@ -4,19 +4,37 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import Logo from '../assets/techastra-logo.png'; // Import the logo
 import { auth, googleProvider } from '../firebaseConfig';
-import { signInWithPopup, signOut, onAuthStateChanged } from 'firebase/auth';
 import AgreementGenerator from './admin/AgreementGenerator';
 import ClientManager from './admin/ClientManager';
-import { ExternalLink, Github, Trash2, Search, FileText, Users, Edit2 } from 'lucide-react';
+import TeamManager from './admin/TeamManager';
+import { useTeam } from '../context/TeamContext';
+import { ExternalLink, Github, Trash2, Search, FileText, Users, Edit2, UserPlus, Upload, Loader2 } from 'lucide-react';
+import { storage } from '../firebaseConfig';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth'; // Import auth functions
 
 const Admin = () => {
     const { addProject, projects, deleteProject, updateProject, totalVisits } = useProjects(); // Get projects and CRUD functions
+    const { teamMembers } = useTeam();
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [activeTab, setActiveTab] = useState('dashboard');
     const [editingId, setEditingId] = useState(null);
+    const [uploading, setUploading] = useState(false);
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+
+    const [formData, setFormData] = useState({
+        title: '',
+        category: '',
+        image: '', // This will be the URL after upload
+        desc: '',
+        technologies: '', // comma separated
+        liveLink: '', // optional
+        githubUrl: '' // optional
+    });
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -43,15 +61,6 @@ const Admin = () => {
         return () => unsubscribe();
     }, []);
 
-    const [formData, setFormData] = useState({
-        title: '',
-        category: '',
-        image: '',
-        desc: '',
-        tech: '', // comma separatedde
-        liveLink: '', // optional
-    });
-
     const handleGoogleLogin = async () => {
         try {
             await signInWithPopup(auth, googleProvider);
@@ -68,9 +77,12 @@ const Admin = () => {
             category: project.category || '',
             image: project.image || '',
             desc: project.desc || '',
-            tech: Array.isArray(project.tech) ? project.tech.join(', ') : (project.tech || ''),
-            liveLink: project.liveLink || ''
+            technologies: Array.isArray(project.tech) ? project.tech.join(', ') : (project.tech || ''),
+            liveLink: project.liveLink || '',
+            githubUrl: project.githubUrl || ''
         });
+        setImageFile(null);
+        setImagePreview(project.image || null);
         setEditingId(project.id);
 
         // Scroll to top where the form is
@@ -81,28 +93,76 @@ const Admin = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSubmit = (e) => {
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImageFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => setImagePreview(reader.result);
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const techArray = formData.tech.split(',').map(item => item.trim());
-        const projectData = { ...formData, tech: techArray };
+
+        let imageUrl = formData.image; // Keep existing image URL if no new file is uploaded
+
+        if (imageFile) {
+            setUploading(true);
+            try {
+                const storageRef = ref(storage, `projects/${Date.now()}_${imageFile.name}`);
+                const uploadTask = uploadBytesResumable(storageRef, imageFile);
+
+                await new Promise((resolve, reject) => {
+                    uploadTask.on('state_changed',
+                        (snapshot) => {
+                            // Optional: handle progress
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            console.log('Upload is ' + progress + '% done');
+                        },
+                        (error) => {
+                            console.error("Error uploading image:", error);
+                            reject(error);
+                        },
+                        async () => {
+                            imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                            resolve();
+                        }
+                    );
+                });
+            } catch (error) {
+                console.error("Error uploading image:", error);
+                alert("Image upload failed. Please try again.");
+                setUploading(false);
+                return;
+            }
+            setUploading(false);
+        }
+
+        const projectData = {
+            ...formData,
+            image: imageUrl,
+            tech: formData.technologies.split(',').map(t => t.trim()).filter(t => t) // Use 'tech' as per context
+        };
+        delete projectData.technologies; // Remove the temporary field
 
         if (editingId) {
             updateProject(editingId, projectData);
             alert('Project updated successfully!');
             setEditingId(null);
         } else {
+            if (!imageUrl) {
+                alert("Please select a project image!");
+                return;
+            }
             addProject(projectData);
             alert('Project added successfully!');
         }
 
-        setFormData({
-            title: '',
-            category: '',
-            image: '',
-            desc: '',
-            tech: '',
-            liveLink: ''
-        });
+        setFormData({ title: '', category: '', image: '', desc: '', technologies: '', liveLink: '', githubUrl: '' });
+        setImageFile(null);
+        setImagePreview(null);
     };
 
     const handleDelete = (project) => {
@@ -229,6 +289,10 @@ const Admin = () => {
                         <Users className="w-5 h-5" />
                         <span className="font-medium">Clients</span>
                     </button>
+                    <button onClick={() => setActiveTab('team')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'team' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                        <UserPlus className="w-5 h-5" />
+                        <span className="font-medium">Team</span>
+                    </button>
                 </nav>
 
                 <div className="p-4 border-t border-white/5">
@@ -249,7 +313,8 @@ const Admin = () => {
                         <span className="text-cyan-400">
                             {activeTab === 'dashboard' ? 'Add Project' :
                                 activeTab === 'agreements' ? 'Agreement Generator' :
-                                    'Client Management'}
+                                    activeTab === 'team' ? 'Team Management' :
+                                        'Client Management'}
                         </span>
                     </div>
 
@@ -272,6 +337,8 @@ const Admin = () => {
                         <AgreementGenerator />
                     ) : activeTab === 'clients' ? (
                         <ClientManager />
+                    ) : activeTab === 'team' ? (
+                        <TeamManager />
                     ) : (
                         <>
 
@@ -297,16 +364,16 @@ const Admin = () => {
                                         <span className="text-xs text-green-500 font-mono">+12%</span>
                                     </div>
                                 </div>
-                                {/* <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
+                                <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
                                     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                        <svg className="w-16 h-16 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <Users className="w-16 h-16 text-yellow-500" />
                                     </div>
-                                    <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">SYSTEM STATUS</div>
-                                    <div className="text-3xl font-bold text-green-500 flex items-baseline gap-2">
-                                        ONLINE
-                                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse ml-2"></span>
+                                    <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">TEAM MEMBERS</div>
+                                    <div className="text-3xl font-bold text-white flex items-baseline gap-2">
+                                        {teamMembers.length}
+                                        <span className="text-xs text-green-500 font-mono pl-1">ACTIVE</span>
                                     </div>
-                                </div> */}
+                                </div>
                             </div>
 
 
@@ -350,18 +417,29 @@ const Admin = () => {
                                             </div>
 
                                             <div className="group">
-                                                <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">VISUAL ASSET URL</label>
-                                                <div className="relative">
-                                                    <input
-                                                        type="url"
-                                                        name="image"
-                                                        value={formData.image}
-                                                        onChange={handleChange}
-                                                        className="w-full p-4 pl-12 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white placeholder-gray-600 outline-none transition-all"
-                                                        required
-                                                        placeholder="https://"
-                                                    />
-                                                    <svg className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">PROJECT TEMPLATE IMAGE</label>
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-24 h-16 rounded-lg overflow-hidden bg-black/40 border border-white/10 shrink-0 flex items-center justify-center relative group/image">
+                                                        {imagePreview ? (
+                                                            <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                        )}
+                                                        <div className="absolute inset-0 bg-black/50 hidden group-hover/image:flex items-center justify-center transition-all">
+                                                            <Upload className="w-5 h-5 text-white" />
+                                                        </div>
+                                                        <input
+                                                            type="file"
+                                                            accept="image/*"
+                                                            onChange={handleImageChange}
+                                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                            required={!editingId && !imagePreview}
+                                                        />
+                                                    </div>
+                                                    <div className="flex-1">
+                                                        <p className="text-sm text-gray-400 mb-1">Upload a visually stunning preview image.</p>
+                                                        <p className="text-xs text-gray-500">Supported formats: JPG, PNG, WEBP (16:9 ratio recommended).</p>
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -378,17 +456,29 @@ const Admin = () => {
                                                     />
                                                 </div>
                                                 <div className="group">
-                                                    <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">TECH STACK (CSV)</label>
+                                                    <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">GITHUB REPO (OPTIONAL)</label>
                                                     <input
-                                                        type="text"
-                                                        name="tech"
-                                                        value={formData.tech}
+                                                        type="url"
+                                                        name="githubUrl"
+                                                        value={formData.githubUrl}
                                                         onChange={handleChange}
-                                                        className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-yellow-500/50 text-white placeholder-gray-600 outline-none transition-all"
-                                                        required
-                                                        placeholder="React, Node.js, AI..."
+                                                        className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-purple-500/50 text-white placeholder-gray-600 outline-none transition-all"
+                                                        placeholder="https://github.com/"
                                                     />
                                                 </div>
+                                            </div>
+
+                                            <div className="group">
+                                                <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">TECH STACK (CSV)</label>
+                                                <input
+                                                    type="text"
+                                                    name="technologies"
+                                                    value={formData.technologies}
+                                                    onChange={handleChange}
+                                                    className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-yellow-500/50 text-white placeholder-gray-600 outline-none transition-all"
+                                                    required
+                                                    placeholder="React, Node.js, AI..."
+                                                />
                                             </div>
 
                                             <div className="group">
@@ -403,26 +493,33 @@ const Admin = () => {
                                                 ></textarea>
                                             </div>
 
-                                            <div className="pt-4 flex justify-end">
-                                                <button
-                                                    type="submit"
-                                                    className="py-4 px-8 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold rounded-lg transition-all shadow-lg hover:shadow-cyan-500/25 transform hover:scale-[1.02] active:scale-95 flex items-center gap-3 uppercase tracking-wider text-sm"
-                                                >
-                                                    <span>{editingId ? 'UPDATE PROJECT' : 'INITIALIZE PROJECT'}</span>
-                                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                                                </button>
+                                            <div className="pt-4 flex justify-end gap-4">
                                                 {editingId && (
                                                     <button
                                                         type="button"
                                                         onClick={() => {
                                                             setEditingId(null);
-                                                            setFormData({ title: '', category: '', image: '', desc: '', tech: '', liveLink: '' });
+                                                            setFormData({ title: '', category: '', image: '', desc: '', technologies: '', liveLink: '', githubUrl: '' });
+                                                            setImageFile(null);
+                                                            setImagePreview(null);
                                                         }}
-                                                        className="py-4 px-6 bg-gray-500/10 hover:bg-gray-500/20 text-gray-400 font-bold rounded-lg transition-all border border-gray-500/30 ml-4 hover:border-gray-500/50 uppercase tracking-wider text-sm"
+                                                        className="py-3 px-6 bg-gray-500/10 hover:bg-gray-500/20 text-gray-400 font-bold rounded-lg transition-all border border-gray-500/30 text-sm uppercase tracking-wider"
                                                     >
                                                         CANCEL
                                                     </button>
                                                 )}
+                                                <button
+                                                    type="submit"
+                                                    disabled={uploading}
+                                                    className={`py-3 px-6 font-bold rounded-lg transition-all border shadow-[0_0_15px_rgba(6,182,212,0.1)] text-sm uppercase tracking-wider flex items-center gap-2
+                                                        ${uploading
+                                                            ? 'bg-gray-800 border-gray-700 text-gray-500 cursor-not-allowed'
+                                                            : 'bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-400 border-cyan-500/30 hover:border-cyan-500/60 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]'
+                                                        }`}
+                                                >
+                                                    {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
+                                                    {uploading ? 'Uploading...' : (editingId ? 'UPDATE TEMPLATE' : 'ADD TEMPLATE')}
+                                                </button>
                                             </div>
                                         </form>
                                     </div>

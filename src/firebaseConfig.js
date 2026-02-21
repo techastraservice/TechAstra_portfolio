@@ -4,6 +4,8 @@ import { getAnalytics } from "firebase/analytics";
 import { getDatabase } from "firebase/database"; // Importing for potential future use as per Hero.jsx todo
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
+import { getStorage } from "firebase/storage";
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyDwPRDH6tiIXXn6aLOpA9vcyFAUlxOk8ic",
@@ -25,5 +27,6 @@ if (typeof window !== 'undefined') {
 const database = getDatabase(app, "https://techastra-14e42-default-rtdb.firebaseio.com/"); // Initialize Realtime Database
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
+const storage = getStorage(app);
 
-export { app, analytics, database, auth, googleProvider };
+export { app, analytics, database, auth, googleProvider, storage };
