@@ -3,7 +3,8 @@ import { ArrowRight } from 'lucide-react';
 import Reveal from './Reveal';
 import ServiceModal from './ServiceModal';
 
-const services = [
+// eslint-disable-next-line react-refresh/only-export-components
+export const services = [
     {
         title: "Web Development",
         desc: "Modern, responsive websites built with cutting-edge technologies and stunning user experiences.",
