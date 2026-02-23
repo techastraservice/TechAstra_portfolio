@@ -17,7 +17,7 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
     if (!isOpen || !service) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+        <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6">
             {/* Backdrop */}
             <div
                 className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300"
@@ -110,11 +110,6 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
                         {service.details?.timeline && (
                             <div className="flex items-center gap-2">
                                 <span>Timeline: <span className="text-gray-900 dark:text-white font-medium transition-colors">{service.details.timeline}</span></span>
-                            </div>
-                        )}
-                        {service.details?.pricing && (
-                            <div className="flex items-center gap-2">
-                                <span>Starting at: <span className="text-gray-900 dark:text-white font-medium transition-colors">{service.details.pricing}</span></span>
                             </div>
                         )}
                     </div>

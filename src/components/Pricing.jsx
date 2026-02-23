@@ -70,9 +70,9 @@ const Pricing = ({ isOpen, onClose }) => {
                                     <div className="mb-10 pb-10 border-b border-gray-100 dark:border-white/10 transition-colors">
                                         <div className="flex items-baseline gap-2 mb-2">
                                             <span className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight transition-colors">
-                                                {service.details.pricing.replace('Starting at ', '').replace('+', '')}
+                                                {(service.details?.pricing || 'Custom Quote').replace('Starting at ', '').replace('+', '')}
                                             </span>
-                                            {service.details.pricing.includes('+') && (
+                                            {(service.details?.pricing || '').includes('+') && (
                                                 <span className="text-xl font-bold text-cyan-500">+</span>
                                             )}
                                         </div>
