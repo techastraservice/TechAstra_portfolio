@@ -8,13 +8,13 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-    apiKey: "AIzaSyDwPRDH6tiIXXn6aLOpA9vcyFAUlxOk8ic",
+    apiKey: "",
     authDomain: "techastra-14e42.firebaseapp.com",
     projectId: "techastra-14e42",
     storageBucket: "techastra-14e42.firebasestorage.app",
-    messagingSenderId: "444657913878",
-    appId: "1:444657913878:web:d369d9bc78a3aa54912537",
-    measurementId: "G-4PXQCD3GK3",
+    messagingSenderId: "",
+    appId: "",
+    measurementId: "",
     databaseURL: "https://techastra-14e42-default-rtdb.firebaseio.com/"
 };
 
