@@ -13,8 +13,8 @@ const firebaseConfig = {
     projectId: "techastra-14e42",
     storageBucket: "techastra-14e42.firebasestorage.app",
     messagingSenderId: "",
-    appId: "",
-    measurementId: "",
+    appId: "1:444657913878:web:d369d9bc78a3aa54912537",
+    measurementId: "G-4PXQCD3GK3",
     databaseURL: "https://techastra-14e42-default-rtdb.firebaseio.com/"
 };
 
