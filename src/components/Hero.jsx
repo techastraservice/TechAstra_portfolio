@@ -62,18 +62,18 @@ const Hero = () => {
                                 </a>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-200 dark:border-white/5">
-                                <div className="flex items-center gap-4 group">
-                                    <div>
+                            <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-200 dark:border-white/5 relative z-20">
+                                <div className="flex items-center gap-4 group relative z-20">
+                                    <div className="w-full">
                                         <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-200 mb-1">Rapid Deployment</h4>
                                         <p className="text-sm md:text-base text-gray-500">Solutions in record time</p>
                                     </div>
                                 </div>
                                 <div
-                                    className="flex items-center gap-4 group cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors -ml-2"
+                                    className="flex items-center gap-4 group cursor-pointer hover:bg-gray-100 dark:hover:bg-white/5 p-3 rounded-xl transition-all -ml-3 relative z-50 w-full"
                                     onClick={() => setIsTeamModalOpen(true)}
                                 >
-                                    <div>
+                                    <div className="w-full">
                                         <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-200 mb-1">Expert Team</h4>
                                         <p className="text-sm md:text-base text-gray-500">Seasoned professionals</p>
                                     </div>
