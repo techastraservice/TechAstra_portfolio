@@ -8,7 +8,8 @@ import ClientManager from './admin/ClientManager';
 import TeamManager from './admin/TeamManager';
 import ProjectManager from './admin/ProjectManager';
 import DashboardOverview from './admin/DashboardOverview';
-import { FileText, Users, UserPlus, FolderKanban, Menu, X } from 'lucide-react';
+import TestimonialManager from './admin/TestimonialManager';
+import { FileText, Users, UserPlus, FolderKanban, Menu, X, MessageSquareQuote } from 'lucide-react';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
 const Admin = () => {
@@ -185,6 +186,10 @@ const Admin = () => {
                         <FolderKanban className="w-5 h-5" />
                         <span className="font-medium">Projects</span>
                     </button>
+                    <button onClick={() => { setActiveTab('testimonials'); setIsMobileSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'testimonials' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                        <MessageSquareQuote className="w-5 h-5" />
+                        <span className="font-medium">Testimonials</span>
+                    </button>
                 </nav>
 
                 <div className="p-4 border-t border-white/5">
@@ -211,7 +216,8 @@ const Admin = () => {
                                     activeTab === 'agreements' ? 'Agreement Generator' :
                                         activeTab === 'team' ? 'Team Management' :
                                             activeTab === 'projects' ? 'Project Management' :
-                                                'Client Management'}
+                                                activeTab === 'testimonials' ? 'Testimonial Management' :
+                                                    'Client Management'}
                             </span>
                         </div>
                     </div>
@@ -242,6 +248,8 @@ const Admin = () => {
                         <TeamManager />
                     ) : activeTab === 'projects' ? (
                         <ProjectManager />
+                    ) : activeTab === 'testimonials' ? (
+                        <TestimonialManager />
                     ) : (
                         <DashboardOverview />
                     )}
