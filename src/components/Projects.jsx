@@ -3,11 +3,14 @@ import { ExternalLink, Github, ChevronRight, ChevronLeft, Search } from 'lucide-
 
 import { useProjects } from '../context/ProjectContext';
 import Reveal from './Reveal';
+import ProjectModal from './ProjectModal';
 
 const Projects = () => {
     const { projects } = useProjects();
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(6);
+    const [selectedProject, setSelectedProject] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
@@ -70,7 +73,13 @@ const Projects = () => {
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                     {currentProjects.map((project, index) => (
                         <Reveal key={index} delay={index * 100}>
-                            <div className="group relative rounded-2xl overflow-hidden glass border-0 h-[300px] md:h-[400px] shadow-sm dark:shadow-none bg-white dark:bg-transparent transition-colors">
+                            <div
+                                className="group relative rounded-2xl overflow-hidden glass border-0 h-[300px] md:h-[400px] shadow-sm dark:shadow-none bg-white dark:bg-transparent transition-colors cursor-pointer"
+                                onClick={() => {
+                                    setSelectedProject(project);
+                                    setIsModalOpen(true);
+                                }}
+                            >
                                 {/* Image Overlay */}
                                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all z-10"></div>
 
@@ -128,6 +137,13 @@ const Projects = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Project Modal */}
+            <ProjectModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                project={selectedProject}
+            />
         </section>
     );
 };
