@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mail, MapPin, Phone, Send, ExternalLink } from 'lucide-react';
+import { Mail, MapPin, MessageCircle, Send, ExternalLink } from 'lucide-react';
 
 const Contact = () => {
     return (
@@ -28,15 +28,17 @@ const Contact = () => {
                             </a>
 
                             <a
-                                href="tel:+917483334990"
+                                href="https://wa.me/917483334990?text=Hello%20TechAstra,%20I'd%20like%20to%20discuss%20a%20project%20with%20you."
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="group relative"
-                                aria-label="Call Us"
+                                aria-label="WhatsApp Us"
                             >
-                                <div className="absolute inset-0 bg-purple-500/20 rounded-2xl blur-xl group-hover:bg-purple-500/40 transition-colors opacity-0 group-hover:opacity-100 duration-500" />
-                                <div className="relative w-20 h-20 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-purple-600 dark:text-purple-400 group-hover:scale-110 group-hover:border-purple-500/50 group-hover:text-purple-500 transition-all duration-300 shadow-lg shadow-purple-500/5">
-                                    <Phone className="w-8 h-8" />
+                                <div className="absolute inset-0 bg-green-500/20 rounded-2xl blur-xl group-hover:bg-green-500/40 transition-colors opacity-0 group-hover:opacity-100 duration-500" />
+                                <div className="relative w-20 h-20 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-green-600 dark:text-green-400 group-hover:scale-110 group-hover:border-green-500/50 group-hover:text-green-500 transition-all duration-300 shadow-lg shadow-green-500/5">
+                                    <MessageCircle className="w-8 h-8" />
                                 </div>
-                                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Call</span>
+                                <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">WhatsApp</span>
                             </a>
                         </div>
                     </div>

@@ -1,8 +1,12 @@
 import React, { useEffect } from 'react';
-import { X, Check, ArrowRight } from 'lucide-react';
+import { X, Check, ArrowRight, MessageCircle, Mail } from 'lucide-react';
 import { services } from './Services';
 
 const Pricing = ({ isOpen, onClose }) => {
+    const [category, setCategory] = React.useState('business');
+    const [activeContactPlan, setActiveContactPlan] = React.useState(null);
+    const [showFooterContactOptions, setShowFooterContactOptions] = React.useState(false);
+
     // Prevent body scroll when the full-screen pricing is open
     useEffect(() => {
         if (isOpen) {
@@ -10,6 +14,7 @@ const Pricing = ({ isOpen, onClose }) => {
             window.scrollTo({ top: 0, behavior: 'instant' });
         } else {
             document.body.style.overflow = 'unset';
+            setActiveContactPlan(null);
         }
         return () => {
             document.body.style.overflow = 'unset';
@@ -18,114 +23,186 @@ const Pricing = ({ isOpen, onClose }) => {
 
     if (!isOpen) return null;
 
-    return (
-        <div className="fixed inset-0 z-[100] bg-gray-50 dark:bg-[#0a0a0a] overflow-y-auto overflow-x-hidden transition-colors animate-in fade-in duration-500">
-            {/* Ambient Background Effects */}
-            <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
-            <div className="absolute top-0 right-0 w-[800px] h-[600px] bg-blue-500/10 dark:bg-blue-500/5 blur-[120px] rounded-full pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
-            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-purple-500/10 dark:bg-purple-500/5 blur-[120px] rounded-full pointer-events-none transform -translate-x-1/2 translate-y-1/2"></div>
+    // Categorize services
+    const businessServices = services.slice(0, 4);
+    const academicServices = services.slice(4, 9); // Covers both project and research/report tiers
+    const displayedServices = category === 'business' ? businessServices : academicServices;
 
-            <div className="container mx-auto px-4 py-32 md:py-40 relative z-10">
-                {/* Header */}
-                <div className="text-center max-w-4xl mx-auto mb-24">
-                    <span className="text-cyan-600 dark:text-cyan-400 font-bold tracking-widest uppercase text-sm transition-colors relative inline-block mb-4">
-                        <span className="absolute -left-12 top-1/2 w-8 h-px bg-cyan-600 dark:bg-cyan-400"></span>
-                        Investment
-                        <span className="absolute -right-12 top-1/2 w-8 h-px bg-cyan-600 dark:bg-cyan-400"></span>
-                    </span>
-                    <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 dark:text-white mt-4 mb-8 tracking-tight transition-colors leading-tight">
-                        Transparent Pricing for <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-purple-500">Premium Solutions</span>
+    return (
+        <div className="fixed inset-0 z-[120] bg-white dark:bg-black overflow-y-auto overflow-x-hidden animate-in fade-in duration-500 selection:bg-cyan-500/30">
+            {/* Minimal Background Accents */}
+            <div className="absolute top-0 right-0 w-full h-[600px] bg-cyan-500/5 dark:bg-cyan-500/10 blur-[120px] rounded-full pointer-events-none transform translate-x-1/2 -translate-y-1/2 opacity-50"></div>
+            <div className="absolute bottom-0 left-0 w-full h-[600px] bg-purple-500/5 dark:bg-purple-500/10 blur-[120px] rounded-full pointer-events-none transform -translate-x-1/2 translate-y-1/2 opacity-50"></div>
+
+            {/* Close Button */}
+            <button 
+                onClick={onClose}
+                className="fixed top-8 right-8 z-[130] p-3 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all focus:outline-none backdrop-blur-md border border-black/5 dark:border-white/5"
+            >
+                <X size={24} />
+            </button>
+
+            <div className="container mx-auto px-6 py-12 md:py-24 relative z-10 flex flex-col items-center min-h-screen">
+                {/* Header Section */}
+                <div className="text-center max-w-4xl mx-auto mb-12 md:mb-16 pt-8">
+                    <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-8 tracking-tight">
+                        Choose your path
                     </h1>
-                    <p className="text-gray-600 dark:text-gray-400 text-xl leading-relaxed mx-auto max-w-2xl transition-colors">
-                        Choose the right engagement model for your next big idea. No hidden fees, just world-class engineering.
-                    </p>
+                    
+                    {/* Category Selector Tabs */}
+                    <div className="inline-flex p-1.5 bg-gray-100 dark:bg-white/5 backdrop-blur-xl rounded-2xl border border-gray-200 dark:border-white/10 shadow-xl">
+                        <button 
+                            onClick={() => setCategory('business')}
+                            className={`px-8 md:px-10 py-2.5 md:py-3 rounded-xl text-sm font-bold transition-all duration-300 ${category === 'business' ? 'bg-white dark:bg-white text-black shadow-lg dark:shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-black/5 dark:hover:bg-white/5'}`}
+                        >
+                            Business
+                        </button>
+                        <button 
+                            onClick={() => setCategory('academic')}
+                            className={`px-8 md:px-10 py-2.5 md:py-3 rounded-xl text-sm font-bold transition-all duration-300 ${category === 'academic' ? 'bg-white dark:bg-white text-black shadow-lg dark:shadow-[0_0_20px_rgba(255,255,255,0.2)]' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-black/5 dark:hover:bg-white/5'}`}
+                        >
+                            Academic
+                        </button>
+                    </div>
                 </div>
 
                 {/* Pricing Grid */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-12 relative">
-                    {services.map((service, index) => {
-                        // Highlight some main services to make the design pop
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative max-w-7xl w-full mx-auto pb-12">
+                    {displayedServices.map((service, index) => {
                         const isHighlighted = service.title.includes("Web") || service.title.includes("App") || service.title.includes("Main Project");
 
                         return (
                             <div
                                 key={index}
-                                className={`group relative flex flex-col p-1 rounded-3xl transition-all duration-500 hover:-translate-y-2 ${isHighlighted
-                                    ? 'bg-gradient-to-br from-cyan-500/30 via-purple-500/30 to-blue-500/30 shadow-2xl shadow-cyan-500/20'
-                                    : 'bg-gradient-to-br from-gray-200 to-gray-100 dark:from-white/10 dark:to-white/5 hover:shadow-xl'
-                                    }`}
+                                className={`flex flex-col rounded-3xl p-6 md:p-7 transition-all duration-500 group relative ${
+                                    isHighlighted 
+                                    ? 'bg-gray-50 dark:bg-[#121218] ring-1 ring-gray-200 dark:ring-white/20 hover:ring-gray-300 dark:hover:ring-white/40 shadow-2xl scale-[1.02] z-20' 
+                                    : 'bg-white dark:bg-[#0a0a0f] border border-gray-100 dark:border-white/5 hover:border-gray-200 dark:hover:border-white/10'
+                                }`}
                             >
-                                <div className="h-full bg-white dark:bg-[#111116] rounded-[22px] p-8 md:p-10 flex flex-col transition-colors border border-transparent dark:border-white/5">
-                                    {isHighlighted && (
-                                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white text-xs font-bold uppercase tracking-wider py-1.5 px-6 rounded-full shadow-lg">
-                                            Most Popular
-                                        </div>
-                                    )}
-
-                                    <div className="mb-8">
-                                        <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-cyan-500 transition-colors">{service.title}</h3>
-                                        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed min-h-[60px] transition-colors">{service.desc}</p>
+                                {isHighlighted && (
+                                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-full text-[10px] font-black text-white uppercase tracking-widest shadow-lg opacity-90 group-hover:opacity-100 transition-opacity">
+                                        Pro Tier
                                     </div>
+                                )}
 
-                                    <div className="mb-10 pb-10 border-b border-gray-100 dark:border-white/10 transition-colors">
-                                        <div className="flex items-baseline gap-2 mb-2">
-                                            <span className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight transition-colors">
-                                                {(service.details?.pricing || 'Custom Quote').replace('Starting at ', '').replace('+', '')}
+                                <div className="flex flex-col h-full">
+                                    <div className="mb-6">
+                                        <h3 className={`text-xl font-bold mb-2 tracking-tight ${isHighlighted ? 'text-gray-900 dark:text-white' : 'text-gray-800 dark:text-gray-200'}`}>
+                                            {service.title}
+                                        </h3>
+                                        <div className="flex items-baseline gap-1.5 mb-4 items-center">
+                                            <span className="text-2xl font-black text-gray-900 dark:text-white">
+                                                {service.details?.pricing?.includes('Rs.') 
+                                                    ? service.details.pricing.split('+')[0] 
+                                                    : service.details?.pricing || 'Quote'}
                                             </span>
-                                            {(service.details?.pricing || '').includes('+') && (
-                                                <span className="text-xl font-bold text-cyan-500">+</span>
+                                            {service.details?.pricing?.includes('Rs.') && (
+                                                <span className="text-gray-500 dark:text-gray-500 text-[10px] uppercase font-bold tracking-widest">Base</span>
                                             )}
                                         </div>
-                                        <div className="text-sm font-medium text-gray-500 dark:text-gray-400 capitalize bg-gray-100 dark:bg-white/5 inline-block py-1 px-3 rounded-full transition-colors">
-                                            {service.details.timeline} Timeline
-                                        </div>
+                                        <p className="text-gray-600 dark:text-gray-400 text-xs leading-relaxed min-h-[48px] line-clamp-3 group-hover:text-gray-800 dark:group-hover:text-gray-300 transition-colors">
+                                            {service.desc}
+                                        </p>
                                     </div>
 
-                                    <div className="flex-1 mb-10">
-                                        <p className="font-semibold text-gray-900 dark:text-white mb-6 transition-colors">What's included:</p>
+                                    <div className="mb-8 min-h-[56px] relative">
+                                        {activeContactPlan === index ? (
+                                            <div className="flex gap-2 animate-in zoom-in duration-300">
+                                                <button
+                                                    onClick={() => {
+                                                        const price = service.details?.pricing?.includes('Rs.') ? service.details.pricing.split('+')[0] : (service.details?.pricing || 'Quote');
+                                                        const text = encodeURIComponent(`Hello TechAstra, I'm interested in the ${service.title} plan (${price}).`);
+                                                        window.open(`https://wa.me/917483334990?text=${text}`, '_blank');
+                                                        setActiveContactPlan(null);
+                                                    }}
+                                                    className="flex-1 py-4 px-2 rounded-2xl bg-green-500 hover:bg-green-600 text-white font-bold text-[11px] flex items-center justify-center gap-2 shadow-lg shadow-green-500/20 transition-all active:scale-95"
+                                                >
+                                                    <MessageCircle size={14} /> WhatsApp
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        const price = service.details?.pricing?.includes('Rs.') ? service.details.pricing.split('+')[0] : (service.details?.pricing || 'Quote');
+                                                        const subject = encodeURIComponent(`Inquiry: ${service.title} Plan`);
+                                                        const body = encodeURIComponent(`Hello TechAstra,\n\nI'm interested in the ${service.title} plan (${price}). Please provide more details.\n\nThank you.`);
+                                                        window.location.href = `mailto:contactus.techastra@gmail.com?subject=${subject}&body=${body}`;
+                                                        setActiveContactPlan(null);
+                                                    }}
+                                                    className="flex-1 py-4 px-2 rounded-2xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-[11px] flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 transition-all active:scale-95"
+                                                >
+                                                    <Mail size={14} /> Email
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => setActiveContactPlan(index)}
+                                                className={`w-full py-3.5 px-6 rounded-2xl font-bold text-sm transition-all duration-300 border border-gray-100 dark:border-white/5 active:scale-95 ${
+                                                    isHighlighted 
+                                                    ? 'bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 shadow-xl' 
+                                                    : 'bg-black/5 dark:bg-white/5 text-gray-900 dark:text-white hover:bg-black/10 dark:hover:bg-white/10'
+                                                }`}
+                                            >
+                                                Select Plan
+                                            </button>
+                                        )}
+                                    </div>
+
+                                    <div className="mt-auto">
+                                        <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] mb-5 border-b border-gray-100 dark:border-white/5 pb-2">Includes</p>
                                         <ul className="space-y-4">
-                                            {service.details.keyFeatures.map((feature, i) => (
-                                                <li key={i} className="flex items-start gap-3">
-                                                    <div className="mt-1 flex-shrink-0 w-5 h-5 rounded-full bg-cyan-500/10 flex items-center justify-center">
-                                                        <Check className="w-3.5 h-3.5 text-cyan-600 dark:text-cyan-400" strokeWidth={3} />
+                                            {service.details.keyFeatures.slice(0, 5).map((feature, i) => (
+                                                <li key={i} className="flex items-start gap-3 group/item">
+                                                    <div className={`mt-0.5 flex-shrink-0 p-0.5 rounded-full transition-colors ${isHighlighted ? 'bg-cyan-100 dark:bg-cyan-500/10' : 'bg-gray-100 dark:bg-white/5'}`}>
+                                                        <Check size={12} className={isHighlighted ? 'text-cyan-600 dark:text-cyan-400' : 'text-gray-400 dark:text-gray-500'} />
                                                     </div>
-                                                    <span className="text-gray-700 dark:text-gray-300 text-sm font-medium transition-colors">{feature}</span>
+                                                    <span className="text-gray-600 dark:text-gray-400 text-[11px] leading-snug group-hover/item:text-gray-800 dark:group-hover/item:text-gray-300 transition-colors">{feature}</span>
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
-
-                                    <button
-                                        onClick={() => {
-                                            onClose();
-                                            setTimeout(() => {
-                                                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                                            }, 100);
-                                        }}
-                                        className={isHighlighted ? 'btn-primary w-full py-4' : 'btn-secondary w-full py-4'}
-                                    >
-                                        Select Plan
-                                        <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                                    </button>
                                 </div>
                             </div>
                         );
                     })}
                 </div>
-            </div>
 
-            {/* Footer Inside Overlay */}
-            <div className="py-12 text-center border-t border-gray-200 dark:border-white/5 mt-12 bg-white/30 dark:bg-[#0a0a0a]/30 backdrop-blur-md transition-colors relative z-10">
-                <p className="text-gray-500 dark:text-gray-400">Need a custom enterprise solution?</p>
-                <button
-                    onClick={() => {
-                        onClose();
-                        setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100);
-                    }}
-                    className="mt-4 text-cyan-600 dark:text-cyan-400 font-bold hover:underline inline-flex items-center gap-2"
-                >
-                    Contact our sales team <ArrowRight className="w-4 h-4" />
-                </button>
+                {/* Simplified Footer */}
+                <div className="w-full max-w-4xl border-t border-gray-100 dark:border-white/5 mt-auto pt-10 pb-12 text-center">
+                    <p className="text-gray-500 dark:text-gray-500 text-sm font-medium">Need a bespoke enterprise quote?</p>
+                    {showFooterContactOptions ? (
+                        <div className="flex gap-3 justify-center mt-4 animate-in zoom-in duration-300">
+                            <button
+                                onClick={() => {
+                                    const text = encodeURIComponent("Hello TechAstra, I'm interested in a bespoke enterprise quote.");
+                                    window.open("https://wa.me/917483334990?text=" + text, '_blank');
+                                    setShowFooterContactOptions(false);
+                                }}
+                                className="px-6 py-2 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-green-500/20 transition-all active:scale-95"
+                            >
+                                <MessageCircle size={14} /> WhatsApp
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const subject = encodeURIComponent("Inquiry: Bespoke Enterprise Quote");
+                                    const body = encodeURIComponent("Hello TechAstra,\n\nI'm interested in a bespoke enterprise quote for my organization. Please get in touch.\n\nThank you.");
+                                    window.location.href = `mailto:contactus.techastra@gmail.com?subject=${subject}&body=${body}`;
+                                    setShowFooterContactOptions(false);
+                                }}
+                                className="px-6 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all active:scale-95"
+                            >
+                                <Mail size={14} /> Email
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => setShowFooterContactOptions(true)}
+                            className="mt-3 group inline-flex items-center gap-2 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 text-sm font-bold transition-all underline underline-offset-8"
+                        >
+                            Contact Strategic Sales Team
+                            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     );
