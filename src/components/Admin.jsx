@@ -119,7 +119,7 @@ const Admin = () => {
                                 </div>
                                 <button
                                     onClick={() => signOut(auth)}
-                                    className="w-full py-3 px-6 bg-red-600/10 hover:bg-red-600/20 text-red-500 hover:text-red-400 border border-red-600/30 hover:border-red-500 font-mono text-sm tracking-wider rounded-lg transition-all flex items-center justify-center gap-3 group/btn"
+                                    className="w-full btn-danger font-mono text-sm tracking-wider"
                                 >
                                     <span className="group-hover/btn:translate-x-1 transition-transform">TERMINATE SESSION</span>
                                 </button>
@@ -174,7 +174,7 @@ const Admin = () => {
                         </div>
                         <span className="font-bold text-lg tracking-wide text-white">TECH<span className="text-cyan-400">ASTRA</span></span>
                     </div>
-                    <button onClick={() => setIsMobileSidebarOpen(false)} className="md:hidden text-gray-400 hover:text-white pb-1 focus:outline-none">
+                    <button onClick={() => setIsMobileSidebarOpen(false)} className="md:hidden btn-icon-only">
                         <X className="w-6 h-6" />
                     </button>
                 </div>
@@ -212,7 +212,7 @@ const Admin = () => {
                 </nav>
 
                 <div className="p-4 border-t border-white/5">
-                    <button onClick={() => signOut(auth)} className="w-full flex items-center gap-3 px-4 py-3 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-colors border border-transparent hover:border-red-500/20">
+                    <button onClick={() => signOut(auth)} className="w-full btn-danger">
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                         <span className="font-medium">Log Out</span>
                     </button>
@@ -224,7 +224,7 @@ const Admin = () => {
                 {/* Top Header */}
                 <header className="h-16 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-md flex items-center justify-between px-4 sm:px-8 z-10 w-full">
                     <div className="flex items-center gap-3">
-                        <button onClick={() => setIsMobileSidebarOpen(true)} className="md:hidden p-2 -ml-2 text-gray-400 hover:text-white focus:outline-none">
+                        <button onClick={() => setIsMobileSidebarOpen(true)} className="md:hidden btn-icon-only -ml-2">
                             <Menu className="w-6 h-6" />
                         </button>
                         <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400">

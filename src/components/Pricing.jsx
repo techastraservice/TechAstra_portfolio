@@ -102,10 +102,7 @@ const Pricing = ({ isOpen, onClose }) => {
                                                 document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
                                             }, 100);
                                         }}
-                                        className={`w-full py-4 rounded-xl flex items-center justify-center gap-2 font-bold transition-all duration-300 group/btn ${isHighlighted
-                                            ? 'bg-gray-900 hover:bg-black dark:bg-cyan-500 dark:hover:bg-cyan-400 text-white shadow-lg shadow-cyan-500/25'
-                                            : 'bg-gray-100 hover:bg-gray-200 dark:bg-white/5 dark:hover:bg-white/10 text-gray-900 dark:text-white border border-gray-200 dark:border-transparent'
-                                            }`}
+                                        className={isHighlighted ? 'btn-primary w-full py-4' : 'btn-secondary w-full py-4'}
                                     >
                                         Select Plan
                                         <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />

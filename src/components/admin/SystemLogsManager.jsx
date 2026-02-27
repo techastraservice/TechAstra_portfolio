@@ -88,7 +88,7 @@ const SystemLogsManager = () => {
                 <div className="flex flex-col sm:flex-row items-center gap-4">
                     <button
                         onClick={handleRefresh}
-                        className="bg-black/40 border border-white/10 hover:border-cyan-500/50 hover:bg-cyan-500/10 text-gray-300 hover:text-cyan-400 rounded-lg p-2.5 transition-all focus:outline-none flex items-center justify-center"
+                        className="btn-icon-only hover:border-cyan-500/50 hover:bg-cyan-500/10 hover:text-cyan-400"
                         title="Refresh Logs"
                     >
                         <RefreshCw size={18} className={loading ? "animate-spin text-cyan-500" : ""} />
@@ -163,7 +163,7 @@ const SystemLogsManager = () => {
                                         <td className="p-4 text-right">
                                             <button
                                                 onClick={() => setSelectedLog(log)}
-                                                className="inline-flex items-center gap-2 p-2 px-3 text-xs bg-white/5 hover:bg-white/10 text-cyan-400 rounded-lg transition-colors border border-white/10 hover:border-cyan-500/30 font-medium"
+                                                className="btn-secondary py-2 px-3 text-xs"
                                                 title="View Full Payload"
                                             >
                                                 <Eye size={14} /> View
@@ -201,7 +201,7 @@ const SystemLogsManager = () => {
                             </div>
                             <button
                                 onClick={() => setSelectedLog(null)}
-                                className="text-gray-500 hover:text-white transition-colors p-2"
+                                className="btn-icon-only"
                             >
                                 <XCircle size={24} />
                             </button>

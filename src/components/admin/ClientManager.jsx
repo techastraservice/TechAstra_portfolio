@@ -136,14 +136,14 @@ const ClientManager = () => {
                                                     <>
                                                         <button
                                                             onClick={() => updateStatus(client.id, 'Approved', client)}
-                                                            className="p-2 bg-green-500/10 text-green-400 hover:bg-green-500/20 rounded-lg transition-colors"
+                                                            className="btn-icon-only text-green-400 hover:text-green-500 hover:bg-green-500/10"
                                                             title="Approve"
                                                         >
                                                             <CheckCircle size={18} />
                                                         </button>
                                                         <button
                                                             onClick={() => updateStatus(client.id, 'Rejected', client)}
-                                                            className="p-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
+                                                            className="btn-icon-only text-red-400 hover:text-red-500 hover:bg-red-500/10"
                                                             title="Reject"
                                                         >
                                                             <XCircle size={18} />
@@ -152,7 +152,7 @@ const ClientManager = () => {
                                                 )}
                                                 <button
                                                     onClick={() => deleteClient(client)}
-                                                    className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors ml-2"
+                                                    className="btn-icon-only hover:text-red-500 hover:bg-red-500/10 ml-2"
                                                     title="Delete"
                                                 >
                                                     <Trash2 size={18} />
@@ -188,7 +188,7 @@ const ClientManager = () => {
                             </div>
                             <button
                                 onClick={() => setSelectedClient(null)}
-                                className="text-gray-500 hover:text-white transition-colors p-2"
+                                className="btn-icon-only ml-2"
                             >
                                 <XCircle size={24} />
                             </button>

@@ -54,14 +54,13 @@ const Hero = () => {
                             <div className="flex flex-wrap gap-4 pt-4 relative z-20">
                                 <a
                                     href="#contact"
-                                    className="group relative px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-xl font-bold tracking-wide text-white shadow-[0_4px_20px_rgba(6,182,212,0.3)] hover:shadow-[0_6px_30px_rgba(6,182,212,0.5)] transition-all transform hover:-translate-y-1 overflow-hidden"
+                                    className="btn-primary"
                                 >
-                                    <span className="relative z-10 flex items-center gap-2">Start Now <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" /></span>
-                                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                                    Start Now <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                                 </a>
                                 <a
                                     href="#projects"
-                                    className="px-8 py-4 rounded-xl font-bold tracking-wide text-gray-800 dark:text-white border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 transition-all flex items-center gap-2 backdrop-blur-sm shadow-sm dark:shadow-none"
+                                    className="btn-secondary"
                                 >
                                     View Work
                                 </a>
