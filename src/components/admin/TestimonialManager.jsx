@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { database, storage } from '../../firebaseConfig';
+import { database } from '../../firebaseConfig';
 import { ref as dbRef, onValue, push, remove, update } from "firebase/database";
-import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { MessageSquareQuote, Plus, Trash2, Upload, Loader2, Star, User, Edit2, XCircle } from 'lucide-react';
 import { logAdminAction } from '../../utils/logger';
+import { uploadToCloudinary } from '../../utils/cloudinary';
 
 const TestimonialManager = () => {
     const [testimonials, setTestimonials] = useState([]);
@@ -54,9 +54,7 @@ const TestimonialManager = () => {
         reader.readAsDataURL(file);
 
         try {
-            const fileRef = storageRef(storage, `testimonials/${Date.now()}_${file.name}`);
-            await uploadBytes(fileRef, file);
-            const url = await getDownloadURL(fileRef);
+            const url = await uploadToCloudinary(file, "testimonials");
             setFormData(prev => ({ ...prev, imageUrl: url }));
         } catch (error) {
             console.error("Error uploading image:", error);

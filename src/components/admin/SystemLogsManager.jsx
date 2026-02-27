@@ -8,6 +8,7 @@ const SystemLogsManager = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedLog, setSelectedLog] = useState(null);
+    const [sortBy, setSortBy] = useState("newest");
 
     useEffect(() => {
         const logsRef = ref(database, 'system_logs');
@@ -18,8 +19,19 @@ const SystemLogsManager = () => {
                     id: key,
                     ...data[key]
                 }));
-                // Sort by newest first
-                setLogs(loadedLogs.sort((a, b) => b.timestamp - a.timestamp));
+                
+                // Deduplicate logs based on identical actions and exact payloads
+                const uniqueLogs = [];
+                const seenLogs = new Set();
+                for (const log of loadedLogs) {
+                    const fingerprint = `${log.action}-${log.entityIdentifier}-${JSON.stringify(log.details)}`;
+                    if (!seenLogs.has(fingerprint)) {
+                        seenLogs.add(fingerprint);
+                        uniqueLogs.push(log);
+                    }
+                }
+                
+                setLogs(uniqueLogs);
             } else {
                 setLogs([]);
             }
@@ -29,7 +41,18 @@ const SystemLogsManager = () => {
         return () => unsubscribe();
     }, []);
 
-    const filteredLogs = logs.filter(log =>
+    let sortedLogs = [...logs];
+    if (sortBy === 'newest') {
+        sortedLogs.sort((a, b) => b.timestamp - a.timestamp);
+    } else if (sortBy === 'oldest') {
+        sortedLogs.sort((a, b) => a.timestamp - b.timestamp);
+    } else if (sortBy === 'action') {
+        sortedLogs.sort((a, b) => a.action.localeCompare(b.action));
+    } else if (sortBy === 'entity') {
+        sortedLogs.sort((a, b) => a.entityType.localeCompare(b.entityType));
+    }
+
+    const filteredLogs = sortedLogs.filter(log =>
         log.action?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         log.adminEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         log.entityType?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -48,15 +71,27 @@ const SystemLogsManager = () => {
                     <Activity className="text-cyan-500" />
                     System Logs Activity
                 </h2>
-                <div className="relative">
-                    <input
-                        type="text"
-                        placeholder="Search logs..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="bg-black/40 border border-white/10 rounded-lg py-2 px-4 pl-10 text-sm text-white focus:border-cyan-500/50 outline-none w-64 transition-all"
-                    />
-                    <Search className="w-4 h-4 text-gray-500 absolute left-3 top-2.5" />
+                <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="bg-black/40 border border-white/10 rounded-lg py-2 px-4 text-sm text-gray-300 focus:border-cyan-500/50 outline-none transition-all cursor-pointer"
+                    >
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="action">Sort by Action</option>
+                        <option value="entity">Sort by Entity</option>
+                    </select>
+                    <div className="relative w-full sm:w-auto">
+                        <input
+                            type="text"
+                            placeholder="Search logs..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="bg-black/40 border border-white/10 rounded-lg py-2 px-4 pl-10 text-sm text-white focus:border-cyan-500/50 outline-none w-full sm:w-64 transition-all"
+                        />
+                        <Search className="w-4 h-4 text-gray-500 absolute left-3 top-2.5" />
+                    </div>
                 </div>
             </div>
 

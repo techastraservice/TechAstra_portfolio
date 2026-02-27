@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useProjects } from '../../context/ProjectContext';
 import { ExternalLink, Github, Trash2, Search, Edit2, Upload, Loader2, Plus, X, FolderOpen } from 'lucide-react';
-import { storage } from '../../firebaseConfig';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { logAdminAction } from '../../utils/logger';
+import { uploadToCloudinary } from '../../utils/cloudinary';
 
 const ProjectManager = () => {
     const { addProject, projects, deleteProject, updateProject } = useProjects();
@@ -81,25 +80,7 @@ const ProjectManager = () => {
         if (imageFile) {
             setUploading(true);
             try {
-                const storageRef = ref(storage, `projects/${Date.now()}_${imageFile.name}`);
-                const uploadTask = uploadBytesResumable(storageRef, imageFile);
-
-                await new Promise((resolve, reject) => {
-                    uploadTask.on('state_changed',
-                        (snapshot) => {
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            console.log('Upload is ' + progress + '% done');
-                        },
-                        (error) => {
-                            console.error("Error uploading image:", error);
-                            reject(error);
-                        },
-                        async () => {
-                            imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                            resolve();
-                        }
-                    );
-                });
+                imageUrl = await uploadToCloudinary(imageFile, 'projects');
             } catch (error) {
                 console.error("Error uploading image:", error);
                 alert("Image upload failed. Please try again.");
