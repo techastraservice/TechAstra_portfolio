@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Linkedin, Github, X } from 'lucide-react';
+import logo from '../assets/techastra-logo.png';
 
 const policyContent = {
     privacy: {
@@ -308,6 +309,7 @@ const Footer = () => {
                     <div className="grid md:grid-cols-4 gap-12 mb-12">
                         <div className="space-y-4">
                             <div className="flex items-center gap-2">
+                                <img src={logo} alt="TechAstra Logo" className="w-10 h-10 object-contain" />
                                 <span className="text-xl font-bold text-gray-900 dark:text-white transition-colors">
                                     Tech<span className="text-cyan-600 dark:text-cyan-400 transition-colors">Astra</span>
                                 </span>
@@ -340,7 +342,7 @@ const Footer = () => {
                         <div>
                             <h4 className="text-gray-900 dark:text-white font-bold mb-4 transition-colors">Connect</h4>
                             <div className="flex gap-4">
-                                <a href="https://github.com/techastraservice/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-all">
+                                <a href="https://github.com/Tech-Astra" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-all">
                                     <Github size={18} />
                                 </a>
                                 <a href="https://www.linkedin.com/company/tech-astra/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-700 dark:text-white hover:bg-blue-100 dark:hover:bg-blue-600 hover:text-blue-600 dark:hover:text-white transition-all">
@@ -352,7 +354,7 @@ const Footer = () => {
 
                     <div className="border-t border-gray-200 dark:border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500 transition-colors">
                         <div className="flex flex-col md:flex-row items-center gap-4">
-                            <p>&copy; Tech Astra. All rights reserved.</p>
+                            <p>Tech Astra. All rights reserved*</p>
                         </div>
                         <div className="flex gap-6">
                             <button onClick={() => setActivePolicy('privacy')} className="hover:text-gray-900 dark:hover:text-white transition-colors">Privacy Policy</button>
