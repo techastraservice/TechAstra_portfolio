@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useTeam } from '../../context/TeamContext';
-import { storage } from '../../firebaseConfig';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { Trash2, Edit2, Search, Users, Github, Linkedin, Upload, Loader2, Plus, X } from 'lucide-react';
+import { logAdminAction } from '../../utils/logger';
+import { uploadToCloudinary } from '../../utils/cloudinary';
 
 const TeamManager = () => {
     const { teamMembers, addTeamMember, updateTeamMember, deleteTeamMember } = useTeam();
@@ -77,9 +77,7 @@ const TeamManager = () => {
         if (imageFile) {
             setUploading(true);
             try {
-                const storageRef = ref(storage, `team/${Date.now()}_${imageFile.name}`);
-                const uploadTask = await uploadBytesResumable(storageRef, imageFile);
-                imageUrl = await getDownloadURL(uploadTask.ref);
+                imageUrl = await uploadToCloudinary(imageFile, 'team');
             } catch (error) {
                 console.error("Error uploading image:", error);
                 alert("Image upload failed. Please try again.");
@@ -93,6 +91,7 @@ const TeamManager = () => {
 
         if (editingId) {
             updateTeamMember(editingId, teamData);
+            logAdminAction('Updated Team Member', 'Team Member', teamData.name, teamData);
             alert('Team member updated successfully!');
         } else {
             if (!imageUrl) {
@@ -100,6 +99,7 @@ const TeamManager = () => {
                 return;
             }
             addTeamMember(teamData);
+            logAdminAction('Added Team Member', 'Team Member', teamData.name, teamData);
             alert('Team member added successfully!');
         }
 
@@ -109,6 +109,7 @@ const TeamManager = () => {
     const handleDelete = (member) => {
         if (window.confirm(`Are you sure you want to remove "${member.name}" from the team?`)) {
             deleteTeamMember(member.id);
+            logAdminAction('Deleted Team Member', 'Team Member', member.name, member);
         }
     };
 

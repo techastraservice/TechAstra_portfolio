@@ -8,8 +8,11 @@ import ClientManager from './admin/ClientManager';
 import TeamManager from './admin/TeamManager';
 import ProjectManager from './admin/ProjectManager';
 import DashboardOverview from './admin/DashboardOverview';
-import { FileText, Users, UserPlus, FolderKanban, Menu, X } from 'lucide-react';
+import TestimonialManager from './admin/TestimonialManager';
+import SystemLogsManager from './admin/SystemLogsManager';
+import { FileText, Users, UserPlus, FolderKanban, Menu, X, MessageSquareQuote, Activity } from 'lucide-react';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { logAdminAction } from '../utils/logger';
 
 const Admin = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -44,7 +47,20 @@ const Admin = () => {
 
     const handleGoogleLogin = async () => {
         try {
-            await signInWithPopup(auth, googleProvider);
+            const result = await signInWithPopup(auth, googleProvider);
+            if (result && result.user) {
+                const allowedEmails = [
+                    "vivekvernekar02@gmail.com",
+                    "shivarajmani2005@gmail.com",
+                    "contactus.techastra@gmail.com"
+                ];
+                if (allowedEmails.includes(result.user.email.toLowerCase())) {
+                    await logAdminAction('Logged In', 'Session', result.user.email, { 
+                        method: 'Google OAuth',
+                        userAgent: navigator.userAgent
+                    });
+                }
+            }
         } catch (error) {
             console.error(`Popup Error: ${error.code} - ${error.message}`);
             alert(`Login Failed: ${error.code} - ${error.message}`);
@@ -185,6 +201,14 @@ const Admin = () => {
                         <FolderKanban className="w-5 h-5" />
                         <span className="font-medium">Projects</span>
                     </button>
+                    <button onClick={() => { setActiveTab('testimonials'); setIsMobileSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'testimonials' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                        <MessageSquareQuote className="w-5 h-5" />
+                        <span className="font-medium">Testimonials</span>
+                    </button>
+                    <button onClick={() => { setActiveTab('logs'); setIsMobileSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'logs' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                        <Activity className="w-5 h-5" />
+                        <span className="font-medium">System Logs</span>
+                    </button>
                 </nav>
 
                 <div className="p-4 border-t border-white/5">
@@ -211,22 +235,34 @@ const Admin = () => {
                                     activeTab === 'agreements' ? 'Agreement Generator' :
                                         activeTab === 'team' ? 'Team Management' :
                                             activeTab === 'projects' ? 'Project Management' :
-                                                'Client Management'}
+                                                activeTab === 'testimonials' ? 'Testimonial Management' :
+                                                    activeTab === 'logs' ? 'System Logs Activity' :
+                                                        'Client Management'}
                             </span>
                         </div>
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <div className="hidden sm:flex flex-col items-end">
-                            <span className="text-sm font-bold text-white uppercase tracking-wider">Admin User</span>
-                            <span className="text-[10px] text-cyan-500 font-mono tracking-widest">LEVEL 5 CLEARANCE</span>
+                        <div className="hidden sm:flex flex-col items-end max-w-[200px]">
+                            <span className="text-sm font-bold text-white uppercase tracking-wider truncate w-full text-right">
+                                {auth.currentUser?.displayName || auth.currentUser?.email?.split('@')[0] || 'Admin User'}
+                            </span>
+                            <span className="text-[10px] text-cyan-500 font-mono tracking-widest truncate w-full text-right w-32">
+                                {auth.currentUser?.email || 'SYSTEM_ADMIN'}
+                            </span>
                         </div>
                         <button onClick={() => signOut(auth)} className="md:hidden p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors border border-transparent hover:border-red-500/20" title="Log Out">
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
                         </button>
                         <div className="hidden sm:block w-10 h-10 rounded-lg bg-gradient-to-tr from-cyan-500 to-purple-600 p-[1px]">
-                            <div className="w-full h-full bg-[#0a0a0f] rounded-lg flex items-center justify-center">
-                                <span className="font-bold text-white">AU</span>
+                            <div className="w-full h-full bg-[#0a0a0f] rounded-lg flex items-center justify-center overflow-hidden">
+                                {auth.currentUser?.photoURL ? (
+                                    <img src={auth.currentUser.photoURL} alt="Profile" className="w-full h-full object-cover" />
+                                ) : (
+                                    <span className="font-bold text-white uppercase">
+                                        {(auth.currentUser?.displayName || auth.currentUser?.email || 'A')[0]}
+                                    </span>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -242,6 +278,10 @@ const Admin = () => {
                         <TeamManager />
                     ) : activeTab === 'projects' ? (
                         <ProjectManager />
+                    ) : activeTab === 'testimonials' ? (
+                        <TestimonialManager />
+                    ) : activeTab === 'logs' ? (
+                        <SystemLogsManager />
                     ) : (
                         <DashboardOverview />
                     )}

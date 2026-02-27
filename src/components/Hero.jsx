@@ -14,12 +14,10 @@ const Hero = () => {
     const [approvedClientCount, setApprovedClientCount] = React.useState(0);
 
     React.useEffect(() => {
-        const clientsRef = ref(database, 'clients');
+        const clientsRef = ref(database, 'site_stats/total_clients');
         const unsubscribe = onValue(clientsRef, (snapshot) => {
             if (snapshot.exists()) {
-                const data = snapshot.val();
-                const count = Object.values(data).filter(c => c.status === 'Approved').length;
-                setApprovedClientCount(count);
+                setApprovedClientCount(snapshot.val());
             } else {
                 setApprovedClientCount(0);
             }

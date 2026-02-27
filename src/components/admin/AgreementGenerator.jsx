@@ -4,6 +4,7 @@ import { Download, FileText, Loader2 } from 'lucide-react';
 import logo from '../../assets/techastra-logo.png';
 import { database } from '../../firebaseConfig';
 import { ref, push } from 'firebase/database';
+import { logAdminAction } from '../../utils/logger';
 
 const AgreementGenerator = () => {
     const [clientData, setClientData] = useState({
@@ -39,11 +40,13 @@ const AgreementGenerator = () => {
         try {
             // Save to Database in the background
             const clientsRef = ref(database, 'clients');
-            await push(clientsRef, {
+            const newClientData = {
                 ...clientData,
                 status: 'Pending',
                 generatedAt: Date.now()
-            });
+            };
+            await push(clientsRef, newClientData);
+            await logAdminAction('Generated Agreement', 'Agreement/Client', clientData.clientName, newClientData);
         } catch (error) {
             console.error("Error saving client:", error);
         }
