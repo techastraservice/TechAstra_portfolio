@@ -8,13 +8,14 @@ import ClientManager from './admin/ClientManager';
 import TeamManager from './admin/TeamManager';
 import ProjectManager from './admin/ProjectManager';
 import DashboardOverview from './admin/DashboardOverview';
-import { FileText, Users, UserPlus, FolderKanban } from 'lucide-react';
+import { FileText, Users, UserPlus, FolderKanban, Menu, X } from 'lucide-react';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
 const Admin = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('dashboard');
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -139,35 +140,48 @@ const Admin = () => {
             <div className="fixed inset-0 bg-grid-pattern opacity-[0.03] pointer-events-none"></div>
             <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent opacity-50"></div>
 
+            {/* Mobile Sidebar Backdrop */}
+            {isMobileSidebarOpen && (
+                <div 
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+                    onClick={() => setIsMobileSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="w-64 bg-[#0a0a0f] border-r border-white/5 flex flex-col z-20 hidden md:flex">
-                <div className="p-6 border-b border-white/5 flex items-center gap-3">
-                    <div className="w-8 h-8 relative">
-                        <div className="absolute inset-0 bg-cyan-500/20 blur-md rounded-full"></div>
-                        <img src={Logo} alt="TechAstra" className="w-full h-full object-contain relative" />
+            <aside className={`fixed inset-y-0 left-0 transform ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:relative md:translate-x-0 transition duration-300 ease-in-out w-64 bg-[#0a0a0f] border-r border-white/5 flex flex-col z-50`}>
+                <div className="p-6 border-b border-white/5 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 relative">
+                            <div className="absolute inset-0 bg-cyan-500/20 blur-md rounded-full"></div>
+                            <img src={Logo} alt="TechAstra" className="w-full h-full object-contain relative" />
+                        </div>
+                        <span className="font-bold text-lg tracking-wide text-white">TECH<span className="text-cyan-400">ASTRA</span></span>
                     </div>
-                    <span className="font-bold text-lg tracking-wide text-white">TECH<span className="text-cyan-400">ASTRA</span></span>
+                    <button onClick={() => setIsMobileSidebarOpen(false)} className="md:hidden text-gray-400 hover:text-white pb-1 focus:outline-none">
+                        <X className="w-6 h-6" />
+                    </button>
                 </div>
 
                 <nav className="flex-1 p-4 space-y-2">
                     <div className="text-xs font-mono text-gray-500 mb-4 px-2 tracking-widest">MAIN MENU</div>
-                    <button onClick={() => setActiveTab('dashboard')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'dashboard' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                    <button onClick={() => { setActiveTab('dashboard'); setIsMobileSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'dashboard' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
                         <span className="font-medium">Dashboard</span>
                     </button>
-                    <button onClick={() => setActiveTab('agreements')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'agreements' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                    <button onClick={() => { setActiveTab('agreements'); setIsMobileSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'agreements' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
                         <FileText className="w-5 h-5" />
                         <span className="font-medium">Agreements</span>
                     </button>
-                    <button onClick={() => setActiveTab('clients')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'clients' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                    <button onClick={() => { setActiveTab('clients'); setIsMobileSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'clients' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
                         <Users className="w-5 h-5" />
                         <span className="font-medium">Clients</span>
                     </button>
-                    <button onClick={() => setActiveTab('team')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'team' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                    <button onClick={() => { setActiveTab('team'); setIsMobileSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'team' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
                         <UserPlus className="w-5 h-5" />
                         <span className="font-medium">Team</span>
                     </button>
-                    <button onClick={() => setActiveTab('projects')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'projects' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                    <button onClick={() => { setActiveTab('projects'); setIsMobileSidebarOpen(false); }} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'projects' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
                         <FolderKanban className="w-5 h-5" />
                         <span className="font-medium">Projects</span>
                     </button>
@@ -184,25 +198,33 @@ const Admin = () => {
             {/* Main Content */}
             <main className="flex-1 flex flex-col h-screen overflow-hidden relative">
                 {/* Top Header */}
-                <header className="h-16 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-md flex items-center justify-between px-8 z-10">
-                    <div className="flex items-center gap-4 text-sm text-gray-400">
-                        <span className="text-white font-medium">Dashboard</span>
-                        <span>/</span>
-                        <span className="text-cyan-400">
-                            {activeTab === 'dashboard' ? 'Overview' :
-                                activeTab === 'agreements' ? 'Agreement Generator' :
-                                    activeTab === 'team' ? 'Team Management' :
-                                        activeTab === 'projects' ? 'Project Management' :
-                                            'Client Management'}
-                        </span>
+                <header className="h-16 border-b border-white/5 bg-[#0a0a0f]/80 backdrop-blur-md flex items-center justify-between px-4 sm:px-8 z-10 w-full">
+                    <div className="flex items-center gap-3">
+                        <button onClick={() => setIsMobileSidebarOpen(true)} className="md:hidden p-2 -ml-2 text-gray-400 hover:text-white focus:outline-none">
+                            <Menu className="w-6 h-6" />
+                        </button>
+                        <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400">
+                            <span className="text-white font-medium hidden sm:inline">Dashboard</span>
+                            <span className="hidden sm:inline">/</span>
+                            <span className="text-cyan-400">
+                                {activeTab === 'dashboard' ? 'Overview' :
+                                    activeTab === 'agreements' ? 'Agreement Generator' :
+                                        activeTab === 'team' ? 'Team Management' :
+                                            activeTab === 'projects' ? 'Project Management' :
+                                                'Client Management'}
+                            </span>
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-6">
-                        <div className="flex flex-col items-end">
+                    <div className="flex items-center gap-4">
+                        <div className="hidden sm:flex flex-col items-end">
                             <span className="text-sm font-bold text-white uppercase tracking-wider">Admin User</span>
                             <span className="text-[10px] text-cyan-500 font-mono tracking-widest">LEVEL 5 CLEARANCE</span>
                         </div>
-                        <div className="w-10 h-10 rounded-lg bg-gradient-to-tr from-cyan-500 to-purple-600 p-[1px]">
+                        <button onClick={() => signOut(auth)} className="md:hidden p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-colors border border-transparent hover:border-red-500/20" title="Log Out">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                        </button>
+                        <div className="hidden sm:block w-10 h-10 rounded-lg bg-gradient-to-tr from-cyan-500 to-purple-600 p-[1px]">
                             <div className="w-full h-full bg-[#0a0a0f] rounded-lg flex items-center justify-center">
                                 <span className="font-bold text-white">AU</span>
                             </div>
@@ -211,7 +233,7 @@ const Admin = () => {
                 </header>
 
                 {/* Dashboard Content */}
-                <div className="flex-1 overflow-y-auto p-8 relative">
+                <div className="flex-1 overflow-y-auto p-4 pb-24 md:p-8 relative">
                     {activeTab === 'agreements' ? (
                         <AgreementGenerator />
                     ) : activeTab === 'clients' ? (
@@ -225,6 +247,45 @@ const Admin = () => {
                     )}
                 </div>
             </main>
+
+            {/* Mobile Bottom Navigation */}
+            <nav className="md:hidden fixed bottom-0 left-0 w-full bg-[#0a0a0f]/95 backdrop-blur-xl border-t border-white/5 z-50 flex items-center justify-around p-2 px-4 shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
+                <button 
+                  onClick={() => setActiveTab('dashboard')} 
+                  className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all flex-1 ${activeTab === 'dashboard' ? 'text-cyan-400' : 'text-gray-500 hover:text-white'}`}
+                >
+                    <svg className={`w-5 h-5 ${activeTab === 'dashboard' ? 'drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <span className="text-[10px] font-medium tracking-wider">Overview</span>
+                </button>
+                <button 
+                  onClick={() => setActiveTab('agreements')} 
+                  className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all flex-1 ${activeTab === 'agreements' ? 'text-cyan-400' : 'text-gray-500 hover:text-white'}`}
+                >
+                    <FileText className={`w-5 h-5 ${activeTab === 'agreements' ? 'drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]' : ''}`} />
+                    <span className="text-[10px] font-medium tracking-wider">Docs</span>
+                </button>
+                <button 
+                  onClick={() => setActiveTab('clients')} 
+                  className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all flex-1 ${activeTab === 'clients' ? 'text-cyan-400' : 'text-gray-500 hover:text-white'}`}
+                >
+                    <Users className={`w-5 h-5 ${activeTab === 'clients' ? 'drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]' : ''}`} />
+                    <span className="text-[10px] font-medium tracking-wider">Clients</span>
+                </button>
+                <button 
+                  onClick={() => setActiveTab('team')} 
+                  className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all flex-1 ${activeTab === 'team' ? 'text-cyan-400' : 'text-gray-500 hover:text-white'}`}
+                >
+                    <UserPlus className={`w-5 h-5 ${activeTab === 'team' ? 'drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]' : ''}`} />
+                    <span className="text-[10px] font-medium tracking-wider">Team</span>
+                </button>
+                <button 
+                  onClick={() => setActiveTab('projects')} 
+                  className={`flex flex-col items-center gap-1 p-2 rounded-lg transition-all flex-1 ${activeTab === 'projects' ? 'text-cyan-400' : 'text-gray-500 hover:text-white'}`}
+                >
+                    <FolderKanban className={`w-5 h-5 ${activeTab === 'projects' ? 'drop-shadow-[0_0_8px_rgba(6,182,212,0.8)]' : ''}`} />
+                    <span className="text-[10px] font-medium tracking-wider">Projects</span>
+                </button>
+            </nav>
         </div>
     );
 
