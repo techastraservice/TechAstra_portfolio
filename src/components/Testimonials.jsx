@@ -69,7 +69,7 @@ const Testimonials = () => {
                          {/* Duplicate Content blocks exactly twice to ensure a perfect endless continuous loop (`-50%` wrapper translate logic natively expects two full sets to form exactly 100% boundary width without jumping gaps) */}
                          {[...row, ...row].map((testimonial, index) => (
                              <div 
-                                 key={`${testimonial.id || index}-${rowIndex}`} 
+                                 key={`${testimonial.id || index}-${rowIndex}-${index}`} 
                                  onClick={() => setSelectedTestimonial(testimonial)}
                                  className="bg-white dark:bg-[#0B0D14] border border-gray-200 dark:border-white/5 hover:border-cyan-500/30 rounded-2xl p-6 transition-all flex gap-4 md:gap-5 items-start w-[320px] md:w-[450px] shrink-0 cursor-pointer hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-500/10 group dark:shadow-none shadow-sm"
                              >

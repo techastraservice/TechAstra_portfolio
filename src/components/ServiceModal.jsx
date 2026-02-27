@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { X, Check, ArrowRight, Clock, DollarSign, MessageCircle, Mail } from 'lucide-react';
+import { X, Check, ArrowRight, Clock, DollarSign } from 'lucide-react';
+import { GmailIcon, WhatsAppIcon } from './BrandIcons';
 
 const ServiceModal = ({ isOpen, onClose, service }) => {
     const [showContactOptions, setShowContactOptions] = React.useState(false);
@@ -123,9 +124,9 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
                                     window.open(`https://wa.me/917483334990?text=${text}`, '_blank');
                                     setShowContactOptions(false);
                                 }}
-                                className="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-green-500/20 transition-all active:scale-95"
+                                className="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/20 transition-all active:scale-95"
                             >
-                                <MessageCircle size={18} /> WhatsApp
+                                <WhatsAppIcon className="w-5 h-5" /> WhatsApp
                             </button>
                             <button
                                 onClick={() => {
@@ -134,9 +135,9 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
                                     window.location.href = `mailto:contactus.techastra@gmail.com?subject=${subject}&body=${body}`;
                                     setShowContactOptions(false);
                                 }}
-                                className="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 transition-all active:scale-95"
+                                className="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-[#EA4335] hover:bg-[#C5221F] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#EA4335]/20 transition-all active:scale-95"
                             >
-                                <Mail size={18} /> Email
+                                <GmailIcon className="w-5 h-5" /> Email
                             </button>
                         </div>
                     ) : (

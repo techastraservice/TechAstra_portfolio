@@ -1,7 +1,28 @@
-import React from 'react';
-import { Mail, MapPin, MessageCircle, Send, ExternalLink } from 'lucide-react';
+import React, { useState } from 'react';
+import { MapPin, Send, ExternalLink } from 'lucide-react';
+import { GmailIcon, WhatsAppIcon } from './BrandIcons';
 
 const Contact = () => {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const { name, email, subject, message } = formData;
+        const mailtoSubject = encodeURIComponent(subject || 'Project Discussion');
+        const mailtoBody = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+        window.location.href = `mailto:contactus.techastra@gmail.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+    };
+
     return (
         <section id="contact" className="py-20 relative bg-gray-50 dark:bg-transparent transition-colors duration-300">
             <div className="container">
@@ -20,9 +41,9 @@ const Contact = () => {
                                 className="group relative"
                                 aria-label="Email Us"
                             >
-                                <div className="absolute inset-0 bg-cyan-500/20 rounded-2xl blur-xl group-hover:bg-cyan-500/40 transition-colors opacity-0 group-hover:opacity-100 duration-500" />
-                                <div className="relative w-20 h-20 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-cyan-600 dark:text-cyan-400 group-hover:scale-110 group-hover:border-cyan-500/50 group-hover:text-cyan-500 transition-all duration-300 shadow-lg shadow-cyan-500/5">
-                                    <Mail className="w-8 h-8" />
+                                <div className="absolute inset-0 bg-[#EA4335]/20 rounded-2xl blur-xl group-hover:bg-[#EA4335]/40 transition-colors opacity-0 group-hover:opacity-100 duration-500" />
+                                <div className="relative w-20 h-20 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-[#EA4335] group-hover:scale-110 group-hover:border-[#EA4335]/50 transition-all duration-300 shadow-lg shadow-[#EA4335]/5">
+                                    <GmailIcon className="w-8 h-8" />
                                 </div>
                                 <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">Email</span>
                             </a>
@@ -34,38 +55,70 @@ const Contact = () => {
                                 className="group relative"
                                 aria-label="WhatsApp Us"
                             >
-                                <div className="absolute inset-0 bg-green-500/20 rounded-2xl blur-xl group-hover:bg-green-500/40 transition-colors opacity-0 group-hover:opacity-100 duration-500" />
-                                <div className="relative w-20 h-20 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-green-600 dark:text-green-400 group-hover:scale-110 group-hover:border-green-500/50 group-hover:text-green-500 transition-all duration-300 shadow-lg shadow-green-500/5">
-                                    <MessageCircle className="w-8 h-8" />
+                                <div className="absolute inset-0 bg-[#25D366]/20 rounded-2xl blur-xl group-hover:bg-[#25D366]/40 transition-colors opacity-0 group-hover:opacity-100 duration-500" />
+                                <div className="relative w-20 h-20 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-[#25D366] group-hover:scale-110 group-hover:border-[#25D366]/50 transition-all duration-300 shadow-lg shadow-[#25D366]/5">
+                                    <WhatsAppIcon className="w-8 h-8" />
                                 </div>
                                 <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm font-medium text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300">WhatsApp</span>
                             </a>
                         </div>
                     </div>
 
-                    <form className="space-y-6 bg-gray-50 dark:bg-black/20 p-6 rounded-2xl border border-gray-200 dark:border-white/5 transition-colors">
+                    <form onSubmit={handleSubmit} className="space-y-6 bg-gray-50 dark:bg-black/20 p-6 rounded-2xl border border-gray-200 dark:border-white/5 transition-colors">
                         <div className="grid md:grid-cols-2 gap-6">
                             <div className="space-y-2">
                                 <label className="text-sm text-gray-700 dark:text-gray-300 transition-colors">Name</label>
-                                <input type="text" className="w-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors" placeholder="Your Name" />
+                                <input 
+                                    type="text" 
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleChange}
+                                    className="w-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors" 
+                                    placeholder="Your Name" 
+                                    required
+                                />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm text-gray-700 dark:text-gray-300 transition-colors">Email</label>
-                                <input type="email" className="w-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors" placeholder="your@email.com" />
+                                <input 
+                                    type="email" 
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    className="w-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors" 
+                                    placeholder="your@email.com" 
+                                    required
+                                />
                             </div>
                         </div>
 
                         <div className="space-y-2">
                             <label className="text-sm text-gray-700 dark:text-gray-300 transition-colors">Subject</label>
-                            <input type="text" className="w-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors" placeholder="Project Discussion" />
+                            <input 
+                                type="text" 
+                                name="subject"
+                                value={formData.subject}
+                                onChange={handleChange}
+                                className="w-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors" 
+                                placeholder="Project Discussion" 
+                                required
+                            />
                         </div>
 
                         <div className="space-y-2">
                             <label className="text-sm text-gray-700 dark:text-gray-300 transition-colors">Message</label>
-                            <textarea rows="4" className="w-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors" placeholder="Tell us about your project..."></textarea>
+                            <textarea 
+                                name="message"
+                                value={formData.message}
+                                onChange={handleChange}
+                                rows="4" 
+                                className="w-full bg-white dark:bg-white/5 border border-gray-300 dark:border-white/10 rounded-lg px-4 py-3 text-gray-900 dark:text-white focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 transition-colors" 
+                                placeholder="Tell us about your project..."
+                                required
+                            ></textarea>
                         </div>
 
-                        <button type="button" className="w-full btn-primary flex items-center justify-center gap-2">
+                        <button type="submit" className="w-full btn-primary flex items-center justify-center gap-2">
                             Send Message <Send size={18} />
                         </button>
                     </form>
