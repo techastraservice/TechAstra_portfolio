@@ -4,11 +4,26 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d0d12" />
     
+    <!-- Mobile App Support -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Tech Astra" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    
+    <!-- Performance Optimizations -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://techastra-14e42-default-rtdb.firebaseio.com" />
+    
+    <!-- Premium Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
     <!-- SEO Meta Tags -->
     <title>Tech Astra | Freelancing & Projects Building Company | Innovating the Future</title>
-    <meta name="description" content="Tech Astra is a premium student-led digital agency specializing in professional freelancing, academic project building, and cutting-edge software solutions. Bridging the gap between academia and industry." />
-    <meta name="keywords" content="freelancing, project building company, student developers, software development agency, academic projects, Tech Astra, professional consultancy, web development, digital innovation, student innovation group" />
+    <meta name="description" content="Tech Astra is a premium student-led digital agency specializing in professional freelancing, academic project building, and cutting-edge software solutions." />
+    <meta name="keywords" content="freelancing, project building company, student developers, software development agency, academic projects, Tech Astra, professional consultancy, web development, digital innovation" />
     <meta name="author" content="Tech Astra Team" />
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://techastra-14e42.web.app/" />
@@ -50,9 +65,65 @@
       ]
     }
     </script>
+    
+    <style>
+      #initial-loader {
+        position: fixed;
+        inset: 0;
+        background: #0d0d12;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease-out, visibility 0.5s;
+      }
+      .loader-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+      }
+      .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(6, 182, 212, 0.1);
+        border-top-color: #06b6d4;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      .loader-text {
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.875rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        font-weight: 600;
+        opacity: 0.6;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      body.loaded #initial-loader {
+        opacity: 0;
+        visibility: hidden;
+      }
+    </style>
   </head>
   <body>
+    <div id="initial-loader">
+      <div class="loader-content">
+        <div class="spinner"></div>
+        <div class="loader-text">Tech Astra</div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          document.body.classList.add('loaded');
+        }, 500);
+      });
+    </script>
   </body>
 </html>

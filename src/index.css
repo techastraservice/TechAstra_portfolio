@@ -10,6 +10,7 @@
 
 :root {
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-heading: 'Outfit', sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -60,6 +61,11 @@ body {
   @apply text-gray-900 dark:text-gray-100;
   overflow-x: hidden;
   position: relative;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
 }
 
 /* Dynamic background orbs */
