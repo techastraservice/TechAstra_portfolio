@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { useProjects } from '../context/ProjectContext';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import Logo from '../assets/techastra-logo.png'; // Import the logo
+import Logo from '../assets/techastra-logo.png';
 import { auth, googleProvider } from '../firebaseConfig';
 import AgreementGenerator from './admin/AgreementGenerator';
 import ClientManager from './admin/ClientManager';
 import TeamManager from './admin/TeamManager';
 import ProjectManager from './admin/ProjectManager';
-import { useTeam } from '../context/TeamContext';
+import DashboardOverview from './admin/DashboardOverview';
 import { FileText, Users, UserPlus, FolderKanban } from 'lucide-react';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
 const Admin = () => {
-    const { projects, totalVisits } = useProjects();
-    const { teamMembers } = useTeam();
-
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('dashboard');
@@ -225,42 +221,7 @@ const Admin = () => {
                     ) : activeTab === 'projects' ? (
                         <ProjectManager />
                     ) : (
-                        <>
-
-                            {/* Stats Row */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                                <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                        <svg className="w-16 h-16 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                                    </div>
-                                    <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">TOTAL PROJECTS</div>
-                                    <div className="text-3xl font-bold text-white flex items-baseline gap-2">
-                                        {projects.length}
-                                        <span className="text-xs text-green-500 font-mono">+1 NEW</span>
-                                    </div>
-                                </div>
-                                <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                        <svg className="w-16 h-16 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
-                                    </div>
-                                    <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">TOTAL VIEWS</div>
-                                    <div className="text-3xl font-bold text-white flex items-baseline gap-2">
-                                        {totalVisits ? totalVisits.toLocaleString() : '0'}
-                                        <span className="text-xs text-green-500 font-mono">+12%</span>
-                                    </div>
-                                </div>
-                                <div className="bg-[#0f0f16] border border-white/5 p-6 rounded-xl relative overflow-hidden group">
-                                    <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                                        <Users className="w-16 h-16 text-yellow-500" />
-                                    </div>
-                                    <div className="text-gray-400 text-xs font-mono tracking-widest mb-2">TEAM MEMBERS</div>
-                                    <div className="text-3xl font-bold text-white flex items-baseline gap-2">
-                                        {teamMembers.length}
-                                        <span className="text-xs text-green-500 font-mono pl-1">ACTIVE</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </>
+                        <DashboardOverview />
                     )}
                 </div>
             </main>
