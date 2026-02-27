@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
-import { X, Check, ArrowRight, Clock, DollarSign } from 'lucide-react';
+import { X, Check, ArrowRight, Clock, DollarSign, MessageCircle, Mail } from 'lucide-react';
 
 const ServiceModal = ({ isOpen, onClose, service }) => {
+    const [showContactOptions, setShowContactOptions] = React.useState(false);
     // Prevent body scroll when modal is open
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
+            setShowContactOptions(false);
         }
         return () => {
             document.body.style.overflow = 'unset';
@@ -113,18 +115,39 @@ const ServiceModal = ({ isOpen, onClose, service }) => {
                             </div>
                         )}
                     </div>
-                    <button
-                        onClick={() => {
-                            onClose();
-                            setTimeout(() => {
-                                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                            }, 100);
-                        }}
-                        className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-medium rounded-xl transition-all shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 group"
-                    >
-                        Get Started
-                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    {showContactOptions ? (
+                        <div className="flex gap-3 w-full sm:w-auto animate-in zoom-in duration-300">
+                            <button
+                                onClick={() => {
+                                    const text = encodeURIComponent(`Hello TechAstra, I'm interested in your ${service.title} services.`);
+                                    window.open(`https://wa.me/917483334990?text=${text}`, '_blank');
+                                    setShowContactOptions(false);
+                                }}
+                                className="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-green-500/20 transition-all active:scale-95"
+                            >
+                                <MessageCircle size={18} /> WhatsApp
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const subject = encodeURIComponent(`Inquiry: ${service.title} Services`);
+                                    const body = encodeURIComponent(`Hello TechAstra,\n\nI'm interested in your ${service.title} services. Please provide more information.\n\nThank you.`);
+                                    window.location.href = `mailto:contactus.techastra@gmail.com?subject=${subject}&body=${body}`;
+                                    setShowContactOptions(false);
+                                }}
+                                className="flex-1 sm:flex-none px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 transition-all active:scale-95"
+                            >
+                                <Mail size={18} /> Email
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => setShowContactOptions(true)}
+                            className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold rounded-xl transition-all shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2 group"
+                        >
+                            Get Started
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

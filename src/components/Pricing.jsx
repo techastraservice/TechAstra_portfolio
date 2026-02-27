@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
-import { X, Check, ArrowRight } from 'lucide-react';
+import { X, Check, ArrowRight, MessageCircle, Mail } from 'lucide-react';
 import { services } from './Services';
 
 const Pricing = ({ isOpen, onClose }) => {
     const [category, setCategory] = React.useState('business');
+    const [activeContactPlan, setActiveContactPlan] = React.useState(null);
+    const [showFooterContactOptions, setShowFooterContactOptions] = React.useState(false);
 
     // Prevent body scroll when the full-screen pricing is open
     useEffect(() => {
@@ -12,6 +14,7 @@ const Pricing = ({ isOpen, onClose }) => {
             window.scrollTo({ top: 0, behavior: 'instant' });
         } else {
             document.body.style.overflow = 'unset';
+            setActiveContactPlan(null);
         }
         return () => {
             document.body.style.overflow = 'unset';
@@ -103,21 +106,46 @@ const Pricing = ({ isOpen, onClose }) => {
                                         </p>
                                     </div>
 
-                                    <button
-                                        onClick={() => {
-                                            onClose();
-                                            setTimeout(() => {
-                                                document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                                            }, 200);
-                                        }}
-                                        className={`w-full py-3.5 px-6 rounded-2xl font-bold text-sm transition-all duration-300 mb-8 border border-gray-100 dark:border-white/5 active:scale-95 ${
-                                            isHighlighted 
-                                            ? 'bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 shadow-xl' 
-                                            : 'bg-black/5 dark:bg-white/5 text-gray-900 dark:text-white hover:bg-black/10 dark:hover:bg-white/10'
-                                        }`}
-                                    >
-                                        Select Plan
-                                    </button>
+                                    <div className="mb-8 min-h-[56px] relative">
+                                        {activeContactPlan === index ? (
+                                            <div className="flex gap-2 animate-in zoom-in duration-300">
+                                                <button
+                                                    onClick={() => {
+                                                        const price = service.details?.pricing?.includes('Rs.') ? service.details.pricing.split('+')[0] : (service.details?.pricing || 'Quote');
+                                                        const text = encodeURIComponent(`Hello TechAstra, I'm interested in the ${service.title} plan (${price}).`);
+                                                        window.open(`https://wa.me/917483334990?text=${text}`, '_blank');
+                                                        setActiveContactPlan(null);
+                                                    }}
+                                                    className="flex-1 py-4 px-2 rounded-2xl bg-green-500 hover:bg-green-600 text-white font-bold text-[11px] flex items-center justify-center gap-2 shadow-lg shadow-green-500/20 transition-all active:scale-95"
+                                                >
+                                                    <MessageCircle size={14} /> WhatsApp
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        const price = service.details?.pricing?.includes('Rs.') ? service.details.pricing.split('+')[0] : (service.details?.pricing || 'Quote');
+                                                        const subject = encodeURIComponent(`Inquiry: ${service.title} Plan`);
+                                                        const body = encodeURIComponent(`Hello TechAstra,\n\nI'm interested in the ${service.title} plan (${price}). Please provide more details.\n\nThank you.`);
+                                                        window.location.href = `mailto:contactus.techastra@gmail.com?subject=${subject}&body=${body}`;
+                                                        setActiveContactPlan(null);
+                                                    }}
+                                                    className="flex-1 py-4 px-2 rounded-2xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-[11px] flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 transition-all active:scale-95"
+                                                >
+                                                    <Mail size={14} /> Email
+                                                </button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={() => setActiveContactPlan(index)}
+                                                className={`w-full py-3.5 px-6 rounded-2xl font-bold text-sm transition-all duration-300 border border-gray-100 dark:border-white/5 active:scale-95 ${
+                                                    isHighlighted 
+                                                    ? 'bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-200 shadow-xl' 
+                                                    : 'bg-black/5 dark:bg-white/5 text-gray-900 dark:text-white hover:bg-black/10 dark:hover:bg-white/10'
+                                                }`}
+                                            >
+                                                Select Plan
+                                            </button>
+                                        )}
+                                    </div>
 
                                     <div className="mt-auto">
                                         <p className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-[0.2em] mb-5 border-b border-gray-100 dark:border-white/5 pb-2">Includes</p>
@@ -141,16 +169,39 @@ const Pricing = ({ isOpen, onClose }) => {
                 {/* Simplified Footer */}
                 <div className="w-full max-w-4xl border-t border-gray-100 dark:border-white/5 mt-auto pt-10 pb-12 text-center">
                     <p className="text-gray-500 dark:text-gray-500 text-sm font-medium">Need a bespoke enterprise quote?</p>
-                    <button
-                        onClick={() => {
-                            onClose();
-                            setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 200);
-                        }}
-                        className="mt-3 group inline-flex items-center gap-2 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 text-sm font-bold transition-all underline underline-offset-8"
-                    >
-                        Contact Strategic Sales Team
-                        <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                    </button>
+                    {showFooterContactOptions ? (
+                        <div className="flex gap-3 justify-center mt-4 animate-in zoom-in duration-300">
+                            <button
+                                onClick={() => {
+                                    const text = encodeURIComponent("Hello TechAstra, I'm interested in a bespoke enterprise quote.");
+                                    window.open("https://wa.me/917483334990?text=" + text, '_blank');
+                                    setShowFooterContactOptions(false);
+                                }}
+                                className="px-6 py-2 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-green-500/20 transition-all active:scale-95"
+                            >
+                                <MessageCircle size={14} /> WhatsApp
+                            </button>
+                            <button
+                                onClick={() => {
+                                    const subject = encodeURIComponent("Inquiry: Bespoke Enterprise Quote");
+                                    const body = encodeURIComponent("Hello TechAstra,\n\nI'm interested in a bespoke enterprise quote for my organization. Please get in touch.\n\nThank you.");
+                                    window.location.href = `mailto:contactus.techastra@gmail.com?subject=${subject}&body=${body}`;
+                                    setShowFooterContactOptions(false);
+                                }}
+                                className="px-6 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all active:scale-95"
+                            >
+                                <Mail size={14} /> Email
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => setShowFooterContactOptions(true)}
+                            className="mt-3 group inline-flex items-center gap-2 text-cyan-600 dark:text-cyan-400 hover:text-cyan-500 dark:hover:text-cyan-300 text-sm font-bold transition-all underline underline-offset-8"
+                        >
+                            Contact Strategic Sales Team
+                            <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

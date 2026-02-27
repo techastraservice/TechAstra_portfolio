@@ -64,7 +64,7 @@ const policyContent = {
             },
             {
                 heading: "Contact",
-                text: "For questions, email contactus.techastra@gmail.com or call +91 7483334990."
+                text: "For questions, email contactus.techastra@gmail.com."
             }
         ]
     },
@@ -149,7 +149,7 @@ const policyContent = {
             },
             {
                 heading: "Contact",
-                text: "Questions? Email contactus.techastra@gmail.com or call +91 7483334990."
+                text: "Questions? Email contactus.techastra@gmail.com."
             }
         ]
     },
@@ -218,7 +218,7 @@ const policyContent = {
             },
             {
                 heading: "Contact",
-                text: "Questions about cookies? Email contactus.techastra@gmail.com or call +91 7483334990."
+                text: "Questions about cookies? Email contactus.techastra@gmail.com."
             }
         ]
     }
