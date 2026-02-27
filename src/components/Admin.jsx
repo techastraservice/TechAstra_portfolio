@@ -7,34 +7,18 @@ import { auth, googleProvider } from '../firebaseConfig';
 import AgreementGenerator from './admin/AgreementGenerator';
 import ClientManager from './admin/ClientManager';
 import TeamManager from './admin/TeamManager';
+import ProjectManager from './admin/ProjectManager';
 import { useTeam } from '../context/TeamContext';
-import { ExternalLink, Github, Trash2, Search, FileText, Users, Edit2, UserPlus, Upload, Loader2 } from 'lucide-react';
-import { storage } from '../firebaseConfig';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth'; // Import auth functions
+import { FileText, Users, UserPlus, FolderKanban } from 'lucide-react';
+import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
 
 const Admin = () => {
-    const { addProject, projects, deleteProject, updateProject, totalVisits } = useProjects(); // Get projects and CRUD functions
+    const { projects, totalVisits } = useProjects();
     const { teamMembers } = useTeam();
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [searchTerm, setSearchTerm] = useState("");
     const [activeTab, setActiveTab] = useState('dashboard');
-    const [editingId, setEditingId] = useState(null);
-    const [uploading, setUploading] = useState(false);
-    const [imageFile, setImageFile] = useState(null);
-    const [imagePreview, setImagePreview] = useState(null);
-
-    const [formData, setFormData] = useState({
-        title: '',
-        category: '',
-        image: '', // This will be the URL after upload
-        desc: '',
-        technologies: '', // comma separated
-        liveLink: '', // optional
-        githubUrl: '' // optional
-    });
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -64,117 +48,11 @@ const Admin = () => {
     const handleGoogleLogin = async () => {
         try {
             await signInWithPopup(auth, googleProvider);
-            // State update handled by onAuthStateChanged
         } catch (error) {
             console.error(`Popup Error: ${error.code} - ${error.message}`);
             alert(`Login Failed: ${error.code} - ${error.message}`);
         }
     };
-
-    const handleEdit = (project) => {
-        setFormData({
-            title: project.title || '',
-            category: project.category || '',
-            image: project.image || '',
-            desc: project.desc || '',
-            technologies: Array.isArray(project.tech) ? project.tech.join(', ') : (project.tech || ''),
-            liveLink: project.liveLink || '',
-            githubUrl: project.githubUrl || ''
-        });
-        setImageFile(null);
-        setImagePreview(project.image || null);
-        setEditingId(project.id);
-
-        // Scroll to top where the form is
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => setImagePreview(reader.result);
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        let imageUrl = formData.image; // Keep existing image URL if no new file is uploaded
-
-        if (imageFile) {
-            setUploading(true);
-            try {
-                const storageRef = ref(storage, `projects/${Date.now()}_${imageFile.name}`);
-                const uploadTask = uploadBytesResumable(storageRef, imageFile);
-
-                await new Promise((resolve, reject) => {
-                    uploadTask.on('state_changed',
-                        (snapshot) => {
-                            // Optional: handle progress
-                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            console.log('Upload is ' + progress + '% done');
-                        },
-                        (error) => {
-                            console.error("Error uploading image:", error);
-                            reject(error);
-                        },
-                        async () => {
-                            imageUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                            resolve();
-                        }
-                    );
-                });
-            } catch (error) {
-                console.error("Error uploading image:", error);
-                alert("Image upload failed. Please try again.");
-                setUploading(false);
-                return;
-            }
-            setUploading(false);
-        }
-
-        const projectData = {
-            ...formData,
-            image: imageUrl,
-            tech: formData.technologies.split(',').map(t => t.trim()).filter(t => t) // Use 'tech' as per context
-        };
-        delete projectData.technologies; // Remove the temporary field
-
-        if (editingId) {
-            updateProject(editingId, projectData);
-            alert('Project updated successfully!');
-            setEditingId(null);
-        } else {
-            if (!imageUrl) {
-                alert("Please select a project image!");
-                return;
-            }
-            addProject(projectData);
-            alert('Project added successfully!');
-        }
-
-        setFormData({ title: '', category: '', image: '', desc: '', technologies: '', liveLink: '', githubUrl: '' });
-        setImageFile(null);
-        setImagePreview(null);
-    };
-
-    const handleDelete = (project) => {
-        if (window.confirm(`Are you sure you want to delete "${project.title}"? This action cannot be undone.`)) {
-            deleteProject(project.id);
-        }
-    };
-
-    const filteredProjects = projects.filter(p =>
-        p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.category.toLowerCase().includes(searchTerm.toLowerCase())
-    );
 
     if (loading) {
         return (
@@ -293,6 +171,10 @@ const Admin = () => {
                         <UserPlus className="w-5 h-5" />
                         <span className="font-medium">Team</span>
                     </button>
+                    <button onClick={() => setActiveTab('projects')} className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg border transition-all ${activeTab === 'projects' ? 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20 shadow-[0_0_15px_rgba(6,182,212,0.1)]' : 'text-gray-400 hover:text-white hover:bg-white/5 border-transparent'}`}>
+                        <FolderKanban className="w-5 h-5" />
+                        <span className="font-medium">Projects</span>
+                    </button>
                 </nav>
 
                 <div className="p-4 border-t border-white/5">
@@ -311,10 +193,11 @@ const Admin = () => {
                         <span className="text-white font-medium">Dashboard</span>
                         <span>/</span>
                         <span className="text-cyan-400">
-                            {activeTab === 'dashboard' ? 'Add Project' :
+                            {activeTab === 'dashboard' ? 'Overview' :
                                 activeTab === 'agreements' ? 'Agreement Generator' :
                                     activeTab === 'team' ? 'Team Management' :
-                                        'Client Management'}
+                                        activeTab === 'projects' ? 'Project Management' :
+                                            'Client Management'}
                         </span>
                     </div>
 
@@ -339,6 +222,8 @@ const Admin = () => {
                         <ClientManager />
                     ) : activeTab === 'team' ? (
                         <TeamManager />
+                    ) : activeTab === 'projects' ? (
+                        <ProjectManager />
                     ) : (
                         <>
 
@@ -372,233 +257,6 @@ const Admin = () => {
                                     <div className="text-3xl font-bold text-white flex items-baseline gap-2">
                                         {teamMembers.length}
                                         <span className="text-xs text-green-500 font-mono pl-1">ACTIVE</span>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                                {/* Form Section */}
-                                <div className="lg:col-span-1">
-                                    <div className="bg-[#0f0f16]/90 border border-white/10 rounded-2xl p-6 relative backdrop-blur-xl shadow-2xl sticky top-6">
-                                        <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
-
-                                        <h2 className="text-2xl font-bold mb-8 text-white flex items-center gap-3">
-                                            <span className="w-1 h-8 bg-cyan-500 rounded-full"></span>
-                                            {editingId ? 'Edit Project Protocol' : 'New Project Protocol'}
-                                        </h2>
-
-                                        <form onSubmit={handleSubmit} className="space-y-6">
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <div className="group">
-                                                    <label className="block text-xs font-mono text-cyan-500/80 mb-2 tracking-wider">PROJECT IDENTIFIER</label>
-                                                    <input
-                                                        type="text"
-                                                        name="title"
-                                                        value={formData.title}
-                                                        onChange={handleChange}
-                                                        className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white placeholder-gray-600 outline-none transition-all focus:bg-black/60 focus:shadow-[0_0_20px_rgba(6,182,212,0.1)]"
-                                                        required
-                                                        placeholder="Enter project name..."
-                                                    />
-                                                </div>
-                                                <div className="group">
-                                                    <label className="block text-xs font-mono text-purple-500/80 mb-2 tracking-wider">CATEGORY CLASSIFICATION</label>
-                                                    <input
-                                                        type="text"
-                                                        name="category"
-                                                        value={formData.category}
-                                                        onChange={handleChange}
-                                                        className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-purple-500/50 text-white placeholder-gray-600 outline-none transition-all focus:bg-black/60 focus:shadow-[0_0_20px_rgba(168,85,247,0.1)]"
-                                                        required
-                                                        placeholder="e.g. Web Development"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="group">
-                                                <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">PROJECT TEMPLATE IMAGE</label>
-                                                <div className="flex items-center gap-4">
-                                                    <div className="w-24 h-16 rounded-lg overflow-hidden bg-black/40 border border-white/10 shrink-0 flex items-center justify-center relative group/image">
-                                                        {imagePreview ? (
-                                                            <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                                                        ) : (
-                                                            <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                                                        )}
-                                                        <div className="absolute inset-0 bg-black/50 hidden group-hover/image:flex items-center justify-center transition-all">
-                                                            <Upload className="w-5 h-5 text-white" />
-                                                        </div>
-                                                        <input
-                                                            type="file"
-                                                            accept="image/*"
-                                                            onChange={handleImageChange}
-                                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                                            required={!editingId && !imagePreview}
-                                                        />
-                                                    </div>
-                                                    <div className="flex-1">
-                                                        <p className="text-sm text-gray-400 mb-1">Upload a visually stunning preview image.</p>
-                                                        <p className="text-xs text-gray-500">Supported formats: JPG, PNG, WEBP (16:9 ratio recommended).</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                                <div className="group">
-                                                    <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">DEPLOYMENT UPLINK (OPTIONAL)</label>
-                                                    <input
-                                                        type="url"
-                                                        name="liveLink"
-                                                        value={formData.liveLink}
-                                                        onChange={handleChange}
-                                                        className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-green-500/50 text-white placeholder-gray-600 outline-none transition-all"
-                                                        placeholder="https://"
-                                                    />
-                                                </div>
-                                                <div className="group">
-                                                    <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">GITHUB REPO (OPTIONAL)</label>
-                                                    <input
-                                                        type="url"
-                                                        name="githubUrl"
-                                                        value={formData.githubUrl}
-                                                        onChange={handleChange}
-                                                        className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-purple-500/50 text-white placeholder-gray-600 outline-none transition-all"
-                                                        placeholder="https://github.com/"
-                                                    />
-                                                </div>
-                                            </div>
-
-                                            <div className="group">
-                                                <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">TECH STACK (CSV)</label>
-                                                <input
-                                                    type="text"
-                                                    name="technologies"
-                                                    value={formData.technologies}
-                                                    onChange={handleChange}
-                                                    className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-yellow-500/50 text-white placeholder-gray-600 outline-none transition-all"
-                                                    required
-                                                    placeholder="React, Node.js, AI..."
-                                                />
-                                            </div>
-
-                                            <div className="group">
-                                                <label className="block text-xs font-mono text-gray-500 mb-2 tracking-wider">PROJECT DATA LOG</label>
-                                                <textarea
-                                                    name="desc"
-                                                    value={formData.desc}
-                                                    onChange={handleChange}
-                                                    className="w-full p-4 rounded-lg bg-black/40 border border-white/10 focus:border-cyan-500/50 text-white placeholder-gray-600 outline-none transition-all h-32 resize-none"
-                                                    required
-                                                    placeholder="Detailed system description..."
-                                                ></textarea>
-                                            </div>
-
-                                            <div className="pt-4 flex justify-end gap-4">
-                                                {editingId && (
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => {
-                                                            setEditingId(null);
-                                                            setFormData({ title: '', category: '', image: '', desc: '', technologies: '', liveLink: '', githubUrl: '' });
-                                                            setImageFile(null);
-                                                            setImagePreview(null);
-                                                        }}
-                                                        className="py-3 px-6 bg-gray-500/10 hover:bg-gray-500/20 text-gray-400 font-bold rounded-lg transition-all border border-gray-500/30 text-sm uppercase tracking-wider"
-                                                    >
-                                                        CANCEL
-                                                    </button>
-                                                )}
-                                                <button
-                                                    type="submit"
-                                                    disabled={uploading}
-                                                    className={`py-3 px-6 font-bold rounded-lg transition-all border shadow-[0_0_15px_rgba(6,182,212,0.1)] text-sm uppercase tracking-wider flex items-center gap-2
-                                                        ${uploading
-                                                            ? 'bg-gray-800 border-gray-700 text-gray-500 cursor-not-allowed'
-                                                            : 'bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-400 border-cyan-500/30 hover:border-cyan-500/60 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]'
-                                                        }`}
-                                                >
-                                                    {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
-                                                    {uploading ? 'Uploading...' : (editingId ? 'UPDATE TEMPLATE' : 'ADD TEMPLATE')}
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-
-                                {/* Right/Bottom: Project List */}
-                                <div className="lg:col-span-2">
-                                    <div className="bg-[#0f0f16]/90 border border-white/10 rounded-2xl p-6 backdrop-blur-xl shadow-2xl">
-                                        <div className="flex justify-between items-center mb-6">
-                                            <h2 className="text-xl font-bold text-white flex items-center gap-3">
-                                                <span className="w-1 h-6 bg-purple-500 rounded-full"></span>
-                                                Active Projects Directory
-                                            </h2>
-                                            <div className="relative">
-                                                <input
-                                                    type="text"
-                                                    placeholder="Search database..."
-                                                    value={searchTerm}
-                                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                                    className="bg-black/40 border border-white/10 rounded-lg py-2 px-4 pl-10 text-sm text-white focus:border-cyan-500/50 outline-none w-48 md:w-64 transition-all"
-                                                />
-                                                <Search className="w-4 h-4 text-gray-500 absolute left-3 top-2.5" />
-                                            </div>
-                                        </div>
-
-                                        <div className="space-y-4">
-                                            {filteredProjects.map((project) => (
-                                                <div key={project.id} className="group bg-black/20 hover:bg-white/5 border border-white/5 hover:border-cyan-500/30 rounded-xl p-4 flex flex-col md:flex-row gap-4 transition-all duration-300">
-                                                    <div className="w-full md:w-32 h-32 rounded-lg overflow-hidden relative">
-                                                        <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                                                        <div className="absolute inset-0 bg-cyan-500/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                                    </div>
-                                                    <div className="flex-1 flex flex-col justify-between">
-                                                        <div>
-                                                            <div className="flex justify-between items-start">
-                                                                <div>
-                                                                    <div className="flex items-center gap-2 mb-1">
-                                                                        <h3 className="text-lg font-bold text-white">{project.title}</h3>
-                                                                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">{project.category}</span>
-                                                                    </div>
-                                                                    <p className="text-gray-500 text-xs line-clamp-2 md:line-clamp-1">{project.desc}</p>
-                                                                </div>
-                                                                <div className="flex gap-1">
-                                                                    <button
-                                                                        onClick={() => handleEdit(project)}
-                                                                        className="p-2 text-gray-500 hover:text-cyan-500 hover:bg-cyan-500/10 rounded-lg transition-colors"
-                                                                        title="Edit Project"
-                                                                    >
-                                                                        <Edit2 size={18} />
-                                                                    </button>
-                                                                    <button
-                                                                        onClick={() => handleDelete(project)}
-                                                                        className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
-                                                                        title="Delete Project"
-                                                                    >
-                                                                        <Trash2 size={18} />
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex flex-wrap gap-2 mt-3">
-                                                                {project.tech.map((t, i) => (
-                                                                    <span key={i} className="text-[10px] text-gray-400 font-mono bg-white/5 px-2 py-1 rounded">{t}</span>
-                                                                ))}
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex items-center gap-4 mt-4 pt-4 border-t border-white/5 text-xs font-mono text-gray-600">
-                                                            <span>ID: <span className="text-gray-400">P-{project.id || 'LEGACY'}</span></span>
-                                                            <span>STATUS: <span className="text-green-500">ACTIVE</span></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-
-                                            {filteredProjects.length === 0 && (
-                                                <div className="text-center py-12 text-gray-500">
-                                                    <p>No projects found matching your query.</p>
-                                                </div>
-                                            )}
-                                        </div>
                                     </div>
                                 </div>
                             </div>
