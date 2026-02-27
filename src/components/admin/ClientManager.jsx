@@ -7,6 +7,7 @@ const ClientManager = () => {
     const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
+    const [selectedClient, setSelectedClient] = useState(null);
 
     useEffect(() => {
         const clientsRef = ref(database, 'clients');
@@ -98,11 +99,11 @@ const ClientManager = () => {
                                 filteredClients.map((client) => (
                                     <tr key={client.id} className="hover:bg-white/5 transition-colors group">
                                         <td className="p-4">
-                                            <div className="font-bold text-white">{client.clientName}</div>
+                                            <div className="font-bold text-white cursor-pointer hover:text-cyan-400 transition-colors" onClick={() => setSelectedClient(client)}>{client.clientName}</div>
                                             <div className="text-xs text-gray-500">ID: {client.id.slice(0, 8)}...</div>
                                         </td>
                                         <td className="p-4 text-gray-300">{client.projectTitle}</td>
-                                        <td className="p-4 font-mono text-cyan-400">₹{client.price}</td>
+                                        <td className="p-4 font-mono text-cyan-400">₹{client.priceWithoutResource || client.priceWithResource || 'N/A'}</td>
                                         <td className="p-4 text-sm text-gray-500">
                                             {new Date(client.generatedAt || Date.now()).toLocaleDateString()}
                                         </td>
@@ -159,6 +160,86 @@ const ClientManager = () => {
                     </table>
                 </div>
             </div>
+
+            {/* Client Details Modal */}
+            {selectedClient && (
+                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                    <div className="bg-[#0f0f16] border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden relative">
+                        {/* Modal Header */}
+                        <div className="p-6 border-b border-white/5 flex justify-between items-center bg-[#0a0a0f]">
+                            <div>
+                                <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                                    <User className="text-cyan-500" />
+                                    Client Profile
+                                </h3>
+                                <p className="text-xs text-gray-500 font-mono mt-1">ID: {selectedClient.id}</p>
+                            </div>
+                            <button
+                                onClick={() => setSelectedClient(null)}
+                                className="text-gray-500 hover:text-white transition-colors p-2"
+                            >
+                                <XCircle size={24} />
+                            </button>
+                        </div>
+
+                        {/* Modal Body */}
+                        <div className="p-6 overflow-y-auto custom-scrollbar space-y-6">
+                            <div className="grid grid-cols-2 gap-6">
+                                <div>
+                                    <p className="text-xs font-mono text-gray-500 mb-1">CLIENT NAME</p>
+                                    <p className="text-white font-medium">{selectedClient.clientName || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-mono text-gray-500 mb-1">PROJECT TITLE</p>
+                                    <p className="text-cyan-400 font-medium">{selectedClient.projectTitle || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-mono text-gray-500 mb-1">EMAIL</p>
+                                    <p className="text-white font-medium">{selectedClient.clientEmail || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-mono text-gray-500 mb-1">PHONE</p>
+                                    <p className="text-white font-medium">{selectedClient.clientPhone || 'N/A'}</p>
+                                </div>
+                                <div className="col-span-2">
+                                    <p className="text-xs font-mono text-gray-500 mb-1">ADDRESS</p>
+                                    <p className="text-white font-medium">{selectedClient.clientAddress || 'N/A'}</p>
+                                </div>
+                            </div>
+                            
+                            <hr className="border-white/5" />
+                            
+                            <div className="grid grid-cols-2 gap-6">
+                                <div>
+                                    <p className="text-xs font-mono text-gray-500 mb-1">PRICE (WO/RESOURCE)</p>
+                                    <p className="text-white font-mono">₹{selectedClient.priceWithoutResource || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-mono text-gray-500 mb-1">PRICE (W/RESOURCE)</p>
+                                    <p className="text-white font-mono">₹{selectedClient.priceWithResource || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-mono text-gray-500 mb-1">DURATION</p>
+                                    <p className="text-white">{selectedClient.duration || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs font-mono text-gray-500 mb-1">START DATE</p>
+                                    <p className="text-white">{selectedClient.startDate || 'N/A'}</p>
+                                </div>
+                            </div>
+
+                            <hr className="border-white/5" />
+
+                            <div>
+                                <p className="text-xs font-mono text-gray-500 mb-2">DELIVERABLES</p>
+                                <div className="bg-black/30 p-4 rounded-xl border border-white/5 text-gray-300 text-sm whitespace-pre-wrap">
+                                    {selectedClient.deliverables || 'No deliverables specified.'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

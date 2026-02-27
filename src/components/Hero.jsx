@@ -5,21 +5,28 @@ import logo from '../assets/techastra-logo.png';
 import Reveal from './Reveal';
 import { useProjects } from '../context/ProjectContext';
 import TeamModal from './TeamModal';
+import { database } from '../firebaseConfig';
+import { ref, onValue } from 'firebase/database';
 
 const Hero = () => {
     const { projects, totalVisits } = useProjects();
     const [isTeamModalOpen, setIsTeamModalOpen] = React.useState(false);
+    const [approvedClientCount, setApprovedClientCount] = React.useState(0);
 
-    // TODO: future integration with Firebase for real-time visit count
-    // useEffect(() => {
-    //     // const database = getDatabase(app);
-    //     // const visitsRef = ref(database, 'visits');
-    //     // get(visitsRef).then((snapshot) => {
-    //     //   if (snapshot.exists()) {
-    //     //     setVisitCount(snapshot.val());
-    //     //   }
-    //     // });
-    // }, []);
+    React.useEffect(() => {
+        const clientsRef = ref(database, 'clients');
+        const unsubscribe = onValue(clientsRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                const count = Object.values(data).filter(c => c.status === 'Approved').length;
+                setApprovedClientCount(count);
+            } else {
+                setApprovedClientCount(0);
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     return (
         <>
@@ -118,7 +125,7 @@ const Hero = () => {
                                 <p className="text-gray-600 dark:text-gray-400 font-medium uppercase tracking-wider text-sm">Total Visits</p>
                             </div>
                             <div className="p-4 transition-transform hover:-translate-y-1 duration-300">
-                                <h3 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent mb-2">50+</h3>
+                                <h3 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent mb-2">{approvedClientCount > 0 ? approvedClientCount : '0'}+</h3>
                                 <p className="text-gray-600 dark:text-gray-400 font-medium uppercase tracking-wider text-sm">Total Clients</p>
                             </div>
                         </div>
