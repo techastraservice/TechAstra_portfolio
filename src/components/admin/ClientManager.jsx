@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { database } from '../../firebaseConfig';
-import { ref, onValue, update, remove } from "firebase/database";
+import { ref, onValue, update, remove, set } from "firebase/database";
 import { CheckCircle, XCircle, Trash2, Clock, Search, User } from 'lucide-react';
 
 const ClientManager = () => {
@@ -20,8 +20,13 @@ const ClientManager = () => {
                 }));
                 // Sort by generatedAt descending (newest first)
                 setClients(loadedClients.sort((a, b) => b.generatedAt - a.generatedAt));
+                
+                // Sync public stats based correctly on status
+                const approvedCount = loadedClients.filter(c => c.status === 'Approved').length;
+                set(ref(database, 'site_stats/total_clients'), approvedCount);
             } else {
                 setClients([]);
+                set(ref(database, 'site_stats/total_clients'), 0);
             }
             setLoading(false);
         });
