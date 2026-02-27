@@ -12,6 +12,7 @@ import TestimonialManager from './admin/TestimonialManager';
 import SystemLogsManager from './admin/SystemLogsManager';
 import { FileText, Users, UserPlus, FolderKanban, Menu, X, MessageSquareQuote, Activity } from 'lucide-react';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
+import { logAdminAction } from '../utils/logger';
 
 const Admin = () => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -46,7 +47,20 @@ const Admin = () => {
 
     const handleGoogleLogin = async () => {
         try {
-            await signInWithPopup(auth, googleProvider);
+            const result = await signInWithPopup(auth, googleProvider);
+            if (result && result.user) {
+                const allowedEmails = [
+                    "vivekvernekar02@gmail.com",
+                    "shivarajmani2005@gmail.com",
+                    "contactus.techastra@gmail.com"
+                ];
+                if (allowedEmails.includes(result.user.email.toLowerCase())) {
+                    await logAdminAction('Logged In', 'Session', result.user.email, { 
+                        method: 'Google OAuth',
+                        userAgent: navigator.userAgent
+                    });
+                }
+            }
         } catch (error) {
             console.error(`Popup Error: ${error.code} - ${error.message}`);
             alert(`Login Failed: ${error.code} - ${error.message}`);
