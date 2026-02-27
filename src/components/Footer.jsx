@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Linkedin, Github, X } from 'lucide-react';
 import logo from '../assets/techastra-logo.png';
+import { GmailIcon, WhatsAppIcon } from './BrandIcons';
 
 const policyContent = {
     privacy: {
@@ -347,6 +348,12 @@ const Footer = () => {
                                 </a>
                                 <a href="https://www.linkedin.com/company/tech-astra/" target="_blank" rel="noopener noreferrer" className="btn-icon-only w-10 h-10 hover:text-blue-500">
                                     <Linkedin size={18} />
+                                </a>
+                                <a href="https://wa.me/917483334990" target="_blank" rel="noopener noreferrer" className="btn-icon-only w-10 h-10 hover:text-[#25D366]">
+                                    <WhatsAppIcon className="w-[18px] h-[18px]" />
+                                </a>
+                                <a href="mailto:contactus.techastra@gmail.com" className="btn-icon-only w-10 h-10 hover:text-[#EA4335]">
+                                    <GmailIcon className="w-[18px] h-[18px]" />
                                 </a>
                             </div>
                         </div>

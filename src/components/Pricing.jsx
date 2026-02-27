@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
-import { X, Check, ArrowRight, MessageCircle, Mail } from 'lucide-react';
+import { X, Check, ArrowRight } from 'lucide-react';
 import { services } from './Services';
+import { GmailIcon, WhatsAppIcon } from './BrandIcons';
 
 const Pricing = ({ isOpen, onClose }) => {
     const [category, setCategory] = React.useState('business');
@@ -116,9 +117,9 @@ const Pricing = ({ isOpen, onClose }) => {
                                                         window.open(`https://wa.me/917483334990?text=${text}`, '_blank');
                                                         setActiveContactPlan(null);
                                                     }}
-                                                    className="flex-1 py-4 px-2 rounded-2xl bg-green-500 hover:bg-green-600 text-white font-bold text-[11px] flex items-center justify-center gap-2 shadow-lg shadow-green-500/20 transition-all active:scale-95"
+                                                    className="flex-1 py-4 px-2 rounded-2xl bg-[#25D366] hover:bg-[#128C7E] text-white font-bold text-[11px] flex items-center justify-center gap-2 shadow-lg shadow-[#25D366]/20 transition-all active:scale-95"
                                                 >
-                                                    <MessageCircle size={14} /> WhatsApp
+                                                    <WhatsAppIcon className="w-4 h-4" /> WhatsApp
                                                 </button>
                                                 <button
                                                     onClick={() => {
@@ -128,9 +129,9 @@ const Pricing = ({ isOpen, onClose }) => {
                                                         window.location.href = `mailto:contactus.techastra@gmail.com?subject=${subject}&body=${body}`;
                                                         setActiveContactPlan(null);
                                                     }}
-                                                    className="flex-1 py-4 px-2 rounded-2xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-[11px] flex items-center justify-center gap-2 shadow-lg shadow-cyan-500/20 transition-all active:scale-95"
+                                                    className="flex-1 py-4 px-2 rounded-2xl bg-[#EA4335] hover:bg-[#C5221F] text-white font-bold text-[11px] flex items-center justify-center gap-2 shadow-lg shadow-[#EA4335]/20 transition-all active:scale-95"
                                                 >
-                                                    <Mail size={14} /> Email
+                                                    <GmailIcon className="w-4 h-4" /> Email
                                                 </button>
                                             </div>
                                         ) : (
@@ -179,7 +180,7 @@ const Pricing = ({ isOpen, onClose }) => {
                                 }}
                                 className="px-6 py-2 rounded-xl bg-green-500 hover:bg-green-600 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-green-500/20 transition-all active:scale-95"
                             >
-                                <MessageCircle size={14} /> WhatsApp
+                                <WhatsAppIcon className="w-4 h-4" /> WhatsApp
                             </button>
                             <button
                                 onClick={() => {
@@ -188,9 +189,9 @@ const Pricing = ({ isOpen, onClose }) => {
                                     window.location.href = `mailto:contactus.techastra@gmail.com?subject=${subject}&body=${body}`;
                                     setShowFooterContactOptions(false);
                                 }}
-                                className="px-6 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-cyan-500/20 transition-all active:scale-95"
+                                className="px-6 py-2 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-red-500/20 transition-all active:scale-95"
                             >
-                                <Mail size={14} /> Email
+                                <GmailIcon className="w-4 h-4" /> Email
                             </button>
                         </div>
                     ) : (
