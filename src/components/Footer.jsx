@@ -256,7 +256,7 @@ const PolicyModal = ({ isOpen, onClose, policyKey }) => {
                     </div>
                     <button
                         onClick={onClose}
-                        className="w-8 h-8 rounded-full bg-gray-100 dark:bg-white/10 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/20 hover:text-gray-900 dark:hover:text-white transition-colors"
+                        className="btn-icon-only"
                     >
                         <X size={16} />
                     </button>
@@ -342,10 +342,10 @@ const Footer = () => {
                         <div>
                             <h4 className="text-gray-900 dark:text-white font-bold mb-4 transition-colors">Connect</h4>
                             <div className="flex gap-4">
-                                <a href="https://github.com/Tech-Astra" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-800 transition-all">
+                                <a href="https://github.com/Tech-Astra" target="_blank" rel="noopener noreferrer" className="btn-icon-only w-10 h-10">
                                     <Github size={18} />
                                 </a>
-                                <a href="https://www.linkedin.com/company/tech-astra/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-gray-100 dark:bg-white/5 flex items-center justify-center text-gray-700 dark:text-white hover:bg-blue-100 dark:hover:bg-blue-600 hover:text-blue-600 dark:hover:text-white transition-all">
+                                <a href="https://www.linkedin.com/company/tech-astra/" target="_blank" rel="noopener noreferrer" className="btn-icon-only w-10 h-10 hover:text-blue-500">
                                     <Linkedin size={18} />
                                 </a>
                             </div>

@@ -165,7 +165,7 @@ const TestimonialManager = () => {
                 </h2>
                 <button
                     onClick={openModalForNew}
-                    className="flex items-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-4 py-2 rounded-lg font-medium transition-all shadow-lg hover:shadow-cyan-500/25"
+                    className="btn-primary"
                 >
                     <Plus size={18} /> Add Testimonial
                 </button>
@@ -187,7 +187,7 @@ const TestimonialManager = () => {
                                 </h3>
                                 <button
                                     onClick={closeModal}
-                                    className="text-gray-500 hover:text-white transition-colors p-2"
+                                    className="btn-icon-only"
                                 >
                                     <XCircle size={24} />
                                 </button>
@@ -291,14 +291,14 @@ const TestimonialManager = () => {
                                         <button
                                             type="button"
                                             onClick={closeModal}
-                                            className="px-6 py-2.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 transition-colors font-medium border border-transparent hover:border-white/10"
+                                            className="btn-secondary"
                                         >
                                             Cancel
                                         </button>
                                         <button
                                             type="submit"
                                             disabled={uploading}
-                                            className="px-6 py-2.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white font-medium transition-colors border border-cyan-500/50 disabled:opacity-50 flex items-center gap-2 shadow-lg shadow-cyan-500/20"
+                                            className={uploading ? "btn-secondary opacity-50 cursor-not-allowed" : "btn-primary"}
                                         >
                                             {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
                                             {editingId ? 'Save Changes' : 'Publish Testimonial'}
@@ -314,18 +314,17 @@ const TestimonialManager = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
                     {testimonials.map((testimonial) => (
                         <div key={testimonial.id} className="bg-[#0f0f16]/60 border border-white/5 hover:border-white/10 rounded-2xl p-6 relative group transition-all flex flex-col h-full hover:shadow-[0_8px_30px_rgba(0,0,0,0.5)]">
-                            
-                            <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all z-10">
+                                                        <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all z-10">
                                 <button 
                                     onClick={() => openModalForEdit(testimonial)}
-                                    className="p-2 text-gray-500 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-colors"
+                                    className="btn-icon-only hover:text-cyan-400 hover:bg-cyan-500/10"
                                     title="Edit Testimonial"
                                 >
                                     <Edit2 size={16} />
                                 </button>
                                 <button 
                                     onClick={() => handleDelete(testimonial)}
-                                    className="p-2 text-gray-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                                    className="btn-icon-only hover:text-red-500 hover:bg-red-500/10"
                                     title="Delete Testimonial"
                                 >
                                     <Trash2 size={16} />

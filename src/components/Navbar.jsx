@@ -38,7 +38,7 @@ const Navbar = ({ isAuthenticated, onLogout, onPricingClick, onNavClick, isPrici
 
                     <button
                         onClick={toggleTheme}
-                        className="p-2 rounded-full bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors text-gray-700 dark:text-white"
+                        className="btn-icon-only"
                         aria-label="Toggle theme"
                     >
                         {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
@@ -47,7 +47,7 @@ const Navbar = ({ isAuthenticated, onLogout, onPricingClick, onNavClick, isPrici
                     {isAuthenticated ? (
                         <button
                             onClick={onLogout}
-                            className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 font-medium transition-colors shadow-lg shadow-red-500/20"
+                            className="btn-danger py-2 px-4"
                         >
                             Sign Out
                         </button>
@@ -60,13 +60,13 @@ const Navbar = ({ isAuthenticated, onLogout, onPricingClick, onNavClick, isPrici
                 <div className="flex items-center gap-4 md:hidden">
                     <button
                         onClick={toggleTheme}
-                        className="p-2 rounded-full bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors text-gray-700 dark:text-white"
+                        className="btn-icon-only"
                     >
                         {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
                     </button>
 
-                    <button className="text-gray-900 dark:text-white" onClick={() => setIsOpen(!isOpen)}>
-                        {isOpen ? <X /> : <Menu />}
+                    <button className="btn-icon-only" onClick={() => setIsOpen(!isOpen)}>
+                        {isOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
                 </div>
             </div>
@@ -85,7 +85,7 @@ const Navbar = ({ isAuthenticated, onLogout, onPricingClick, onNavClick, isPrici
                                 onLogout();
                                 setIsOpen(false);
                             }}
-                            className="bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg font-medium text-center mt-2 shadow-lg shadow-red-500/20"
+                            className="btn-danger w-full mt-2"
                         >
                             Sign Out
                         </button>

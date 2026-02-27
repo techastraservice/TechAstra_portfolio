@@ -132,7 +132,7 @@ const TeamManager = () => {
 
                 <button
                     onClick={() => { resetForm(); setShowForm(true); }}
-                    className="flex items-center gap-2 px-5 py-3 font-bold rounded-lg transition-all border text-sm uppercase tracking-wider bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-400 border-cyan-500/30 hover:border-cyan-500/60 shadow-[0_0_15px_rgba(6,182,212,0.1)] hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]"
+                    className="btn-primary"
                 >
                     <Plus size={18} />
                     Add Team Member
@@ -161,7 +161,7 @@ const TeamManager = () => {
                             </h3>
                             <button
                                 onClick={resetForm}
-                                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:bg-white/20 hover:text-white transition-colors"
+                                className="btn-icon-only"
                             >
                                 <X size={16} />
                             </button>
@@ -273,18 +273,14 @@ const TeamManager = () => {
                                     <button
                                         type="button"
                                         onClick={resetForm}
-                                        className="py-2.5 px-6 bg-gray-500/10 hover:bg-gray-500/20 text-gray-400 font-bold rounded-lg transition-all border border-gray-500/30 text-xs uppercase tracking-wider"
+                                        className="btn-secondary"
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={uploading}
-                                        className={`py-2.5 px-6 font-bold rounded-lg transition-all border shadow-[0_0_15px_rgba(6,182,212,0.1)] text-xs uppercase tracking-wider flex items-center gap-2
-                                            ${uploading
-                                                ? 'bg-gray-800 border-gray-700 text-gray-500 cursor-not-allowed'
-                                                : 'bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-400 border-cyan-500/30 hover:border-cyan-500/60 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]'
-                                            }`}
+                                        className={uploading ? "btn-secondary opacity-50 cursor-not-allowed" : "btn-primary"}
                                     >
                                         {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
                                         {uploading ? 'Uploading...' : (editingId ? 'Update Member' : 'Add Member')}
@@ -330,14 +326,14 @@ const TeamManager = () => {
                             <div className="flex flex-col gap-2 shrink-0">
                                 <button
                                     onClick={() => handleEdit(member)}
-                                    className="p-1.5 text-gray-500 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition-colors"
+                                    className="btn-icon-only hover:text-cyan-400 hover:bg-cyan-500/10"
                                     title="Edit Member"
                                 >
                                     <Edit2 size={16} />
                                 </button>
                                 <button
                                     onClick={() => handleDelete(member)}
-                                    className="p-1.5 text-gray-500 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
+                                    className="btn-icon-only hover:text-red-400 hover:bg-red-500/10"
                                     title="Remove Member"
                                 >
                                     <Trash2 size={16} />

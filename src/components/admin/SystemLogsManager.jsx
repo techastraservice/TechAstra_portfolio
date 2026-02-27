@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { database } from '../../firebaseConfig';
-import { ref, onValue } from "firebase/database";
-import { Activity, Search, Eye, XCircle, Clock, Database, User } from 'lucide-react';
+import { ref, onValue, query, orderByChild } from "firebase/database";
+import { Activity, Search, Eye, XCircle, Clock, Database, User, RefreshCw } from 'lucide-react';
 
 const SystemLogsManager = () => {
     const [logs, setLogs] = useState([]);
@@ -9,20 +9,33 @@ const SystemLogsManager = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedLog, setSelectedLog] = useState(null);
     const [sortBy, setSortBy] = useState("newest");
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+    const handleRefresh = () => {
+        setLoading(true);
+        setRefreshTrigger(prev => prev + 1);
+    };
 
     useEffect(() => {
-        const logsRef = ref(database, 'system_logs');
-        const unsubscribe = onValue(logsRef, (snapshot) => {
+        // Query firebase natively ordering by child node timestamp
+        const logsQuery = query(ref(database, 'system_logs'), orderByChild('timestamp'));
+        
+        const unsubscribe = onValue(logsQuery, (snapshot) => {
             if (snapshot.exists()) {
-                const data = snapshot.val();
-                const loadedLogs = Object.keys(data).map(key => ({
-                    id: key,
-                    ...data[key]
-                }));
+                const loadedLogs = [];
+                // Natively iterate using snapshot.forEach to preserve Firebase ordering
+                snapshot.forEach((childSnapshot) => {
+                    loadedLogs.push({
+                        id: childSnapshot.key,
+                        ...childSnapshot.val()
+                    });
+                });
                 
+                // loadedLogs is ordered oldest -> newest by Firebase
                 // Deduplicate logs based on identical actions and exact payloads
                 const uniqueLogs = [];
                 const seenLogs = new Set();
+                
                 for (const log of loadedLogs) {
                     const fingerprint = `${log.action}-${log.entityIdentifier}-${JSON.stringify(log.details)}`;
                     if (!seenLogs.has(fingerprint)) {
@@ -39,17 +52,18 @@ const SystemLogsManager = () => {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [refreshTrigger]);
 
     let sortedLogs = [...logs];
     if (sortBy === 'newest') {
-        sortedLogs.sort((a, b) => b.timestamp - a.timestamp);
+        // Reverse firebase's default oldest->newest order
+        sortedLogs.reverse();
     } else if (sortBy === 'oldest') {
-        sortedLogs.sort((a, b) => a.timestamp - b.timestamp);
+        // Do nothing, this is the native Firebase order
     } else if (sortBy === 'action') {
-        sortedLogs.sort((a, b) => a.action.localeCompare(b.action));
+        sortedLogs.sort((a, b) => (a.action || '').localeCompare(b.action || ''));
     } else if (sortBy === 'entity') {
-        sortedLogs.sort((a, b) => a.entityType.localeCompare(b.entityType));
+        sortedLogs.sort((a, b) => (a.entityType || '').localeCompare(b.entityType || ''));
     }
 
     const filteredLogs = sortedLogs.filter(log =>
@@ -72,6 +86,13 @@ const SystemLogsManager = () => {
                     System Logs Activity
                 </h2>
                 <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <button
+                        onClick={handleRefresh}
+                        className="btn-icon-only hover:border-cyan-500/50 hover:bg-cyan-500/10 hover:text-cyan-400"
+                        title="Refresh Logs"
+                    >
+                        <RefreshCw size={18} className={loading ? "animate-spin text-cyan-500" : ""} />
+                    </button>
                     <select
                         value={sortBy}
                         onChange={(e) => setSortBy(e.target.value)}
@@ -142,7 +163,7 @@ const SystemLogsManager = () => {
                                         <td className="p-4 text-right">
                                             <button
                                                 onClick={() => setSelectedLog(log)}
-                                                className="inline-flex items-center gap-2 p-2 px-3 text-xs bg-white/5 hover:bg-white/10 text-cyan-400 rounded-lg transition-colors border border-white/10 hover:border-cyan-500/30 font-medium"
+                                                className="btn-secondary py-2 px-3 text-xs"
                                                 title="View Full Payload"
                                             >
                                                 <Eye size={14} /> View
@@ -180,7 +201,7 @@ const SystemLogsManager = () => {
                             </div>
                             <button
                                 onClick={() => setSelectedLog(null)}
-                                className="text-gray-500 hover:text-white transition-colors p-2"
+                                className="btn-icon-only"
                             >
                                 <XCircle size={24} />
                             </button>

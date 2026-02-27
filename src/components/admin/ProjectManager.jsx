@@ -140,7 +140,7 @@ const ProjectManager = () => {
 
                 <button
                     onClick={() => { resetForm(); setShowForm(true); }}
-                    className="flex items-center gap-2 px-5 py-3 font-bold rounded-lg transition-all border text-sm uppercase tracking-wider bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-400 border-cyan-500/30 hover:border-cyan-500/60 shadow-[0_0_15px_rgba(6,182,212,0.1)] hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]"
+                    className="btn-primary"
                 >
                     <Plus size={18} />
                     Add New Project
@@ -169,7 +169,7 @@ const ProjectManager = () => {
                             </h3>
                             <button
                                 onClick={resetForm}
-                                className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-gray-400 hover:bg-white/20 hover:text-white transition-colors"
+                                className="btn-icon-only"
                             >
                                 <X size={16} />
                             </button>
@@ -286,18 +286,14 @@ const ProjectManager = () => {
                                     <button
                                         type="button"
                                         onClick={resetForm}
-                                        className="py-3 px-6 bg-gray-500/10 hover:bg-gray-500/20 text-gray-400 font-bold rounded-lg transition-all border border-gray-500/30 text-sm uppercase tracking-wider"
+                                        className="btn-secondary"
                                     >
                                         CANCEL
                                     </button>
                                     <button
                                         type="submit"
                                         disabled={uploading}
-                                        className={`py-3 px-6 font-bold rounded-lg transition-all border shadow-[0_0_15px_rgba(6,182,212,0.1)] text-sm uppercase tracking-wider flex items-center gap-2
-                                            ${uploading
-                                                ? 'bg-gray-800 border-gray-700 text-gray-500 cursor-not-allowed'
-                                                : 'bg-cyan-600/20 hover:bg-cyan-600/30 text-cyan-400 border-cyan-500/30 hover:border-cyan-500/60 hover:shadow-[0_0_20px_rgba(6,182,212,0.2)]'
-                                            }`}
+                                        className={uploading ? "btn-secondary opacity-50 cursor-not-allowed" : "btn-primary"}
                                     >
                                         {uploading && <Loader2 className="w-4 h-4 animate-spin" />}
                                         {uploading ? 'Uploading...' : (editingId ? 'UPDATE TEMPLATE' : 'ADD TEMPLATE')}
@@ -348,14 +344,14 @@ const ProjectManager = () => {
                                         <div className="flex gap-1">
                                             <button
                                                 onClick={() => handleEdit(project)}
-                                                className="p-2 text-gray-500 hover:text-cyan-500 hover:bg-cyan-500/10 rounded-lg transition-colors"
+                                                className="btn-icon-only hover:text-cyan-500 hover:bg-cyan-500/10"
                                                 title="Edit Project"
                                             >
                                                 <Edit2 size={18} />
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(project)}
-                                                className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+                                                className="btn-icon-only hover:text-red-500 hover:bg-red-500/10"
                                                 title="Delete Project"
                                             >
                                                 <Trash2 size={18} />
