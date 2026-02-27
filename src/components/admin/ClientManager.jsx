@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { database } from '../../firebaseConfig';
 import { ref, onValue, update, remove, set } from "firebase/database";
 import { CheckCircle, XCircle, Trash2, Clock, Search, User } from 'lucide-react';
+import { logAdminAction } from '../../utils/logger';
 
 const ClientManager = () => {
     const [clients, setClients] = useState([]);
@@ -34,22 +35,28 @@ const ClientManager = () => {
         return () => unsubscribe();
     }, []);
 
-    const updateStatus = async (id, status) => {
+    const updateStatus = async (id, status, clientData) => {
         const clientRef = ref(database, `clients/${id}`);
         try {
             await update(clientRef, { status });
-            // alert(`Client marked as ${status}`);
+            await logAdminAction(
+                status === 'Approved' ? 'Approved Client' : 'Rejected Client',
+                'Client',
+                clientData.clientName,
+                clientData
+            );
         } catch (error) {
             console.error("Error updating status:", error);
             alert("Failed to update status");
         }
     };
 
-    const deleteClient = async (id) => {
+    const deleteClient = async (clientData) => {
         if (window.confirm("Are you sure you want to delete this client record?")) {
-            const clientRef = ref(database, `clients/${id}`);
+            const clientRef = ref(database, `clients/${clientData.id}`);
             try {
                 await remove(clientRef);
+                await logAdminAction('Deleted Client', 'Client', clientData.clientName, clientData);
             } catch (error) {
                 console.error("Error deleting client:", error);
             }
@@ -128,14 +135,14 @@ const ClientManager = () => {
                                                 {client.status === 'Pending' && (
                                                     <>
                                                         <button
-                                                            onClick={() => updateStatus(client.id, 'Approved')}
+                                                            onClick={() => updateStatus(client.id, 'Approved', client)}
                                                             className="p-2 bg-green-500/10 text-green-400 hover:bg-green-500/20 rounded-lg transition-colors"
                                                             title="Approve"
                                                         >
                                                             <CheckCircle size={18} />
                                                         </button>
                                                         <button
-                                                            onClick={() => updateStatus(client.id, 'Rejected')}
+                                                            onClick={() => updateStatus(client.id, 'Rejected', client)}
                                                             className="p-2 bg-red-500/10 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors"
                                                             title="Reject"
                                                         >
@@ -144,7 +151,7 @@ const ClientManager = () => {
                                                     </>
                                                 )}
                                                 <button
-                                                    onClick={() => deleteClient(client.id)}
+                                                    onClick={() => deleteClient(client)}
                                                     className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors ml-2"
                                                     title="Delete"
                                                 >

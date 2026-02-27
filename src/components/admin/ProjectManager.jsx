@@ -3,6 +3,7 @@ import { useProjects } from '../../context/ProjectContext';
 import { ExternalLink, Github, Trash2, Search, Edit2, Upload, Loader2, Plus, X, FolderOpen } from 'lucide-react';
 import { storage } from '../../firebaseConfig';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { logAdminAction } from '../../utils/logger';
 
 const ProjectManager = () => {
     const { addProject, projects, deleteProject, updateProject } = useProjects();
@@ -117,6 +118,7 @@ const ProjectManager = () => {
 
         if (editingId) {
             updateProject(editingId, projectData);
+            logAdminAction('Updated Project', 'Project', projectData.title, projectData);
             alert('Project updated successfully!');
         } else {
             if (!imageUrl) {
@@ -124,6 +126,7 @@ const ProjectManager = () => {
                 return;
             }
             addProject(projectData);
+            logAdminAction('Added Project', 'Project', projectData.title, projectData);
             alert('Project added successfully!');
         }
 
@@ -133,6 +136,7 @@ const ProjectManager = () => {
     const handleDelete = (project) => {
         if (window.confirm(`Are you sure you want to delete "${project.title}"? This action cannot be undone.`)) {
             deleteProject(project.id);
+            logAdminAction('Deleted Project', 'Project', project.title, project);
         }
     };
 

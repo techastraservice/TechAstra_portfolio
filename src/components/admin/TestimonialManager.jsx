@@ -3,6 +3,7 @@ import { database, storage } from '../../firebaseConfig';
 import { ref as dbRef, onValue, push, remove, update } from "firebase/database";
 import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { MessageSquareQuote, Plus, Trash2, Upload, Loader2, Star, User, Edit2, XCircle } from 'lucide-react';
+import { logAdminAction } from '../../utils/logger';
 
 const TestimonialManager = () => {
     const [testimonials, setTestimonials] = useState([]);
@@ -73,17 +74,21 @@ const TestimonialManager = () => {
             if (editingId) {
                 // Update existing
                 const testimonialRef = dbRef(database, `testimonials/${editingId}`);
-                await update(testimonialRef, {
+                const updateData = {
                     ...formData,
                     updatedAt: Date.now()
-                });
+                };
+                await update(testimonialRef, updateData);
+                await logAdminAction('Updated Testimonial', 'Testimonial', formData.clientName, updateData);
             } else {
                 // Create new
                 const testimonialsRef = dbRef(database, 'testimonials');
-                await push(testimonialsRef, {
+                const newData = {
                     ...formData,
                     createdAt: Date.now()
-                });
+                };
+                await push(testimonialsRef, newData);
+                await logAdminAction('Added Testimonial', 'Testimonial', formData.clientName, newData);
             }
 
             // Reset form
@@ -136,11 +141,12 @@ const TestimonialManager = () => {
         });
     };
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (testimonial) => {
         if (window.confirm("Are you sure you want to delete this testimonial?")) {
             try {
-                const testimonialRef = dbRef(database, `testimonials/${id}`);
+                const testimonialRef = dbRef(database, `testimonials/${testimonial.id}`);
                 await remove(testimonialRef);
+                await logAdminAction('Deleted Testimonial', 'Testimonial', testimonial.clientName, testimonial);
             } catch (error) {
                 console.error("Error deleting testimonial:", error);
             }
@@ -320,7 +326,7 @@ const TestimonialManager = () => {
                                     <Edit2 size={16} />
                                 </button>
                                 <button 
-                                    onClick={() => handleDelete(testimonial.id)}
+                                    onClick={() => handleDelete(testimonial)}
                                     className="p-2 text-gray-600 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
                                     title="Delete Testimonial"
                                 >
