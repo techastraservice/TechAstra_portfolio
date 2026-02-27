@@ -89,10 +89,16 @@ const Projects = () => {
                                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                                 />
 
+                                {/* Floating Top Badge */}
+                                <div className="absolute top-4 left-4 z-20">
+                                    <span className="bg-black/50 backdrop-blur-[2px] border border-white/20 text-cyan-400 px-3 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider shadow-[0_4px_10px_rgba(0,0,0,0.5)] block transition-colors group-hover:bg-cyan-500/20 group-hover:border-cyan-500/50 group-hover:text-cyan-300">
+                                        {project.category}
+                                    </span>
+                                </div>
+
                                 <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 z-20 bg-gradient-to-t from-black/95 via-black/80 to-transparent">
                                     <div className="flex justify-between items-end">
                                         <div className="w-full">
-                                            <span className="text-cyan-400 text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2 block">{project.category}</span>
                                             <h3 className="text-lg md:text-2xl font-bold text-white mb-1 md:mb-2 truncate">{project.title}</h3>
                                             <p className="text-gray-300 text-xs md:text-sm mb-2 md:mb-4 line-clamp-2 hidden md:block">{project.desc}</p>
                                             <div className="flex flex-wrap gap-1 md:gap-2 mb-2 md:mb-4">
