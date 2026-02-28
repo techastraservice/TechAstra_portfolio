@@ -69,6 +69,12 @@ const TeamManager = () => {
         }
     };
 
+    const handleRemoveImage = () => {
+        setImageFile(null);
+        setImagePreview(null);
+        setFormData({ ...formData, image: '' });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -217,9 +223,18 @@ const TeamManager = () => {
                                                 required={!editingId && !imagePreview}
                                             />
                                         </div>
-                                        <div className="flex-1">
+                                        <div className="flex-1 space-y-2">
                                             <p className="text-sm text-gray-400 mb-1">Upload a squarish image (1:1 ratio recommended).</p>
                                             <p className="text-xs text-gray-500">Supported formats: JPG, PNG, WEBP.</p>
+                                            {imagePreview && (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleRemoveImage}
+                                                    className="text-xs text-red-500 hover:text-red-400 transition-colors flex items-center gap-1 mt-2 bg-red-500/10 hover:bg-red-500/20 px-2 py-1 rounded"
+                                                >
+                                                    <Trash2 size={12} /> Remove Image
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
                                 </div>

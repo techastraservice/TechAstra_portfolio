@@ -4,11 +4,11 @@ export const uploadToCloudinary = async (file, folder = 'techastra_portfolio') =
     const apiSecret = "J8OmOiitUY3WB-Ec7D_jagNKsEA";
 
     const timestamp = Math.round((new Date).getTime() / 1000);
-    
+
     // Generate signature payload according to Cloudinary spec
     // Parameters must be sorted alphabetically
     const signatureString = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
-    
+
     // Create SHA-1 signature using Web Crypto API
     const msgBuffer = new TextEncoder().encode(signatureString);
     const hashBuffer = await crypto.subtle.digest('SHA-1', msgBuffer);
@@ -34,7 +34,10 @@ export const uploadToCloudinary = async (file, folder = 'techastra_portfolio') =
     }
 
     const data = await response.json();
-    
+
     // Returning the secure URL which can be directly saved to Firebase
-    return data.secure_url;
+    // Inject transformation parameters to optimize image delivery (resize to 400x400 max, auto format, auto quality)
+    const optimizedUrl = data.secure_url.replace('/upload/', '/upload/w_400,h_400,c_fill,q_auto,f_auto/');
+
+    return optimizedUrl;
 };
