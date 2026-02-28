@@ -30,7 +30,7 @@ const ProjectModal = ({ isOpen, onClose, project }) => {
                 {/* Close Button - Floating */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 z-50 p-2 bg-black/50 hover:bg-black/80 rounded-full transition-colors text-gray-400 hover:text-white backdrop-blur-sm shadow-sm"
+                    className="absolute top-4 right-4 z-50 p-2 bg-white/80 dark:bg-black/50 hover:bg-gray-100 dark:hover:bg-black/80 rounded-full transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white backdrop-blur-sm shadow-sm border border-gray-200 dark:border-transparent"
                 >
                     <X className="w-5 h-5" />
                 </button>
@@ -47,18 +47,18 @@ const ProjectModal = ({ isOpen, onClose, project }) => {
                 )}
 
                 {/* Right Side: Content */}
-                <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar bg-[#0a0a0a] transition-colors">
+                <div className="flex-1 flex flex-col overflow-y-auto custom-scrollbar bg-white dark:bg-[#0a0a0a] transition-colors">
                     <div className="p-6 md:p-8 space-y-6 flex-1 mt-8 md:mt-0">
                         {/* Header Info */}
                         <div>
-                            <span className="text-cyan-400 text-sm font-bold uppercase tracking-wider block mb-2">{project.category}</span>
-                            <h3 className="text-2xl sm:text-3xl font-bold text-white transition-colors pr-8">{project.title}</h3>
+                            <span className="text-cyan-600 dark:text-cyan-400 text-sm font-bold uppercase tracking-wider block mb-2">{project.category}</span>
+                            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white transition-colors pr-8">{project.title}</h3>
                         </div>
 
                         {/* Description */}
-                        <div className="prose prose-invert max-w-none">
-                            <h4 className="text-lg font-semibold text-white mb-2">About the Project</h4>
-                            <p className="text-gray-300 text-[15px] sm:text-base leading-relaxed transition-colors whitespace-pre-line">
+                        <div>
+                            <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">About the Project</h4>
+                            <p className="text-gray-600 dark:text-gray-300 text-[15px] sm:text-base leading-relaxed transition-colors whitespace-pre-line">
                                 {project.desc}
                             </p>
                         </div>
@@ -66,12 +66,12 @@ const ProjectModal = ({ isOpen, onClose, project }) => {
                         {/* Technologies Grid */}
                         {project.tech && project.tech.length > 0 && (
                             <div>
-                                <h4 className="text-lg font-semibold text-white mb-3 flex items-center gap-2 transition-colors">
+                                <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2 transition-colors">
                                     Technologies Used
                                 </h4>
                                 <div className="flex flex-wrap gap-2">
                                     {project.tech.map((t, i) => (
-                                        <span key={i} className="text-sm text-gray-300 bg-[#1a1a1a] px-3 py-1.5 rounded-lg border border-white/5 shadow-sm font-medium">
+                                        <span key={i} className="text-sm text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-[#1a1a1a] px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/5 shadow-sm font-medium transition-colors">
                                             {t}
                                         </span>
                                     ))}
@@ -81,7 +81,7 @@ const ProjectModal = ({ isOpen, onClose, project }) => {
                     </div>
 
                     {/* Footer with Actions */}
-                    <div className="p-6 md:p-8 border-t border-white/5 bg-[#0a0a0a] flex flex-col sm:flex-row items-center gap-4 transition-colors">
+                    <div className="p-6 md:p-8 border-t border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-[#0a0a0a] flex flex-col sm:flex-row items-center gap-4 transition-colors">
                         {project.liveLink && (
                             <a
                                 href={project.liveLink}
@@ -98,7 +98,7 @@ const ProjectModal = ({ isOpen, onClose, project }) => {
                                 href={project.github}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="w-full sm:flex-1 px-6 py-3 rounded-xl border border-white/10 text-gray-300 hover:bg-white/5 transition-colors font-medium flex items-center justify-center gap-2 shadow-sm"
+                                className="w-full sm:flex-1 px-6 py-3 rounded-xl border border-gray-200 dark:border-white/10 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/5 transition-colors font-medium flex items-center justify-center gap-2 shadow-sm"
                             >
                                 <Github size={20} />
                                 Source Code

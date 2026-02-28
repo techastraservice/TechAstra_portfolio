@@ -39,7 +39,7 @@ const Testimonials = () => {
     testimonials.forEach((t, i) => rows[i % 2].push(t));
 
     return (
-        <section id="testimonials" className="py-24 relative bg-gray-50 dark:bg-[#050505] overflow-hidden transition-colors duration-300">
+        <section id="testimonials" className="py-24 relative bg-gray-50 dark:bg-transparent overflow-hidden transition-colors duration-300">
             {/* Ambient Background Glows */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[120px] pointer-events-none"></div>
@@ -58,41 +58,41 @@ const Testimonials = () => {
             {/* Seamless Horizontally Scrolling Marquee Rows */}
             <div className="relative w-full flex flex-col gap-6 overflow-hidden max-w-[100vw]">
                 {/* Left/Right Gradient Mask for smooth fade-in/-out effect */}
-                <div className="absolute top-0 left-0 w-16 md:w-48 h-full bg-gradient-to-r from-gray-50 dark:from-[#050505] to-transparent z-10 pointer-events-none transition-colors"></div>
-                <div className="absolute top-0 right-0 w-16 md:w-48 h-full bg-gradient-to-l from-gray-50 dark:from-[#050505] to-transparent z-10 pointer-events-none transition-colors"></div>
+                <div className="absolute top-0 left-0 w-16 md:w-48 h-full bg-gradient-to-r from-gray-50 dark:from-black to-transparent z-10 pointer-events-none transition-colors"></div>
+                <div className="absolute top-0 right-0 w-16 md:w-48 h-full bg-gradient-to-l from-gray-50 dark:from-black to-transparent z-10 pointer-events-none transition-colors"></div>
 
                 {rows.map((row, rowIndex) => (
-                     <div 
-                         key={rowIndex} 
-                         className={`flex gap-6 w-max pause-on-hover ${rowIndex % 2 === 0 ? 'animate-marquee' : 'animate-marquee-reverse'}`}
-                     >
-                         {/* Duplicate Content blocks exactly twice to ensure a perfect endless continuous loop (`-50%` wrapper translate logic natively expects two full sets to form exactly 100% boundary width without jumping gaps) */}
-                         {[...row, ...row].map((testimonial, index) => (
-                             <div 
-                                 key={`${testimonial.id || index}-${rowIndex}-${index}`} 
-                                 onClick={() => setSelectedTestimonial(testimonial)}
-                                 className="bg-white dark:bg-[#0B0D14] border border-gray-200 dark:border-white/5 hover:border-cyan-500/30 rounded-2xl p-6 transition-all flex gap-4 md:gap-5 items-start w-[320px] md:w-[450px] shrink-0 cursor-pointer hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-500/10 group dark:shadow-none shadow-sm"
-                             >
-                                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden shrink-0 border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-black/50">
-                                     {testimonial.imageUrl ? (
-                                         <img src={testimonial.imageUrl} alt={testimonial.clientName} className="w-full h-full object-cover" />
-                                     ) : (
-                                         <div className="w-full h-full flex items-center justify-center bg-gradient-to-tr from-cyan-600 to-purple-600 text-white font-bold">
-                                             {testimonial.clientName ? testimonial.clientName[0].toUpperCase() : 'C'}
-                                         </div>
-                                     )}
-                                 </div>
+                    <div
+                        key={rowIndex}
+                        className={`flex gap-6 w-max pause-on-hover ${rowIndex % 2 === 0 ? 'animate-marquee' : 'animate-marquee-reverse'}`}
+                    >
+                        {/* Duplicate Content blocks exactly twice to ensure a perfect endless continuous loop (`-50%` wrapper translate logic natively expects two full sets to form exactly 100% boundary width without jumping gaps) */}
+                        {[...row, ...row].map((testimonial, index) => (
+                            <div
+                                key={`${testimonial.id || index}-${rowIndex}-${index}`}
+                                onClick={() => setSelectedTestimonial(testimonial)}
+                                className="bg-white dark:bg-[#0B0D14] border border-gray-200 dark:border-white/5 hover:border-cyan-500/30 rounded-2xl p-6 transition-all flex gap-4 md:gap-5 items-start w-[320px] md:w-[450px] shrink-0 cursor-pointer hover:-translate-y-1 hover:shadow-2xl hover:shadow-cyan-500/10 group dark:shadow-none shadow-sm"
+                            >
+                                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full overflow-hidden shrink-0 border border-gray-200 dark:border-white/10 bg-gray-100 dark:bg-black/50">
+                                    {testimonial.imageUrl ? (
+                                        <img src={testimonial.imageUrl} alt={testimonial.clientName} className="w-full h-full object-cover" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-tr from-cyan-600 to-purple-600 text-white font-bold">
+                                            {testimonial.clientName ? testimonial.clientName[0].toUpperCase() : 'C'}
+                                        </div>
+                                    )}
+                                </div>
 
-                                 <div className="flex-1">
-                                     <p className="text-gray-600 dark:text-gray-400 text-[13px] md:text-sm leading-relaxed mb-4 font-normal line-clamp-3 group-hover:text-gray-900 dark:group-hover:text-gray-300 transition-colors">
-                                         "{testimonial.content}"
-                                     </p>
-                                     <div className="text-cyan-600 dark:text-cyan-500 font-medium text-xs md:text-[13px] transition-colors">
-                                         @{testimonial.company ? testimonial.company.replace(/\s+/g, '').toLowerCase() : testimonial.clientName.replace(/\s+/g, '').toLowerCase()}
-                                     </div>
-                                 </div>
-                             </div>
-                         ))}
+                                <div className="flex-1">
+                                    <p className="text-gray-600 dark:text-gray-400 text-[13px] md:text-sm leading-relaxed mb-4 font-normal line-clamp-3 group-hover:text-gray-900 dark:group-hover:text-gray-300 transition-colors">
+                                        "{testimonial.content}"
+                                    </p>
+                                    <div className="text-cyan-600 dark:text-cyan-500 font-medium text-xs md:text-[13px] transition-colors">
+                                        @{testimonial.company ? testimonial.company.replace(/\s+/g, '').toLowerCase() : testimonial.clientName.replace(/\s+/g, '').toLowerCase()}
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 ))}
             </div>
@@ -114,12 +114,12 @@ const Testimonials = () => {
 
                         <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.3)] mb-6 mx-auto">
                             {selectedTestimonial.imageUrl ? (
-                                 <img src={selectedTestimonial.imageUrl} alt={selectedTestimonial.clientName} className="w-full h-full object-cover" />
-                             ) : (
-                                 <div className="w-full h-full flex items-center justify-center bg-gradient-to-tr from-cyan-600 to-purple-600 text-white font-bold text-2xl">
-                                     {selectedTestimonial.clientName ? selectedTestimonial.clientName[0].toUpperCase() : 'C'}
-                                 </div>
-                             )}
+                                <img src={selectedTestimonial.imageUrl} alt={selectedTestimonial.clientName} className="w-full h-full object-cover" />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-gradient-to-tr from-cyan-600 to-purple-600 text-white font-bold text-2xl">
+                                    {selectedTestimonial.clientName ? selectedTestimonial.clientName[0].toUpperCase() : 'C'}
+                                </div>
+                            )}
                         </div>
 
                         <p className="text-gray-700 dark:text-gray-300 md:text-lg leading-relaxed mb-8 italic transition-colors">

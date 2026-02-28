@@ -58,30 +58,31 @@ const Hero = () => {
                                 >
                                     Start Now <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                                 </a>
-                                <a
-                                    href="#projects"
-                                    className="btn-secondary"
+                                <button
+                                    type="button"
+                                    onClick={() => setIsTeamModalOpen(true)}
+                                    className="btn-secondary relative z-50 cursor-pointer"
                                 >
-                                    View Work
-                                </a>
+                                    View Team
+                                </button>
                             </div>
 
                             <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-200 dark:border-white/5 relative z-20">
                                 <div className="flex items-center gap-4 group relative z-20">
                                     <div className="w-full">
-                                        <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-200 mb-1">Rapid Deployment</h4>
+                                        <h4 className="text-xl md:text-2xl font-bold text-black dark:text-gray-200 mb-1">Rapid Deployment</h4>
                                         <p className="text-sm md:text-base text-gray-500">Solutions in record time</p>
                                     </div>
                                 </div>
-                                <div
+                                <a
+                                    href="#projects"
                                     className="flex items-center gap-4 group cursor-pointer hover:bg-gray-100 dark:hover:bg-white/5 p-3 rounded-xl transition-all -ml-3 relative z-50 w-full"
-                                    onClick={() => setIsTeamModalOpen(true)}
                                 >
                                     <div className="w-full">
-                                        <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-200 mb-1">Expert Team</h4>
-                                        <p className="text-sm md:text-base text-gray-500">Seasoned professionals</p>
+                                        <h4 className="text-xl md:text-2xl font-bold text-black dark:text-gray-200 mb-1">View Work</h4>
+                                        <p className="text-sm md:text-base text-gray-500">Explore our projects</p>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                     </Reveal>
