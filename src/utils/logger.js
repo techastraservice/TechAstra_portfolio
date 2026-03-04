@@ -14,7 +14,7 @@ export const logAdminAction = async (action, entityType, entityIdentifier, detai
         if (!user) return; // Must have an authenticated current user
 
         const logsRef = ref(database, 'system_logs');
-        
+
         // Remove undefined values to prevent Firebase errors
         const sanitizedDetails = JSON.parse(JSON.stringify(details));
 
@@ -30,3 +30,25 @@ export const logAdminAction = async (action, entityType, entityIdentifier, detai
         console.error("Failed to log admin action:", error);
     }
 };
+
+/**
+ * Logs a public (non-authed) action to system_logs.
+ */
+export const logPublicAction = async (action, entityType, entityIdentifier, submitterName, details = {}) => {
+    try {
+        const logsRef = ref(database, 'system_logs');
+        const sanitizedDetails = JSON.parse(JSON.stringify(details));
+
+        await push(logsRef, {
+            adminEmail: `Public User (${submitterName})`,
+            action,
+            entityType,
+            entityIdentifier: entityIdentifier || 'Unknown',
+            details: sanitizedDetails || {},
+            timestamp: Date.now()
+        });
+    } catch (error) {
+        console.error("Failed to log public action:", error);
+    }
+};
+
