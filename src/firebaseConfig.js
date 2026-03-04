@@ -11,8 +11,8 @@ const firebaseConfig = {
     apiKey: "",
     authDomain: "techastra-14e42.firebaseapp.com",
     projectId: "techastra-14e42",
-    storageBucket: "techastra-14e42.firebasestorage.app",
-    messagingSenderId: "",
+    storageBucket: "techastra-14e42.appspot.com",
+    messagingSenderId: "444657913878",
     appId: "1:444657913878:web:d369d9bc78a3aa54912537",
     measurementId: "",
     databaseURL: "https://techastra-14e42-default-rtdb.firebaseio.com/"

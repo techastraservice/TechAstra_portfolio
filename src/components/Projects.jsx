@@ -3,11 +3,14 @@ import { ExternalLink, Github, ChevronRight, ChevronLeft, Search } from 'lucide-
 
 import { useProjects } from '../context/ProjectContext';
 import Reveal from './Reveal';
+import ProjectModal from './ProjectModal';
 
 const Projects = () => {
     const { projects } = useProjects();
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(6);
+    const [selectedProject, setSelectedProject] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         const handleResize = () => {
@@ -42,7 +45,7 @@ const Projects = () => {
                 <Reveal>
                     <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-4">
                         <div>
-                            
+
                             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mt-2 transition-colors">Featured Projects</h2>
                             <p className="text-gray-600 dark:text-gray-400 mt-2 transition-colors">Explore our diverse portfolio of {projects.length}+ innovative solutions.</p>
                         </div>
@@ -70,7 +73,13 @@ const Projects = () => {
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
                     {currentProjects.map((project, index) => (
                         <Reveal key={index} delay={index * 100}>
-                            <div className="group relative rounded-2xl overflow-hidden glass border-0 h-[300px] md:h-[400px] shadow-sm dark:shadow-none bg-white dark:bg-transparent transition-colors">
+                            <div
+                                className="group relative rounded-2xl overflow-hidden glass border-0 h-[300px] md:h-[400px] shadow-sm dark:shadow-none bg-white dark:bg-transparent transition-colors cursor-pointer"
+                                onClick={() => {
+                                    setSelectedProject(project);
+                                    setIsModalOpen(true);
+                                }}
+                            >
                                 {/* Image Overlay */}
                                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all z-10"></div>
 
@@ -80,10 +89,16 @@ const Projects = () => {
                                     className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
                                 />
 
+                                {/* Floating Top Badge */}
+                                <div className="absolute top-4 left-4 z-20">
+                                    <span className="bg-black/50 backdrop-blur-[2px] border border-white/20 text-cyan-400 px-3 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider shadow-[0_4px_10px_rgba(0,0,0,0.5)] block transition-colors group-hover:bg-cyan-500/20 group-hover:border-cyan-500/50 group-hover:text-cyan-300">
+                                        {project.category}
+                                    </span>
+                                </div>
+
                                 <div className="absolute bottom-0 left-0 w-full p-4 md:p-6 z-20 bg-gradient-to-t from-black/95 via-black/80 to-transparent">
                                     <div className="flex justify-between items-end">
                                         <div className="w-full">
-                                            <span className="text-cyan-400 text-[10px] md:text-xs font-bold uppercase tracking-wider mb-1 md:mb-2 block">{project.category}</span>
                                             <h3 className="text-lg md:text-2xl font-bold text-white mb-1 md:mb-2 truncate">{project.title}</h3>
                                             <p className="text-gray-300 text-xs md:text-sm mb-2 md:mb-4 line-clamp-2 hidden md:block">{project.desc}</p>
                                             <div className="flex flex-wrap gap-1 md:gap-2 mb-2 md:mb-4">
@@ -128,6 +143,13 @@ const Projects = () => {
                     </button>
                 </div>
             </div>
+
+            {/* Project Modal */}
+            <ProjectModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                project={selectedProject}
+            />
         </section>
     );
 };

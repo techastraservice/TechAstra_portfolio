@@ -5,21 +5,26 @@ import logo from '../assets/techastra-logo.png';
 import Reveal from './Reveal';
 import { useProjects } from '../context/ProjectContext';
 import TeamModal from './TeamModal';
+import { database } from '../firebaseConfig';
+import { ref, onValue } from 'firebase/database';
 
 const Hero = () => {
     const { projects, totalVisits } = useProjects();
     const [isTeamModalOpen, setIsTeamModalOpen] = React.useState(false);
+    const [approvedClientCount, setApprovedClientCount] = React.useState(0);
 
-    // TODO: future integration with Firebase for real-time visit count
-    // useEffect(() => {
-    //     // const database = getDatabase(app);
-    //     // const visitsRef = ref(database, 'visits');
-    //     // get(visitsRef).then((snapshot) => {
-    //     //   if (snapshot.exists()) {
-    //     //     setVisitCount(snapshot.val());
-    //     //   }
-    //     // });
-    // }, []);
+    React.useEffect(() => {
+        const clientsRef = ref(database, 'site_stats/total_clients');
+        const unsubscribe = onValue(clientsRef, (snapshot) => {
+            if (snapshot.exists()) {
+                setApprovedClientCount(snapshot.val());
+            } else {
+                setApprovedClientCount(0);
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     return (
         <>
@@ -49,35 +54,35 @@ const Hero = () => {
                             <div className="flex flex-wrap gap-4 pt-4 relative z-20">
                                 <a
                                     href="#contact"
-                                    className="group relative px-8 py-4 bg-gradient-to-r from-cyan-600 to-blue-700 rounded-xl font-bold tracking-wide text-white shadow-[0_4px_20px_rgba(6,182,212,0.3)] hover:shadow-[0_6px_30px_rgba(6,182,212,0.5)] transition-all transform hover:-translate-y-1 overflow-hidden"
+                                    className="btn-primary"
                                 >
-                                    <span className="relative z-10 flex items-center gap-2">Start Now <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" /></span>
-                                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                                    Start Now <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                                 </a>
-                                <a
-                                    href="#projects"
-                                    className="px-8 py-4 rounded-xl font-bold tracking-wide text-gray-800 dark:text-white border border-gray-200 dark:border-white/10 hover:bg-gray-100 dark:hover:bg-white/5 transition-all flex items-center gap-2 backdrop-blur-sm shadow-sm dark:shadow-none"
+                                <button
+                                    type="button"
+                                    onClick={() => setIsTeamModalOpen(true)}
+                                    className="btn-secondary relative z-50 cursor-pointer"
                                 >
-                                    View Work
-                                </a>
+                                    View Team
+                                </button>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-200 dark:border-white/5">
-                                <div className="flex items-center gap-4 group">
-                                    <div>
-                                        <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-200 mb-1">Rapid Deployment</h4>
+                            <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-200 dark:border-white/5 relative z-20">
+                                <div className="flex items-center gap-4 group relative z-20">
+                                    <div className="w-full">
+                                        <h4 className="text-xl md:text-2xl font-bold text-black dark:text-gray-200 mb-1">Rapid Deployment</h4>
                                         <p className="text-sm md:text-base text-gray-500">Solutions in record time</p>
                                     </div>
                                 </div>
-                                <div
-                                    className="flex items-center gap-4 group cursor-pointer hover:bg-white/5 p-2 rounded-lg transition-colors -ml-2"
-                                    onClick={() => setIsTeamModalOpen(true)}
+                                <a
+                                    href="#projects"
+                                    className="flex items-center gap-4 group cursor-pointer hover:bg-gray-100 dark:hover:bg-white/5 p-3 rounded-xl transition-all -ml-3 relative z-50 w-full"
                                 >
-                                    <div>
-                                        <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-200 mb-1">Expert Team</h4>
-                                        <p className="text-sm md:text-base text-gray-500">Seasoned professionals</p>
+                                    <div className="w-full">
+                                        <h4 className="text-xl md:text-2xl font-bold text-black dark:text-gray-200 mb-1">View Work</h4>
+                                        <p className="text-sm md:text-base text-gray-500">Explore our projects</p>
                                     </div>
-                                </div>
+                                </a>
                             </div>
                         </div>
                     </Reveal>
@@ -118,7 +123,7 @@ const Hero = () => {
                                 <p className="text-gray-600 dark:text-gray-400 font-medium uppercase tracking-wider text-sm">Total Visits</p>
                             </div>
                             <div className="p-4 transition-transform hover:-translate-y-1 duration-300">
-                                <h3 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent mb-2">50+</h3>
+                                <h3 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-cyan-500 to-blue-600 bg-clip-text text-transparent mb-2">{approvedClientCount > 0 ? approvedClientCount : '0'}+</h3>
                                 <p className="text-gray-600 dark:text-gray-400 font-medium uppercase tracking-wider text-sm">Total Clients</p>
                             </div>
                         </div>

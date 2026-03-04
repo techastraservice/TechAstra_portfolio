@@ -195,6 +195,70 @@ export const services = [
             timeline: "2-4 Weeks",
             pricing: "Affordable"
         }
+    },
+    {
+        title: "Research Paper Drafting",
+        desc: "Professional drafting and formatting of academic research papers for IEEE, ACM, Springer, and Scopus journals.",
+        details: {
+            description: "High-quality academic writing assistance for students and researchers. We help you draft, format, and structure your research papers according to international publisher standards. From writing abstract and introductions to formatting references.",
+            technologies: {
+                Standards: "IEEE, ACM, Springer, Elsevier, Harvard, APA",
+                Tools: "LaTeX, Overleaf, MS Word, Mendeley, Zotero",
+                Analysis: "SPSS, Python (Matplotlib, Seaborn), Excel",
+                Formatting: "Two-column formats, Equation typesetting, Citation management",
+                Quality_Check: "Grammarly Premium, Advanced AI Grammar Checks"
+            },
+            servicesList: [
+                "IEEE Base Paper Implementation & Drafting",
+                "Literature Review Writing",
+                "Methodology & Results Composition",
+                "Mathematical Equation Formulation",
+                "LaTeX/Overleaf Typesetting",
+                "Reference & Citation Generation"
+            ],
+            keyFeatures: [
+                "Publisher-Specific Templates",
+                "Grammatically Perfect (Premium Checked)",
+                "Scientifically Sound Structuring",
+                "High-Quality Figures and Graphs",
+                "Native-English Language Standards",
+                "Free Revisions up to Submission"
+            ],
+            timeline: "1-3 Weeks",
+            pricing: "Rs.5,000+"
+        }
+    },
+    {
+        title: "Report Making & Plagiarism",
+        desc: "Comprehensive project reports, PPTs, synopsis crafting, with 100% Turnitin-verified plagiarism checking.",
+        details: {
+            description: "End-to-end documentation for academic projects. We create meticulously detailed project reports, executive summaries, and presentation slides. Every document comes with a verified plagiarism/Turnitin report to ensure complete originality.",
+            technologies: {
+                Document_Tools: "MS Office 365 suite, Google Workspace",
+                Presentation: "PowerPoint, Canva Pro, Figma (Presentations)",
+                Design: "Adobe Illustrator (for Architecture Diagrams)",
+                Verification: "Turnitin, Copyscape, Plagiarism Checker X",
+                Structuring: "UML Diagrams, SRS, DFD, ER Diagrams"
+            },
+            servicesList: [
+                "Final Year Project Reports",
+                "Synopsis & Proposal Drafting",
+                "Software Requirement Specifications (SRS)",
+                "System Architecture & UML Designing",
+                "Viva-Voce Presentation (PPT) Creation",
+                "Professional Plagiarism Checking"
+            ],
+            keyFeatures: [
+                "100% Original Content Guarantee",
+                "Turnitin Report Included",
+                "University Guideline Compliant",
+                "Professionally Drawn System Architecture Diagrams",
+                "Print-Ready Margins & Binding Formatting",
+                "Express Delivery Available"
+            ],
+            timeline: "3-7 Days",
+            pricing: "Rs.2,500+"
+        }
     }
 ];
 
@@ -223,7 +287,7 @@ const Services = () => {
                     </div>
                 </Reveal>
 
-                <div className="grid md:grid-cols-3 gap-8">
+                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {services.map((service, index) => (
                         <Reveal key={index} delay={index * 100}>
                             <div className="group h-full p-8 rounded-2xl bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 hover:border-cyan-500/30 dark:hover:border-white/20 hover:bg-gray-50 dark:hover:bg-white/10 transition-all duration-500 backdrop-blur-sm flex flex-col justify-between hover:shadow-2xl hover:shadow-cyan-500/10">

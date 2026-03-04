@@ -7,6 +7,7 @@ import Features from './Features';
 import Services from './Services';
 import Pricing from './Pricing';
 import Projects from './Projects';
+import Testimonials from './Testimonials';
 import Contact from './Contact';
 import Footer from './Footer';
 
@@ -28,6 +29,7 @@ const Home = () => {
             <Services />
             <Pricing isOpen={isPricingOpen} onClose={() => setIsPricingOpen(false)} />
             <Projects />
+            <Testimonials />
             <Contact />
             <Footer />
         </div>
