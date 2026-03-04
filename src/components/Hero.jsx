@@ -92,13 +92,14 @@ const Hero = () => {
                             {/* Main Glass Card */}
                             <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 to-purple-600/20 rounded-full blur-[80px] animate-pulse"></div>
 
-                            <div className="relative z-10 w-full h-full bg-white/60 dark:bg-white/5 backdrop-blur-2xl border border-white/40 dark:border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col items-center justify-center transform hover:scale-[1.02] transition-transform duration-500 group">
+                            <div className="relative z-10 w-full h-full bg-white/60 dark:bg-gradient-to-br dark:from-[#1a1a2e] dark:via-[#16213e] dark:to-[#0f3460] backdrop-blur-2xl border border-white/40 dark:border-cyan-500/20 rounded-3xl p-8 shadow-2xl dark:shadow-purple-500/10 flex flex-col items-center justify-center transform hover:scale-[1.02] transition-transform duration-500 group">
                                 {/* Inner Shimmer */}
                                 <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/40 dark:via-white/5 to-transparent skew-x-12 translate-x-[-150%] group-hover:animate-shimmer rounded-3xl overflow-hidden"></div>
 
-                                <div className="relative w-48 h-48 mb-6">
-                                    <div className="absolute inset-0 bg-blue-500/20 dark:bg-blue-500/30 blur-2xl rounded-full"></div>
-                                    <img src={logo} alt="TechAstra Logo" className="w-full h-full object-contain relative z-10 drop-shadow-2xl" />
+                                <div className="relative w-72 h-72 mb-6">
+                                    <div className="absolute inset-[-20%] bg-gradient-radial from-cyan-400/30 via-purple-500/20 to-transparent dark:from-cyan-400/40 dark:via-purple-500/25 dark:to-transparent blur-2xl rounded-full"></div>
+                                    <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(100,200,255,0.25)_0%,rgba(160,100,255,0.15)_40%,transparent_70%)] dark:bg-[radial-gradient(circle,rgba(100,200,255,0.35)_0%,rgba(160,100,255,0.2)_40%,transparent_70%)]"></div>
+                                    <img src={logo} alt="TechAstra Logo" className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_30px_rgba(0,200,255,0.3)]" />
                                 </div>
 
                                 <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent mb-2">Tech Astra</h2>
