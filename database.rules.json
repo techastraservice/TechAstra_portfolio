@@ -1,6 +1,44 @@
 {
     "rules": {
-        ".read": "true",
-        ".write": "true"
+        "projects": {
+            ".read": true,
+            ".write": "auth != null"
+        },
+        "team": {
+            ".read": true,
+            ".write": "auth != null"
+        },
+        "testimonials": {
+            ".read": true,
+            "$testimonialId": {
+                ".write": "auth != null || !data.exists()"
+            }
+        },
+        "site_stats": {
+            "total_visits": {
+                ".read": true,
+                ".write": true
+            },
+            "total_clients": {
+                ".read": "auth != null",
+                ".write": "auth != null"
+            },
+            "$other": {
+                ".read": true,
+                ".write": "auth != null"
+            }
+        },
+        "clients": {
+            ".read": "auth != null",
+            ".write": "auth != null"
+        },
+        "system_logs": {
+            ".read": "auth != null",
+            ".write": "auth != null"
+        },
+        "$other": {
+            ".read": "auth != null",
+            ".write": "auth != null"
+        }
     }
 }
