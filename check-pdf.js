@@ -1,18 +1,24 @@
-import { PDFDocument } from 'pdf-lib';
 import fs from 'fs';
+import { PDFDocument } from 'pdf-lib';
 
-async function check() {
+async function test() {
     try {
-        const pdfBytes = fs.readFileSync('public/TECH ASTRA-1.pdf');
-        const pdfDoc = await PDFDocument.load(pdfBytes);
-        const form = pdfDoc.getForm();
-        const fields = form.getFields();
-        console.log('Form fields count:', fields.length);
-        fields.forEach(field => {
-            console.log(field.getName(), field.constructor.name);
-        });
-    } catch (err) {
-        console.error(err);
+        const bytes = fs.readFileSync('public/TECH ASTRA-1.pdf');
+        const pdfDoc = await PDFDocument.load(bytes);
+        console.log("PDF loaded successfully.");
+        
+        // Let's test the page copying logic
+        console.log(`Original pages: ${pdfDoc.getPageCount()}`);
+        const extraPages = await pdfDoc.copyPages(pdfDoc, [0, 0]);
+        for (const p of extraPages) pdfDoc.addPage(p);
+        console.log(`Pages after copy: ${pdfDoc.getPageCount()}`);
+        
+        // Let's save it
+        const saved = await pdfDoc.save();
+        console.log(`Saved bytes: ${saved.length}`);
+    } catch (e) {
+        console.error("ERROR:");
+        console.error(e);
     }
 }
-check();
+test();
